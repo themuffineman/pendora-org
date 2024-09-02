@@ -20,6 +20,7 @@ const AdCard: React.FC<componentProps> = ({adImage, adCopy})=>{
 
     async function copyText(){
         setIsCopied(true)
+        navigator.clipboard.writeText(adCopy)
         await new Promise<void>((resolve) => {
             setTimeout(() => {
                 resolve()
@@ -27,10 +28,11 @@ const AdCard: React.FC<componentProps> = ({adImage, adCopy})=>{
         })
         setIsCopied(false)
     }
+    
     return (
         <div className='size-max flex flex-col items-center justify-between bg-[#f5f5f5] p-2 rounded-md mx-auto'>
             <img 
-                src="/8455966320107134295.png"
+                src={adImage}
                 alt='Ad image'
                 className="object-cover rounded-md w-[20rem] h-auto"
             />
