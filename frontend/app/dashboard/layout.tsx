@@ -1,18 +1,32 @@
+"use client"
 import React from 'react'
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { usePathname } from 'next/navigation';
 
 interface componentProps {
     children: React.ReactNode;
 }
 
 const layout: React.FC<componentProps> = ({ children }) => {
+    const pathname = usePathname()
   return (
     <main className='flex min-h-screen flex-col items-center bg-white'>
+        
         <nav className="w-full px-2 bg-white flex items-center justify-end py-2 gap-10 border-b border-[#F5F5F5] shadow-lg">
+            {
+                pathname === '/dashboard/search' ? (
+                    <form className='relative w-max flex justify-center items-center self-start'>
+                        <input className='w-[30rem] h-12 p-2 px-[40px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md ' placeholder='Enter new website domain e.g. domain.com' type="search" />
+                        <svg className='absolute left-[5px] top-1/2 -translate-y-1/2' xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#d3d3d3" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg>
+                    </form>
+                ):(
+                    ''
+                )
+            }
             <button className='w-max px-4 p-2 rounded-md text-black flex items-center justify-center bg-yellow-200'>Upgrade</button>
             <Popover>
                 <PopoverTrigger className='p-2 rounded-md hover:bg-[#F5F5F5] relative'>
