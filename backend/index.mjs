@@ -14,8 +14,8 @@ app.use(express.json());
 app.post('/api/get-google-ads', async (req,res)=>{
     const {url} = req.body
     console.log('Received request:', url)
-    const gridSelector = 'priority-creative-grid._ngcontent-hew-30._nghost-hew-34.tfaaReportVerified'
-    const adCardSelector = 'creative-preview._ngcontent-hew-34._nghost-hew-35'
+    const gridSelector = 'body > div:nth-child(9) > root > start-page > creative-grid > priority-creative-grid'
+    const adCardSelector = 'body > div:nth-child(9) > root > start-page > creative-grid > priority-creative-grid > creative-preview'
     let browser
     let page
     for(let browserRetries = 0; browserRetries < 4; browserRetries++){
@@ -49,6 +49,7 @@ app.post('/api/get-google-ads', async (req,res)=>{
         
         try {
             await page.waitForSelector(gridSelector);
+            console.log('Selector Found')
         } catch (error) {
             console.log('Grid selector not found');
             return res.sendStatus(404);
@@ -58,6 +59,7 @@ app.post('/api/get-google-ads', async (req,res)=>{
         if (!adGrid) {
             return res.json({ adImages: [] }).status(200); 
         }
+        console.log('Grid found')
         const adCards = await adGrid.$$(adCardSelector);
         const adImages = [];
         for (const card of adCards) {
@@ -65,6 +67,7 @@ app.post('/api/get-google-ads', async (req,res)=>{
                 const adImage = await card.$('img');
                 if (adImage) {
                     const adImageSrc = await adImage.getProperty('src').then(prop => prop.jsonValue());
+                    console.log('Src found: ',adImageSrc)
                     adImages.push(adImageSrc);
                 }
             } catch (error) {
