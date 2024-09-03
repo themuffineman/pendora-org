@@ -13,25 +13,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.post('/api/get-google-ads', async (req,res)=>{
     const {url} = req.body
+    console.log('Received request:', url)
     const gridSelector = 'priority-creative-grid._ngcontent-pku-30._nghost-pku-34.tfaaReportVerified'
     const adCardSelector = 'creative-preview._ngcontent-pku-34._nghost-pku-35'
     let browser
     let page
     for(let browserRetries = 0; browserRetries < 4; browserRetries++){
         try {
-            browser = await puppeteer.connect({
-                browserWSEndpoint: process.env.BROWSER_URL
-            })
+            browser = await puppeteer.launch()
             page = await browser.newPage();
-            await page.setRequestInterception(true);  
-            page.on('request', (request) => {  
-                if (request.resourceType() === 'image') {  
-                    request.abort(); 
-                } else {  
-                    request.continue();  
-                }
-            })
+            // await page.setRequestInterception(true);  
+            // page.on('request', (request) => {  
+            //     if (request.resourceType() === 'image') {  
+            //         request.abort(); 
+            //     } else {  
+            //         request.continue();  
+            //     }
+            // })
             if(browser && page){
+                console.log('Browser and Page opended')
                 break
             }else{
                 throw new Error('Browser Launch Fail, retrying... :', browserRetries)
@@ -43,7 +43,6 @@ app.post('/api/get-google-ads', async (req,res)=>{
                 return res.sendStatus(500)
             }
         }
-
     }
     try {
         await page.goto(`https://adstransparency.google.com/?region=US&domain=${url}&preset-date=Last+30+days`);
