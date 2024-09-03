@@ -14,8 +14,8 @@ app.use(express.json());
 app.post('/api/get-google-ads', async (req,res)=>{
     const {url} = req.body
     console.log('Received request:', url)
-    const gridSelector = 'priority-creative-grid._ngcontent-pku-30._nghost-pku-34.tfaaReportVerified'
-    const adCardSelector = 'creative-preview._ngcontent-pku-34._nghost-pku-35'
+    const gridSelector = 'priority-creative-grid._ngcontent-hew-30._nghost-hew-34.tfaaReportVerified'
+    const adCardSelector = 'creative-preview._ngcontent-hew-34._nghost-hew-35'
     let browser
     let page
     for(let browserRetries = 0; browserRetries < 4; browserRetries++){
