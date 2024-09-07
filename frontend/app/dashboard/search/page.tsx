@@ -80,12 +80,14 @@ const page = () => {
                     </Select>
                 </div>
                 <div className={` ${failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
+                    <AdCard 
+                        adImage={'https://tpc.googlesyndication.com/archive/simgad/4801254084584785439'} 
+                    />  
                     {
                         ads?.length > 0 ? (
                             ads.map((src) => (
                                 <AdCard 
                                     key={src}
-                                    adCopy='lorem ipsum lorem ipsum lorem ipsum lorem lorem ipsum' 
                                     adImage={src} 
                                 />  
                             ))
