@@ -67,7 +67,7 @@ const page = () => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="30Days">
-                                <div className='flex gap-2 items-center justify-between '>
+                                <div className='flex gap-2 items-center justify-between'>
                                     <span className='text-base font-medium text-center'>Past 30 Days</span>
                                 </div>
                             </SelectItem>
