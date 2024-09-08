@@ -38,7 +38,7 @@ app.post('/api/get-google-ads', async (req,res)=>{
             }else{
                 throw new Error('Browser Launch Fail, retrying... :', browserRetries)
             }
-        } catch (error) {
+        }catch(error){
             await page?.close()
             await browser?.close()
             console.log(error.message)
@@ -49,10 +49,10 @@ app.post('/api/get-google-ads', async (req,res)=>{
     }
     try{
         await page.goto(`https://adstransparency.google.com/?region=US&domain=${url}&preset-date=Last+30+days`)
-        try {
+        try{
             await page.waitForSelector(gridSelector);
             console.log('Selector Found')
-        } catch (error) {
+        }catch(error) {
             console.log('Grid selector not found');
             return res.sendStatus(404);
         }
@@ -60,16 +60,13 @@ app.post('/api/get-google-ads', async (req,res)=>{
             await page.waitForSelector(allAdsButton)
             await page.click(allAdsButton)
             console.log('Clicked Button')
+            await new Promise((resolve, _)=>{
+                setTimeout(()=>{
+                    resolve()
+                }, 5000)
+            })
         }catch(error){
             console.log('Unable to click button')
-        }
-        try{
-            await page.waitForResponse(response =>
-                response.url().includes('https://displayads-formats.googleusercontent.com/ads/preview/content.js') && response.status() === 200
-            );
-            console.log('Response complete')
-        }catch(error){
-            console.log('Error waiting for response')
         }
         const adGrid = await page.$(gridSelector);
         if (!adGrid) {
@@ -86,7 +83,7 @@ app.post('/api/get-google-ads', async (req,res)=>{
                     console.log('Src found: ',adImageSrc)
                     adImages.push(adImageSrc);
                 }
-            } catch (error) {
+            }catch(error) {
                 console.log('Error processing an ad card:', error);
                 continue;
             }
