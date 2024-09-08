@@ -51,7 +51,7 @@ export async function POST(req) {
             { $push: { ads: uploadedResult.url } }    
         )
         if (result.matchedCount > 0) {
-            return new Response(null, {
+            return new Response('Ad Saved', {
                 status: 201
             })
         } else {

@@ -26,11 +26,11 @@ const layout: React.FC<componentProps> = async ({ children }) => {
            </div>
             <button className='w-max px-4 p-2 rounded-md text-black flex items-center justify-center bg-yellow-200'>Upgrade</button>
             <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
-                {user?.picture? (
+                {user?.given_name?.charAt(0)}
+                {/* {user?.picture? (
                     <img src={user.picture} className='w-full h-full object-cover rounded-full'/>
                 ):(
-                    user?.given_name?.charAt(0)
-                )}
+                )} */}
             </div>
         </nav>
         <div className='w-full h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white'>
