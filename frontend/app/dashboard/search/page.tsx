@@ -16,6 +16,7 @@ const page = () => {
     const [isFetching, setIsFetching] = useState<boolean>(false)
     const searchParams = useSearchParams()
     const url = searchParams.get("url")
+    const platform = searchParams.get("platform")
 
     useEffect(() => {
         console.log('running yeah')
@@ -32,7 +33,8 @@ const page = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        url: url
+                        url: url,
+                        platform: platform 
                     })
                 })
                 if(!adResponse.ok){
@@ -80,9 +82,9 @@ const page = () => {
                     </Select>
                 </div>
                 <div className={` ${failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
-                    <AdCard 
+                    {/* <AdCard 
                         adImage={'https://tpc.googlesyndication.com/archive/simgad/4801254084584785439'} 
-                    />  
+                    />   */}
                     {
                         ads?.length > 0 ? (
                             ads.map((src) => (
