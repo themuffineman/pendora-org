@@ -41,6 +41,7 @@ app.post('/api/get-google-ads', async (req,res)=>{
         } catch (error) {
             await page?.close()
             await browser?.close()
+            console.log(error.message)
             if(browserRetries === 3){
                 return res.sendStatus(500)
             }
