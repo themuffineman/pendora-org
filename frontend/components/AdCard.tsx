@@ -52,7 +52,7 @@ const AdCard: React.FC<componentProps> = ({adImage})=>{
             </div>
             {
                 confirmation && (
-                    <Toast message={saveMessage.message} error={saveMessage.error}/>
+                    <Toast error={saveMessage.error} message={saveMessage.message}/>   
                 )
             }
         </div>

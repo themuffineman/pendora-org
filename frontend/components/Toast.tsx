@@ -1,6 +1,9 @@
 import React from 'react'
-
-const Toast = (message: string, error: boolean) => {
+interface propTypes{
+    message: string,
+    error: boolean
+}
+const Toast:React.FC<propTypes>  = ({message, error}) => {
   return (
     <div className={`flex gap-5 items-center rounded-md bg-[#f0f0f0] p-4 fixed bottom-8 right-16 w-max shadow-2xl shadow-[#f2f2f2]`}>
         <div className="size-5 rounded-full border-2  border-black border-t-[#f5f5f5] animate-spin [animation-duration:0.6s]"/>

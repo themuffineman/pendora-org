@@ -58,11 +58,11 @@ const page = () => {
     return (
         <> 
             <div className='flex flex-col w-full h-full items-center justify-start'>
-                <div className='w-full px-4 flex items-cetner justify-between'>
-                    <div className='text-xl font-semibold text-black tracking-tight'>
+                <div className='w-full px-4 flex items-center justify-start'>
+                    <div className='text-xl font-semibold text-black tracking-tight'>  
                         Results Found: {ads.length}
                     </div>
-                    <Select defaultValue='30Days'>
+                    {/* <Select defaultValue='30Days'>
                         <SelectTrigger className="w-max h-12 flex gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"></path></svg>
                             <SelectValue placeholder="Choose Date Range" />
@@ -79,7 +79,7 @@ const page = () => {
                                 </div>
                             </SelectItem>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
                 </div>
                 <div className={` ${failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                     {/* <AdCard 
