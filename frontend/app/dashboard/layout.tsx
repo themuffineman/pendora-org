@@ -1,8 +1,9 @@
 import React from 'react'
-import {getKindeServerSession} from "@kinde-oss/kinde-auth-nextjs/server";
+import {getKindeServerSession, LogoutLink} from "@kinde-oss/kinde-auth-nextjs/server";
 import {redirect} from "next/navigation";
 import Search from '@/components/Search';
 import Link from 'next/link';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 interface componentProps {
     children: React.ReactNode;
 }
@@ -26,9 +27,18 @@ const layout: React.FC<componentProps> = async ({ children }) => {
                 </span>
            </Link>
             <button className='w-max px-4 p-2 rounded-md text-black flex items-center justify-center bg-yellow-200'>Upgrade</button>
-            <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
-                {user?.given_name?.charAt(0)}
-            </div>
+            <Popover>
+                <PopoverTrigger>
+                    <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
+                        {user?.given_name?.charAt(0)}
+                    </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-max h-max rounded-md bg-[#f5f5f5]">
+                    <LogoutLink className='hover:bg-[#ffffff] rounded-md text-black text-base font-medium'>
+                        Sign Out
+                    </LogoutLink>
+                </PopoverContent>
+            </Popover>
         </nav>
         <div className='w-full h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white'>
             {children}
