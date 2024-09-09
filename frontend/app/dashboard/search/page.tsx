@@ -1,6 +1,6 @@
 "use client"
 import AdCard from '@/components/AdCard'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import {
     Select,
@@ -21,7 +21,7 @@ const page = () => {
     useEffect(() => {
         console.log('running yeah')
         fetchData();
-    },[]);
+    },[url, platform]);
     async function fetchData(){
         setFailedToFetch(false)
         setIsFetching(true)

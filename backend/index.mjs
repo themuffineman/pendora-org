@@ -83,9 +83,9 @@ app.post('/api/get-google-ads', async (req,res)=>{
                     console.log('Src found: ',adImageSrc)
                     adImages.push(adImageSrc);
                 }
-            }catch(error) {
-                console.log('Error processing an ad card:', error);
-                continue;
+            }catch(error){
+                console.log('Error processing an ad card:', error)
+                continue
             }
         }
         return res.status(200).json({ adImages });
