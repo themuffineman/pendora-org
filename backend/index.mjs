@@ -126,7 +126,7 @@ app.post('/api/get-meta-ads', async (req, res)=>{
         }
     }
 
-    try {
+    try{
         await page.goto(`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&media_type=all&q=${username}&search_type=keyword_unordered`)
         try {
             await page.waitForSelector(gridSelector)
@@ -134,12 +134,12 @@ app.post('/api/get-meta-ads', async (req, res)=>{
         } catch (error) {
             console.log('Grid not found')
         }
-        const adGrid = await page.$(gridSelector);
+        const adGrid = await page.$(gridSelector)
         if (!adGrid) {
             return res.json({ adImages: [] }).status(200)
         }
-        const adCards = await adGrid.$$(adCardSelector);
-        const adImages = [];
+        const adCards = await adGrid.$$(adCardSelector)
+        const adImages = []
         const adVideos = []
 
         for(const card of adCards){
@@ -161,8 +161,9 @@ app.post('/api/get-meta-ads', async (req, res)=>{
                 continue
             }
         }
-        return res.status(200).json({ adImages, adVideos });
-    } catch (error) {
-        
+        return res.status(200).json({ adImages, adVideos })
+    }catch(error){
+        console.log(error.message)
+        return res.sendStatus(500)
     }
 })
