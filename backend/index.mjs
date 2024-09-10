@@ -1,8 +1,8 @@
 import express from 'express'
+import axios from 'axios'
 import puppeteer from 'puppeteer'
 import cors from 'cors'
 import {config} from 'dotenv'
-
 config()
 const app = express()
 app.listen(8080, ()=>{
@@ -11,8 +11,8 @@ app.listen(8080, ()=>{
 app.use(cors({
     origin: '*'
 }))
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.post('/api/get-google-ads', async (req,res)=>{
     const {url} = req.body
     console.log('Received request:', url)
@@ -98,44 +98,71 @@ app.post('/api/get-google-ads', async (req,res)=>{
 })
 app.post('/api/get-meta-ads', async (req, res)=>{
     const {username} = req.body
-    async function searchAdsByPageId(pageId) {
-        const url = `https://graph.facebook.com/v18.0/ads_archive`;
+    console.log('Received Request: ', username)
+    const gridSelector = '#mount_0_0_GE > div > div > div > div > div > div > div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w'
+    const adCardSelector = '#mount_0_0_GE > div > div > div > div > div > div > div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w'
+    const adImgSelector = '#mount_0_0_GE > div > div > div > div > div > div > div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div:nth-child(3) > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x1ywc1zp.x78zum5.xl56j7k.x1e56ztr.x1277o0a > img'
+    const adVideoSelector = '#mount_0_0_GE > div > div > div > div > div > div > div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div:nth-child(2) > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x14ju556.x1n2onr6 > div > div > div > div > div > div > video'
+    let browser
+    let page
+
+    for(let browserRetries = 0; browserRetries < 4; browserRetries++){
         try {
-            const params = {
-                access_token: process.env.META_APP_TOKEN,
-                page_id: pageId,           
-                countries: 'US',         
-                ad_type: 'ALL'            
-            };
-            const response = await axios.get(url, { params });
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching ads:', error.response?.data || error.message);
-            throw error;
-        }
-    }
-    async function getPageId(username) {
-        const url = `https://graph.facebook.com/v18.0/${username}?fields=id,name&access_token=${process.env.META_APP_TOKEN}`;
-      
-        try {
-          const response = await axios.get(url);
-          const pageData = response.data;
-          console.log(`Page ID: ${pageData.id}`);
-          return pageData.id;
-        } catch (error) {
-          console.error('Error fetching page data:', error.response?.data || error.message);
-          throw error;
+            browser = await puppeteer.launch()
+            page = await browser.newPage();
+            if(browser && page){
+                console.log('Browser and Page opended')
+                break
+            }else{
+                throw new Error('Browser Launch Fail, retrying... :', browserRetries)
+            }
+        }catch(error){
+            await page?.close()
+            await browser?.close()
+            console.log(error.message)
+            if(browserRetries === 3){
+                return res.sendStatus(500)
+            }
         }
     }
 
     try {
-        const pageId = await getPageId(username)
-        const ads = await searchAdsByPageId(pageId)
-        return res.json({ads}).status(200)
+        await page.goto(`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&media_type=all&q=${username}&search_type=keyword_unordered`)
+        try {
+            await page.waitForSelector(gridSelector)
+            console.log('Grid found')
+        } catch (error) {
+            console.log('Grid not found')
+        }
+        const adGrid = await page.$(gridSelector);
+        if (!adGrid) {
+            return res.json({ adImages: [] }).status(200)
+        }
+        const adCards = await adGrid.$$(adCardSelector);
+        const adImages = [];
+        const adVideos = []
+
+        for(const card of adCards){
+            try {
+                const adImage = await card.$(adImgSelector);
+                if (adImage) {
+                    const adImageSrc = await adImage.getProperty('src').then(prop => prop.jsonValue());
+                    console.log('Src found: ',adImageSrc)
+                    adImages.push(adImageSrc);
+                }
+                const adVideo = await card.$(adVideoSelector);
+                if (adVideo) {
+                    const adVideoSrc = await adVideo.getProperty('src').then(prop => prop.jsonValue());
+                    console.log('Src found: ',adVideoSrc)
+                    adVideos.push(adVideoSrc);
+                }
+            }catch(error){
+                console.log('Error processing an ad card:', error)
+                continue
+            }
+        }
+        return res.status(200).json({ adImages, adVideos });
     } catch (error) {
-        console.log(error.message)
-        return res.sendStatus(500)
+        
     }
-
 })
-
