@@ -92,10 +92,11 @@ app.post('/api/get-google-ads', async (req,res)=>{
         }
         return res.status(200).json({ adImages });
     } catch (error) {
-        await page?.close()
-        await browser?.close()
         console.error('Error fetching ads:', error);
         return res.sendStatus(500);
+    }finally{
+        await page?.close()
+        await browser?.close()
     }
 })
 app.post('/api/get-meta-ads', async (req, res)=>{
@@ -165,9 +166,10 @@ app.post('/api/get-meta-ads', async (req, res)=>{
         }
         return res.status(200).json({ adImages, adVideos })
     }catch(error){
-        await page?.close()
-        await browser?.close()
         console.log(error.message)
         return res.sendStatus(500)
+    }finally{
+        await page?.close()
+        await browser?.close()
     }
 })
