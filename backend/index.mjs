@@ -142,6 +142,7 @@ app.post('/api/get-meta-ads', async (req, res)=>{
             return res.json({ adImages: [] }).status(200)
         }
         const adCards = await adGrid.$$(adCardSelector)
+        console.log('Ad cards length: ',adCards.length)
         const adImages = []
         const adVideos = []
 
