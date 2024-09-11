@@ -36,6 +36,10 @@ const page = () => {
                                 adImage={src} 
                             />  
                         ))
+                    ) : ads.length === 0 ? (
+                        <div className='bg-[#f5f5f5] p-4 rounded-md text-black text-lg flex items-center justify-center'>
+                            No Saved Ads Found
+                        </div>
                     ) : failedToFetch ? (
                         <button 
                             onClick={fetchData} 
