@@ -18,7 +18,7 @@ const page = () => {
   function goToSearch(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault()
     setIsLoading(true)
-    router.push(`/dashboard/search?url=${inputValue}?platform=${platform}`);
+    router.push(`/dashboard/search?url=${inputValue}&platform=${platform}`);
   }
 
   return (
@@ -47,7 +47,7 @@ const page = () => {
                     </div>
                 </SelectItem>
             </SelectContent>
-        </Select>
+      </Select>
       </div>
       <div className={`${isLoading ? 'flex' : 'hidden'} gap-5 items-center rounded-md bg-[#f0f0f0] p-4 fixed bottom-8 right-16 w-max shadow-2xl shadow-[#f2f2f2]`}>
           <div className="size-5 rounded-full border-2 border-black border-t-[#f5f5f5] animate-spin [animation-duration:0.6s]"/>

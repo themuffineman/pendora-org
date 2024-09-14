@@ -15,44 +15,36 @@ const page = () => {
         fetchData();
     },[url, platform]);
     async function fetchData(){
-        setFailedToFetch(false)
         setIsFetching(true)
-        for(let retries = 0; retries < 4; retries++){
-            try {
-                const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
-                const adResponse = await fetch(fetchUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        url: url,
-                        platform: platform 
-                    })
+        setFailedToFetch(false)
+        try {
+            const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
+            const adResponse = await fetch(fetchUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: url,
+                    platform: platform 
                 })
-                if(!adResponse.ok){
-                    continue
-                }
-                const ads = await adResponse.json()
-                if(platform === 'google'){
-                    setAds(ads.adImages)
-                }else if(platform === 'meta'){
-                    const initData = []
-                    initData.push(...ads?.adImages)
-                    initData.push(...ads?.adVideos)
-                    setAds(initData)
-                }
-                setIsFetching(false)
-                break
-            } catch (error) {
-                if(retries === 3 ){
-                    setIsFetching(false)
-                    setFailedToFetch(true)
-                }else{
-                    console.log('Retrying request')
-                    continue
-                }
+            })
+            if(!adResponse.ok){
+                throw new Error('Failed to fetch')
             }
+            const ads = await adResponse.json()
+            if(platform === 'google'){
+                setAds(ads.adImages)
+            }else if(platform === 'meta'){
+                const initData = []
+                initData.push(...ads?.adImages)
+                initData.push(...ads?.adVideos)
+                setAds(initData)
+            }
+        } catch (error) {
+            setFailedToFetch(true)
+        }finally{
+            setIsFetching(false)
         }
     }
     return (
@@ -65,23 +57,26 @@ const page = () => {
                 </div>
                 <div className={` ${failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                     {
-                        ads?.length > 0 ? (
+                        ads.length > 0 ? (
                             ads.map((src) => (
-                                <AdCard 
-                                    key={src}
-                                    adImage={src} 
-                                />  
+                              <AdCard 
+                                key={src}
+                                adImage={src} 
+                                type="search"
+                              />  
                             ))
                         ) : failedToFetch ? (
                             <button 
-                                onClick={fetchData} 
-                                className='w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
+                              onClick={fetchData} 
+                              className='w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
                             >
-                                Failed To Fetch. Try Again
+                              Failed To Fetch. Try Again
                             </button>
-                        ) : isFetching && (
+                        ) : isFetching ? (
                             <div className='size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]'/>
-                        )
+                        ) : null
+                          
+                          
                     }
                 </div>
             </div>

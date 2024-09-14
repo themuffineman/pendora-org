@@ -34,6 +34,7 @@ const page = () => {
                             <AdCard
                                 key={src}
                                 adImage={src} 
+                                type="saved"
                             />  
                         ))
                     ) : ads.length === 0 ? (
