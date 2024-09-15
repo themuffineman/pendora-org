@@ -64,8 +64,8 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
                         </a>
                     </div>
                 ):(
-                    <div className='w-full h-max p-1 px-1 bg-red-400 text-sm truncate rounded-b-md flex items-center justify-between'>
-                        <button onClick={()=> {saveAd()}} className="p-2 rounded-md hover:bg-[#ffff] text-black">
+                    <div className='w-full h-max p-1 px-1 bg-[#f5f5f5] text-sm truncate rounded-b-md flex items-center justify-between'>
+                        <button onClick={()=> {saveAd()}} className="p-2 rounded-md bg-red-400 hover:bg-red-300 text-white"> 
                             Delete
                         </button>
                     </div>

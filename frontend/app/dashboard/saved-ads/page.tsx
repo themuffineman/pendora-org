@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import AdCard from '@/components/AdCard'
 const page = () => {
@@ -9,17 +10,23 @@ const page = () => {
     },[])
     async function fetchData(){
         try {
+            setFailedToFetch(false)
             setIsFetching(true)
             const adResponse = await fetch('/api/get-ads')
             if(!adResponse.ok){
                 throw new Error('Failed to fetch')               
             }
-            const ads = await adResponse.json()
-            setAds(ads.adImages)
-            setIsFetching(false)
+            const {ads} = await adResponse.json()
+            // const ads2 = await adResponse.json()
+            console.log('ads: ',ads)
+            // console.log('ads2: ',ads2)
+            setAds(ads)
             setFailedToFetch(false)
-        } catch (error) {
+        } catch (error: any) {
+            console.log('Failed to fetch saved ads: ', error.message)
             setFailedToFetch(true)
+        }finally{
+            setIsFetching(false)
         }
 
     }
@@ -37,20 +44,16 @@ const page = () => {
                                 type="saved"
                             />  
                         ))
-                    ) : ads.length === 0 ? (
-                        <div className='bg-[#f5f5f5] p-4 rounded-md text-black text-lg flex items-center justify-center'>
-                            No Saved Ads Found
-                        </div>
                     ) : failedToFetch ? (
                         <button 
                             onClick={fetchData} 
-                            className='w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
+                            className='w-max p-4 bg-[#f5f5f5] cursor-pointer transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
                         >
                             Failed To Fetch. Try Again
                         </button>
-                    ) : isFetching && (
+                    ) : isFetching ? (
                         <div className='size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]'/>
-                    )
+                    ) : null
                 }
             </div>
         </div>

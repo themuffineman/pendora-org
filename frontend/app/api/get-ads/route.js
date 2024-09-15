@@ -2,10 +2,12 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { MongoClient } from 'mongodb'
 
 export async function GET() {
+    let client
     try {
         try {
             const {isAuthenticated} = getKindeServerSession();
             const isUserAuthenticated = await isAuthenticated();
+            console.log('Is auth: ', isUserAuthenticated)
             if(!isUserAuthenticated){
                 return new Response('Failed to authenticate', {
                     status: 401
@@ -16,26 +18,21 @@ export async function GET() {
                 status: 500
             })         
         }
-        const client = new MongoClient(process.env.MONGODB_URI)
-        try {
-            await client.connect();
-            const database = client.db('adsInspectDatabase');
-            const collection = database.collection('savedAds');
-            const { getUser } = getKindeServerSession();
-            const user = await getUser();
-            const userSavedAds = await collection.findOne(
-                { email: user.email },   
-                { projection: { savedAds: 1, _id: 0 } } 
-            )
-            console.log(userSavedAds)
-        }catch(error){
-            return new Response(error.message, {
-                status: 500
-            })  
-        }
-        if (result.matchedCount > 0) {
-            return new Response('Ads Retrieved', {
-                status: 201
+        client = new MongoClient(process.env.MONGODB_URI)
+        await client.connect();
+        const database = client.db('adsInspectDatabase');
+        const collection = database.collection('savedAds');
+        const { getUser } = getKindeServerSession();
+        const user = await getUser();
+        console.log(user.email)
+        const userSavedAds = await collection.findOne(
+            { email: user.email },   
+            { projection: { ads: 1, _id: 0 } } 
+        )
+        console.log('Saved ads: ', userSavedAds)
+        if (userSavedAds) {
+            return Response.json({
+                ads: userSavedAds.ads
             })
         } else {
             return new Response('User Not Found', {
@@ -43,10 +40,11 @@ export async function GET() {
             })
         }
     } catch (error) {
+        console.log('main error: ',error.message)
         return new Response(null, {
             status:500
         })
     } finally {
-        await client.close();
+        await client?.close();
     }
 }
