@@ -3,10 +3,17 @@ import { MongoClient, ServerApiVersion } from 'mongodb'
 import { v2 as cloudinary } from 'cloudinary';
 
 export async function POST(req) {
-    const url = req.body
+    const body = await req.json()
+    const url = body.url
+    let client;
+    let uploadedResult;
+    function generateUniqueId() {
+        const randomId = crypto.randomUUID();  
+        const timestamp = Date.now();          
+        return `${randomId}_${timestamp}`;   
+    }
     console.log('Url is: ', url)
     try {
-        let uploadedResult;
         try {
             const {isAuthenticated} = getKindeServerSession();
             const isUserAuthenticated = await isAuthenticated();
@@ -15,32 +22,31 @@ export async function POST(req) {
                     status: 401
                 })
             }
+            console.log('Is auth is: ', isUserAuthenticated)
         }catch(error){
+            console.log('failed to auth')
             return new Response('Failed to authenticate',{
                 status: 500
             })         
         }
         try{
+            
+            const uniqueId = generateUniqueId()
             cloudinary.config({ 
                 cloud_name: process.env.CLOUDINARY_NAME, 
                 api_key: process.env.CLOUDINARY_API_KEY, 
-                api_secret: CLOUDINARY_AP_SECRET
+                api_secret: process.env.CLOUDINARY_API_SECRET
             })
-            uploadedResult = await cloudinary.uploader.upload(url, {public_id: 'adImages',})
-            console.log("Uploaded url: ", uploadedResult.url);
+            uploadedResult = await cloudinary.uploader.upload(url, {public_id: uniqueId})
+            console.log("Uploaded url: ", uploadedResult.url)
         }catch(error){
+            console.log('Error with cloudinary: ', error.message)
             return new Response('Failed to upload image',{
                 status: 500
             })
         }
 
-        const client = new MongoClient(process.env.MONGODB_URI, {
-            serverApi: {
-              version: ServerApiVersion.v1,
-              strict: true,
-              deprecationErrors: true,
-            }
-        });
+        client = new MongoClient(process.env.MONGODB_URI)
         await client.connect()
         const database = client.db('adsInspectDatabase')
         const collection = database.collection('savedAds')
@@ -49,10 +55,10 @@ export async function POST(req) {
         console.log('User email is:', user.email)
         const result = await collection.updateOne(
             { email: user.email },            
-            { $push: { ads: uploadedResult.url } }    
+            { $push: { ads: uploadedResult.url} },
+            { upsert: true } // If no document is found, insert a new one 
         )
-        if (result.matchedCount > 0) {
-            console.log('Image Saved')
+        if (result.acknowledged) {
             return new Response('Ad Saved', {
                 status: 201
             })
@@ -62,10 +68,11 @@ export async function POST(req) {
             })
         }
     }catch(error){
+        console.log("error: ", error.message)
         return new Response(null, {
             status:500
         })
-    } finally {
-        await client.close()
+    }finally {
+        await client?.close()
     }
 }

@@ -11,10 +11,11 @@ interface messageProps {
 }
 const AdCard: React.FC<componentProps> = ({adImage, type})=>{
     const [confirmation, setConfirmation] = useState<boolean>(false)
-    const [saveMessage, setSaveMessage] = useState<messageProps>({message: 'Saving', error: false})
+    const [saveMessage, setSaveMessage] = useState<messageProps>({message: 'Saving...', error: false})
     async function saveAd(){
         try {
             setConfirmation(true)
+            setSaveMessage({message: 'Saving...', error: false})
             const res = await fetch('/api/save-ad',{
                 method: "POST",
                 body: JSON.stringify({
