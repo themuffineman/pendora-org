@@ -11,11 +11,11 @@ interface messageProps {
 }
 const AdCard: React.FC<componentProps> = ({adImage, type})=>{
     const [confirmation, setConfirmation] = useState<boolean>(false)
-    const [saveMessage, setSaveMessage] = useState<messageProps>({message: 'Saving...', error: false})
+    const [saveMessage, setSaveMessage] = useState<messageProps>({message: '', error: false})
     async function saveAd(){
         try {
-            setConfirmation(true)
             setSaveMessage({message: 'Saving...', error: false})
+            setConfirmation(true)
             const res = await fetch('/api/save-ad',{
                 method: "POST",
                 body: JSON.stringify({
@@ -26,8 +26,13 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
                 throw new Error(await res.text())
             }
             setSaveMessage({
-                message: await res.text(),
+                message: 'Ad Saved',
                 error: false
+            })
+            await new Promise<void>((resolve, _) => {
+                setTimeout(() => {
+                  resolve();
+                }, 3000);
             })
         } catch (error: any) {
             setSaveMessage({
@@ -44,7 +49,42 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
         }
     }
     async function deleteAd(){
-        //dbd
+        try {
+            setConfirmation(true)
+            setSaveMessage({
+                message: 'Deleting...',
+                error: false
+            })
+            const response = await fetch(`/api/delete-ad/${adImage}`, {
+                method: "POST"
+            })
+            if(!response.ok){
+                throw new Error('Failed to fetch')
+            }
+            setSaveMessage({
+                message: 'Ad Deleted',
+                error: false
+            })
+            await new Promise<void>((resolve, _) => {
+                setTimeout(() => {
+                  resolve();
+                }, 3000);
+            })
+            
+        } catch (error: any) {
+            console.log(error.message)
+            setSaveMessage({
+                message: 'Failed to delete. Try Again',
+                error: false
+            })
+            await new Promise<void>((resolve, _) => {
+                setTimeout(() => {
+                  resolve();
+                }, 3000);
+            })
+        }finally{
+            setConfirmation(false)
+        }
     }
     return (
         <div className='size-max flex flex-col items-center justify-between bg-[#f5f5f5] p-2 rounded-md mx-auto'>
@@ -65,7 +105,7 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
                     </div>
                 ):(
                     <div className='w-full h-max p-1 px-1 bg-[#f5f5f5] text-sm truncate rounded-b-md flex items-center justify-between'>
-                        <button onClick={()=> {saveAd()}} className="p-2 rounded-md bg-red-400 hover:bg-red-300 text-white"> 
+                        <button onClick={()=> {deleteAd()}} className="p-2 rounded-md bg-red-400 hover:bg-red-300 text-white"> 
                             Delete
                         </button>
                     </div>
