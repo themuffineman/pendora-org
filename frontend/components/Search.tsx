@@ -15,12 +15,13 @@ const Search = () => {
     const [input, setInput] = useState<string>('')
     const [platform, setPlatform] = useState<string>('google')
     const router = useRouter()
+    const pathCondition = pathname === '/dashboard/search' || pathname === '/dashboard/saved-ads'
     function goToSearch(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
         router.push(`/dashboard/search?url=${input}?platform=${platform}`);
     }
   return (
-    pathname === '/dashboard/search' ? (
+    pathCondition? (
         <div className='w-max flex gap-2 items-center justify-self-start'>
             <form onSubmit={(e)=> goToSearch(e)} className='relative w-[30rem] flex justify-center items-center self-start'>
                 <input onChange={(e)=>{setInput(e.target.value)}} className='w-[30rem] h-12 p-2 px-[40px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md ' placeholder='Enter new website domain e.g. domain.com' type="search" />

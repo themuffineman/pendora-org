@@ -3,6 +3,7 @@ import { MongoClient } from 'mongodb'
 
 export async function POST(_, { params }){
     const url = params.url
+    console.log('Url is: ', url)
     let client;
     try {
         try {
@@ -16,7 +17,7 @@ export async function POST(_, { params }){
             console.log('Is auth is: ', isUserAuthenticated)
         }catch(error){
             console.log('failed to auth')
-            return new Response('Failed to authenticate',{
+            return new Response('Failed to authenticate', {
                 status: 500
             })         
         }
@@ -27,12 +28,12 @@ export async function POST(_, { params }){
         const collection = database.collection('savedAds')
         const { getUser } = getKindeServerSession()
         const user = await getUser()
-        console.log('User email is:', user.email)
+        console.log('User email is: ', user.email)
         const result = await collection.updateOne(
-            { email: email.email },          // Find the user by email
-            { $pull: { ads: url } }     // Use $pull to remove the ad from the ads array
+            { email: email.email },         
+            { $pull: { ads: url } }
         );
-        if (result.modifiedCount === 1) {
+        if(result.modifiedCount === 1) {
             return new Response('Ad Deleted', {
                 status: 201
             })
@@ -41,10 +42,10 @@ export async function POST(_, { params }){
                 status: 404
             })
         }
-    } catch (error) {
+    }catch (error) {
         console.log("main error: ", error.message)
         return new Response(null, {
-            status:500
+            status: 500
         })
     }finally {
         await client?.close()

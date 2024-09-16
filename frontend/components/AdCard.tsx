@@ -94,7 +94,7 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
                 className="object-cover rounded-md w-[20rem] h-auto"
             />
             {
-                type === "search"? (
+                type === "search" ? (
                     <div className='w-full h-max p-1 px-1 bg-[#f5f5f5] text-sm truncate rounded-b-md flex items-center justify-between'>
                         <button onClick={()=> {saveAd()}} className="p-2 rounded-md hover:bg-[#ffff] text-black">
                             Save to list
