@@ -17,9 +17,7 @@ const page = () => {
                 throw new Error('Failed to fetch')               
             }
             const {ads} = await adResponse.json()
-            // const ads2 = await adResponse.json()
             console.log('ads: ',ads)
-            // console.log('ads2: ',ads2)
             setAds(ads)
             setFailedToFetch(false)
         } catch (error: any) {
@@ -28,7 +26,6 @@ const page = () => {
         }finally{
             setIsFetching(false)
         }
-
     }
   return (
     <> 
