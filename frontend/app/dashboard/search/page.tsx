@@ -5,19 +5,17 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AdDataContext } from '@/components/AppWrapper'
 const page = () => {
     const context = useContext(AdDataContext)
-    const [failedToFetch, setFailedToFetch] = useState<boolean>(false)
-    const [isFetching, setIsFetching] = useState<boolean>(false)
     const searchParams = useSearchParams()
     const url = searchParams.get("url")
     const platform = searchParams.get("platform")
 
     useEffect(() => {
-        console.log('running yeah')
         fetchData();
-    },[url, platform]);
+    },[])
+
     async function fetchData(){
-        setIsFetching(true)
-        setFailedToFetch(false)
+        context?.setIsFetching(true)
+        context?.setFailedToFetch(false)
         console.log('Platform is: ', platform)
         try {
             
@@ -45,12 +43,13 @@ const page = () => {
                 context?.setAdsData(initData)
             }
         } catch (error) {
-            setFailedToFetch(true)
+            context?.setFailedToFetch(true)
         }finally{
-            setIsFetching(false)
+            context?.setIsFetching(false)
         }
     }
-    return (
+
+    return(
         <> 
             <div className='flex flex-col w-full h-full items-center justify-start'>
                 <div className='w-full px-4 flex items-center justify-start'>
@@ -58,7 +57,7 @@ const page = () => {
                         Results Found: {context?.adsData.length}
                     </div>
                 </div>
-                <div className={` ${context?.adsData?.length === 0 || failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
+                <div className={` ${context?.adsData?.length === 0 || context?.failedToFetch || context?.isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                     {
                         context?.adsData?.length && context.adsData.length > 0? (
                             context?.adsData.map((src:string) => (
@@ -68,14 +67,14 @@ const page = () => {
                                 type="search"
                               />  
                             ))
-                        ) : failedToFetch ? (
+                        ) : context?.failedToFetch ? (
                             <button 
                               onClick={fetchData} 
                               className='w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
                             >
                               Failed To Fetch. Try Again
                             </button>
-                        ) : isFetching ? (
+                        ) : context?.isFetching ? (
                             <div className='size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]'/>
                         ) : context?.adsData.length === 0 ? (
                             <button 
@@ -85,8 +84,6 @@ const page = () => {
                               No Ads Found. Try Again
                             </button>
                         ) : null
-                          
-                          
                     }
                 </div>
             </div>

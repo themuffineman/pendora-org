@@ -23,6 +23,7 @@ const Page = () => {
 
   return (
     <>
+    
       <h1 className="text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">Discover the entire digital advertising world of a website</h1>
       <div className='w-max flex gap-2 items-center justify-self-start'>
         <form onSubmit={(e)=> goToSearch(e)} className='relative w-[30rem] flex justify-center items-center self-start'>

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { usePathname } from 'next/navigation';
 import {
     Select,
@@ -9,16 +9,57 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation';
+import { AdDataContext } from '@/components/AppWrapper'
 
 const Search = () => {
+    const context = useContext(AdDataContext)
     const pathname = usePathname()
     const [input, setInput] = useState<string>('')
     const [platform, setPlatform] = useState<string>('google')
     const router = useRouter()
     const pathCondition = pathname === '/dashboard/search' || pathname === '/dashboard/saved-ads'
-    function goToSearch(e: React.FormEvent<HTMLFormElement>){
+    async function goToSearch(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
-        router.push(`/dashboard/search?url=${input}?platform=${platform}`);
+        if(pathname === '/dashboard/saved-ads'){
+            router.push(`/dashboard/search?url=${input}?platform=${platform}`)
+        }else{
+            await fetchData()
+        }
+    }
+    async function fetchData(){
+        context?.setIsFetching(true)
+        context?.setFailedToFetch(false)
+        console.log('Platform is: ', platform)
+        try {
+            
+            const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
+            const adResponse = await fetch(fetchUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: input,
+                    platform: platform 
+                })
+            })
+            if(!adResponse.ok){
+                throw new Error('Failed to fetch')
+            }
+            const ads = await adResponse.json()
+            if(platform === 'google'){
+                context?.setAdsData(ads.adImages)
+            }else if(platform === 'meta'){
+                const initData = []
+                initData.push(...ads?.adImages)
+                initData.push(...ads?.adVideos)
+                context?.setAdsData(initData)
+            }
+        } catch (error) {
+            context?.setFailedToFetch(true)
+        }finally{
+            context?.setIsFetching(false)
+        }
     }
   return (
     pathCondition? (
