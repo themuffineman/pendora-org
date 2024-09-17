@@ -41,6 +41,12 @@ const page = () => {
                                 type="saved"
                             />  
                         ))
+                    ) : ads?.length === 0 ? (
+                        <div 
+                            className='w-max p-4 bg-[#f5f5f5] cursor-pointer transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
+                        >
+                            No Ads Found
+                        </div>
                     ) : failedToFetch ? (
                         <button 
                             onClick={fetchData} 

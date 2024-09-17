@@ -17,7 +17,9 @@ const page = () => {
     async function fetchData(){
         setIsFetching(true)
         setFailedToFetch(false)
+        console.log('Platform is: ', platform)
         try {
+            
             const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
             const adResponse = await fetch(fetchUrl, {
                 method: 'POST',
@@ -55,7 +57,7 @@ const page = () => {
                         Results Found: {ads.length}
                     </div>
                 </div>
-                <div className={` ${failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
+                <div className={` ${ads?.length === 0 || failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                     {
                         ads.length > 0 ? (
                             ads.map((src) => (
@@ -74,6 +76,13 @@ const page = () => {
                             </button>
                         ) : isFetching ? (
                             <div className='size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]'/>
+                        ) : ads.length === 0 ? (
+                            <button 
+                              onClick={fetchData} 
+                              className='w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
+                            >
+                              No Ads Found. Try Again
+                            </button>
                         ) : null
                           
                           

@@ -1,24 +1,11 @@
-import React from 'react'
-import {getKindeServerSession, LogoutLink} from "@kinde-oss/kinde-auth-nextjs/server";
-import {redirect} from "next/navigation";
-import Search from '@/components/Search';
-import Link from 'next/link';
-import Page from './page'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-interface componentProps {
-    children: React.ReactNode;
-}
-const layout: React.FC<componentProps> = async ({ children }) => {
+import react from 'react'
+import Search from './Search'
+import Link from 'next/link'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 
-    const {isAuthenticated} = getKindeServerSession()
-    const isUserAuthenticated = await isAuthenticated()
-    const {getUser} = getKindeServerSession();
-    const user = await getUser();
-    if(!isUserAuthenticated){
-        redirect('/api/auth/login')
-    }
-  return (
-    <main className='flex min-h-screen flex-col items-center bg-white'>
+const NavBar = ({user}:{user?: string})=>{
+    return (
         <nav className="w-full px-5 bg-white flex items-center justify-end py-2 gap-10 border-b border-[#F5F5F5] shadow-lg">
            <Search/>
            <Link href={'/dashboard/saved-ads'} className='flex gap-2 p-2 rounded-md bg-[#f5f5f5] items-center justify-center cursor-pointer hover:bg-[#f0f0f0]'>
@@ -31,7 +18,7 @@ const layout: React.FC<componentProps> = async ({ children }) => {
             <Popover>
                 <PopoverTrigger>
                     <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
-                        {user?.given_name?.charAt(0)}
+                        {user && user}
                     </div>
                 </PopoverTrigger>
                 <PopoverContent className="w-max h-max rounded-md bg-[#f5f5f5]">
@@ -41,11 +28,7 @@ const layout: React.FC<componentProps> = async ({ children }) => {
                 </PopoverContent>
             </Popover>
         </nav>
-        <div className='w-full h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white'>
-            <Page/>
-        </div>
-    </main>
-)
+    )
 }
 
-export default layout
+export default NavBar

@@ -55,12 +55,16 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
                 message: 'Deleting...',
                 error: false
             })
-            const response = await fetch(`/api/delete-ad/${adImage}`, {
-                method: "POST"
+            const response = await fetch(`/api/delete-ad`, {
+                method: "POST",
+                body:JSON.stringify({
+                    url: adImage
+                })
             })
             if(!response.ok){
                 throw new Error('Failed to fetch')
             }
+
             setSaveMessage({
                 message: 'Ad Deleted',
                 error: false

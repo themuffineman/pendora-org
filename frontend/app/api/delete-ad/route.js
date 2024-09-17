@@ -1,8 +1,8 @@
 import {getKindeServerSession} from "@kinde-oss/kinde-auth-nextjs/server";
 import { MongoClient } from 'mongodb'
 
-export async function POST(_, { params }){
-    const url = params.url
+export async function POST(req){
+    const { url } = await req.json()
     console.log('Url is: ', url)
     let client;
     try {
@@ -30,7 +30,7 @@ export async function POST(_, { params }){
         const user = await getUser()
         console.log('User email is: ', user.email)
         const result = await collection.updateOne(
-            { email: email.email },         
+            { email: user.email },         
             { $pull: { ads: url } }
         );
         if(result.modifiedCount === 1) {
