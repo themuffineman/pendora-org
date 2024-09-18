@@ -11,8 +11,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { AdDataContext } from '@/components/AppWrapper'
 
-const Search = () => {
-    const context = useContext(AdDataContext)
+const Search = ({context}: {context: any}) => {
     const pathname = usePathname()
     const [input, setInput] = useState<string>('')
     const [platform, setPlatform] = useState<string>('google')
@@ -23,15 +22,17 @@ const Search = () => {
         if(pathname === '/dashboard/saved-ads'){
             router.push(`/dashboard/search?url=${input}?platform=${platform}`)
         }else{
+            router.push(`/dashboard/search?url=${input}?platform=${platform}`)
             await fetchData()
         }
     }
     async function fetchData(){
+        console.log('context is: ',context)
+        context?.setAdsData([])
         context?.setIsFetching(true)
         context?.setFailedToFetch(false)
         console.log('Platform is: ', platform)
         try {
-            
             const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
             const adResponse = await fetch(fetchUrl, {
                 method: 'POST',

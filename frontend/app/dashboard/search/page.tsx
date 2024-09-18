@@ -1,7 +1,7 @@
 "use client"
 import AdCard from '@/components/AdCard'
 import { useSearchParams } from 'next/navigation'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AdDataContext } from '@/components/AppWrapper'
 const page = () => {
     const context = useContext(AdDataContext)
@@ -14,11 +14,11 @@ const page = () => {
     },[])
 
     async function fetchData(){
+        context?.setAdsData([])
         context?.setIsFetching(true)
         context?.setFailedToFetch(false)
         console.log('Platform is: ', platform)
-        try {
-            
+        try{
             const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
             const adResponse = await fetch(fetchUrl, {
                 method: 'POST',
@@ -59,7 +59,7 @@ const page = () => {
                 </div>
                 <div className={` ${context?.adsData?.length === 0 || context?.failedToFetch || context?.isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                     {
-                        context?.adsData?.length && context.adsData.length > 0? (
+                        context?.adsData && context.adsData.length > 0? (
                             context?.adsData.map((src:string) => (
                               <AdCard 
                                 key={src}
