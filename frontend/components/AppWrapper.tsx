@@ -9,10 +9,11 @@ interface contextType{
     setFailedToFetch: React.Dispatch<React.SetStateAction<boolean>>;
     isFetching: boolean;
     setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
+    user: string;
 }
 export const AdDataContext = createContext<contextType | null>(null)
 
-export const AppWrapper = ({children}:{children: React.ReactNode}) => {
+export const AppWrapper = ({children, user}:{children: React.ReactNode, user: string}) => {
     const [adsData, setAdsData] = useState<string[]>([])
     const [savedAds, setSavedAds] = useState<string[]>([])
     const [failedToFetch, setFailedToFetch] = useState<boolean>(false)
@@ -25,7 +26,8 @@ export const AppWrapper = ({children}:{children: React.ReactNode}) => {
         failedToFetch,
         setFailedToFetch,
         isFetching,
-        setIsFetching
+        setIsFetching,
+        user
     }
   return (
     <AdDataContext.Provider value={contextObject}>

@@ -9,7 +9,6 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation';
-import { AdDataContext } from '@/components/AppWrapper'
 
 const Search = ({context}: {context: any}) => {
     const pathname = usePathname()
@@ -20,14 +19,14 @@ const Search = ({context}: {context: any}) => {
     async function goToSearch(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
         if(pathname === '/dashboard/saved-ads'){
-            router.push(`/dashboard/search?url=${input}?platform=${platform}`)
+            router.push(`/dashboard/search?url=${input}&platform=${platform}`)
         }else{
-            router.push(`/dashboard/search?url=${input}?platform=${platform}`)
+            router.push(`/dashboard/search?url=${input}&platform=${platform}`)
             await fetchData()
         }
     }
     async function fetchData(){
-        console.log('context is: ',context)
+        console.log('search context is: ',context)
         context?.setAdsData([])
         context?.setIsFetching(true)
         context?.setFailedToFetch(false)
