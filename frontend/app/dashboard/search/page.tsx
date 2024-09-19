@@ -83,7 +83,7 @@ const page = () => {
                 </nav>
             ): null}
             <div className='w-full h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white'>
-                <div className='flex flex-col w-full h-full items-center justify-start'>
+                <div className='flex flex-col w-full h-full items-center justify-start gap-10'>
                     <div className='w-full px-4 flex items-center justify-start'>
                         <div className='text-xl font-semibold text-black tracking-tight'>  
                             Results Found: {context?.adsData.length}
@@ -93,11 +93,11 @@ const page = () => {
                         {
                             context?.adsData && context.adsData.length > 0? (
                                 context?.adsData.map((src:string) => (
-                                <AdCard 
-                                    key={src}
-                                    adImage={src} 
-                                    type="search"
-                                />  
+                                    <AdCard 
+                                        key={src}
+                                        adImage={src} 
+                                        type="search"
+                                    />  
                                 ))
                             ) : context?.failedToFetch ? (
                                 <button 

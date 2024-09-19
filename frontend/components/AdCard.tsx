@@ -90,6 +90,79 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
             setConfirmation(false)
         }
     }
+    async function triggerDownload(imageUrl: string, defaultFileName: string = 'downloaded-image') {
+        setSaveMessage({
+            message: 'Downloading...',
+            error: false
+        })
+        setConfirmation(true)
+        try {   
+          // Fetch the image from the URL
+          const response = await fetch(imageUrl);
+          
+          if(!response.ok){
+            throw new Error(`Failed to fetch: ${response.statusText}`);
+          }
+          // Convert the response to a Blob
+          const blob = await response.blob();
+      
+          // Detect MIME type from the Blob
+          const mimeType = blob.type;
+      
+          // Set the correct file extension based on the MIME type
+          let extension = '';
+          if (mimeType === 'image/png') {
+            extension = 'png';
+          } else if (mimeType === 'image/jpeg') {
+            extension = 'jpg';
+          } else if (mimeType === 'image/gif') {
+            extension = 'gif';
+          } else {
+            throw new Error(`Unsupported MIME type: ${mimeType}`);
+          }
+      
+          // Construct the full file name
+          const fileName = `${defaultFileName}.${extension}`;
+      
+          // Create a URL for the Blob and trigger the download
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link); // Append to the DOM
+          link.click(); // Trigger download
+          document.body.removeChild(link); // Clean up
+      
+          // Revoke the object URL to free memory
+          URL.revokeObjectURL(url);
+          setSaveMessage({
+            message: 'Downloaded Successfully' ,
+            error: false
+          })
+          await new Promise<void>((resolve, _) => {
+            setTimeout(() => {
+                resolve();
+            }, 2000);
+          })
+        } catch (error: any) {
+            setSaveMessage({
+                message: error.message ,
+                error: true
+            })
+            await new Promise<void>((resolve, _) => {
+                setTimeout(() => {
+                    resolve();
+                }, 2000);
+            })
+          console.error('Error downloading the image:', error.message);
+        }finally{
+            setConfirmation(false)
+            setSaveMessage({ //reseting message
+                message: '',
+                error: false
+            })
+        }
+    }
     return (
         <div className='size-max flex flex-col items-center justify-between bg-[#f5f5f5] p-2 rounded-md mx-auto'>
             <img 
@@ -103,9 +176,9 @@ const AdCard: React.FC<componentProps> = ({adImage, type})=>{
                         <button onClick={()=> {saveAd()}} className="p-2 rounded-md hover:bg-[#ffff] text-black">
                             Save to list
                         </button>
-                        <a href={adImage} download={`Ad Image by adsInspect`} className='w-max p-1 rounded-md hover:bg-[#ffff]'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        </a>
+                        <div onClick={()=> triggerDownload(adImage, 'Ads by AdsInspect')} className='w-max p-1 rounded-md hover:bg-[#ffff]'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        </div>
                     </div>
                 ):(
                     <div className='w-full h-max p-1 px-1 bg-[#f5f5f5] text-sm truncate rounded-b-md flex items-center justify-between'>
