@@ -39,7 +39,7 @@ const page = () => {
   return (
     <> 
         {pathCondition? (
-            <nav className="w-full px-5 bg-white flex items-center justify-end py-2 gap-10 border-b border-[#F5F5F5] shadow-lg">
+            <nav className="w-full  px-5 bg-white flex items-center justify-end py-2 gap-10 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50">
                 <Search context={context}/>
                 <Link href={'/dashboard/saved-ads'} className='flex gap-2 p-2 rounded-md bg-[#f5f5f5] items-center justify-center cursor-pointer hover:bg-[#f0f0f0]'>
                     <svg  xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#c0c0c0" viewBox="0 0 256 256"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"></path></svg>
@@ -62,7 +62,7 @@ const page = () => {
                 </Popover>
             </nav>
         ): null}
-        <div className='flex flex-col w-full h-full items-center justify-center'>
+        <div className=' mt-16 flex flex-col w-full h-full items-center justify-center'>
             
             <div className={` ${failedToFetch || isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                 {
