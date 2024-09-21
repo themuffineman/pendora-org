@@ -69,6 +69,23 @@ app.post('/api/get-google-ads', async (req,res)=>{
                     resolve()
                 }, 5000)
             })
+            try {
+                let previousHeight;
+                while (true) {
+                    previousHeight = await page.evaluate('document.body.scrollHeight');
+                    
+                    await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
+                    await page.waitForTimeout(2000); // Wait for content to load
+                    
+                    let newHeight = await page.evaluate('document.body.scrollHeight');
+                    
+                    if (newHeight === previousHeight) {
+                      break; // Exit the loop if no new content is loaded
+                    }
+                }
+            } catch (error) {
+                console.log('Error in scroll loop', error.message)
+            }
         }catch(error){
             console.log('Unable to click button')
         }
