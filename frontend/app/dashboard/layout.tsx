@@ -10,11 +10,12 @@ const layout: React.FC<componentProps> = async ({ children }) => {
     const isUserAuthenticated = await isAuthenticated()
     const {getUser} = getKindeServerSession()
     const user = await getUser()
+    
     if(!isUserAuthenticated){
         redirect('/api/auth/login')
     }
   return (
-    <main className='flex min-h-screen flex-col items-center bg-white'>
+    <main className='flex min-h-screen flex-col w-screen items-center bg-white'>
         <AppContent user={user?.given_name?.charAt(0)}>
             {children}    
         </AppContent> 

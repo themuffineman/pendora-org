@@ -25,15 +25,15 @@ const Page = () => {
     <>
       <div className="flex flex-col gap-10 items-center w-full h-full my-auto">
         <h1 className="text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">Discover the entire digital advertising world of a website</h1>
-        <div className='w-max flex gap-2 items-center justify-self-start'>
-          <form onSubmit={(e)=> goToSearch(e)} className='relative w-[30rem] flex justify-center items-center self-start'>
-            <input required={true} onChange={(e)=> {setInputValue(e.target.value)}} className='w-[30rem] h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md ' placeholder={platform === 'google' ? 'Enter new website domain e.g. domain.com' : 'Enter Facebook or Instagram username' } type="search" />
+        <div className='w-full max-w-[700px] search: flex gap-2 items-center justify-center justify-self-start'>
+          <form onSubmit={(e)=> goToSearch(e)} className='relative w-[70%] min-w-[300px] max-w-[30rem] flex justify-center items-center self-start'>
+            <input required={true} onChange={(e)=> {setInputValue(e.target.value)}} className='w-[100%] h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md ' placeholder={platform === 'google' ? 'Enter new website domain e.g. domain.com' : 'Enter Facebook or Instagram username' } type="search" />
             <svg className='absolute left-[5px] top-1/2 -translate-y-1/2' xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#d3d3d3" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg>
             <button type='submit' className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black absolute top-1/2 -translate-y-1/2 right-[6px]">Submit</button>
           </form>
           <Select value={platform} onValueChange={setPlatform}>
             <SelectTrigger className="w-max h-12">
-              <SelectValue placeholder="Choose Ad Platform" />
+              <SelectValue placeholder="Platform" />
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="meta">

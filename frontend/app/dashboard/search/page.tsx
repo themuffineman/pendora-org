@@ -59,7 +59,7 @@ const page = () => {
     return(
         <> 
             {pathCondition? (
-                <nav className="w-full px-5 bg-white flex items-center justify-end py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-scroll">
+                <nav className="w-full min-w-[454px] px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
                     <Search context={context}/>
                     <div className="flex items-center gap-2 w-max">
                         <Link href={'/dashboard/saved-ads'} className='flex w-max gap-2 p-2 rounded-md bg-[#f5f5f5] items-center justify-center cursor-pointer hover:bg-[#f0f0f0]'>

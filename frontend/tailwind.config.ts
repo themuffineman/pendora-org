@@ -19,7 +19,7 @@ const config: Config = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
 		screens: {
-			'nav-800': '885px',
+			'search': '685px',
 		},
   		colors: {
   			background: 'hsl(var(--background))',
