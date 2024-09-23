@@ -61,7 +61,7 @@ export default function Home() {
         </div>
         <img src="/Untitled-189.png" />
       </div>
-      <div id="features" className="flex flex-col items-center mt-5 gap-20">
+      <div id="features" className="flex flex-col items-center mt-20 gap-20">
         <h2 className=" text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
           Features
         </h2>
@@ -83,7 +83,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div id="pricing" className="flex flex-col items-center mt-5 gap-20">
+      <div id="pricing" className="flex flex-col items-center mt-20 gap-20">
         <h2 className=" text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
           Pricing
         </h2>
@@ -111,6 +111,14 @@ export default function Home() {
             ]}
           />
         </div>
+      </div>
+      <div className="mt-20 w-[50rem] h-[10rem] rounded-lg p-10 bg-gradient-to-r from-orange-400 to-blue-600 flex items-center justify-between gap-2">
+        <p className="text-4xl font-extrabold tracking-tight text-white ">
+          Try It For Free Today
+        </p>
+        <button className="bg-white text-black rounded-md p-4 text-lg font-bold border tracking-tighter ">
+          Get Started
+        </button>
       </div>
     </main>
   );
