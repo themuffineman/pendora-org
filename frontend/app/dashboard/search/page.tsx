@@ -9,6 +9,10 @@ import { Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { usePathname } from 'next/navigation'
 const page = () => {
+    interface adTypes{
+        url: string;
+        type: "image" | "video";
+    }
     const context = useContext(AdDataContext)
     const searchParams = useSearchParams()
     const url = searchParams.get("url")
@@ -40,13 +44,30 @@ const page = () => {
             if(!adResponse.ok){
                 throw new Error('Failed to fetch')
             }
-            const ads = await adResponse.json()
+            const ads: {adImages: string[], adVideos?: string[]}  = await adResponse.json()
             if(platform === 'google'){
-                context?.setAdsData(ads.adImages)
+                const initData:adTypes[] = []
+                ads?.adImages.forEach((string)=>{
+                    initData.push({
+                        url: string,
+                        type: 'image'
+                    })
+                })
+                context?.setAdsData(initData)
             }else if(platform === 'meta'){
-                const initData = []
-                initData.push(...ads?.adImages)
-                initData.push(...ads?.adVideos)
+                const initData:adTypes[] = []
+                ads?.adImages.forEach((string)=>{
+                    initData.push({
+                        url: string,
+                        type: 'image'
+                    })
+                })
+                ads.adVideos && ads?.adVideos.forEach((string)=>{
+                    initData.push({
+                        url: string,
+                        type: 'video'
+                    })
+                })
                 context?.setAdsData(initData)
             }
         } catch (error) {
@@ -95,11 +116,12 @@ const page = () => {
                     <div className={` ${context?.adsData?.length === 0 || context?.failedToFetch || context?.isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                         {
                             context?.adsData && context.adsData.length > 0? (
-                                context?.adsData.map((src:string) => (
+                                context?.adsData.map((data) => (
                                     <AdCard 
-                                        key={src}
-                                        adImage={src} 
+                                        key={data.url}
+                                        adImage={data.url} 
                                         type="search"
+                                        format={data.type}
                                     />  
                                 ))
                             ) : context?.failedToFetch ? (
