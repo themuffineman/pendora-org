@@ -1,8 +1,8 @@
 import React, { createContext, useState } from 'react'
 
 interface contextType{ 
-    adsData: string[];
-    setAdsData: React.Dispatch<React.SetStateAction<string[]>>;
+    adsData: adTypes[];
+    setAdsData: React.Dispatch<React.SetStateAction<adTypes[]>>;
     savedAds: string[];
     setSavedAds: React.Dispatch<React.SetStateAction<string[]>>;
     failedToFetch: boolean;
@@ -11,10 +11,15 @@ interface contextType{
     setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
     user: string;
 }
+
+type adTypes = {
+  url: string;
+  type: "image" | "video";
+}
 export const AdDataContext = createContext<contextType | null>(null)
 
 export const AppWrapper = ({children, user}:{children: React.ReactNode, user: string}) => {
-    const [adsData, setAdsData] = useState<string[]>([])
+    const [adsData, setAdsData] = useState<adTypes[]>([])
     const [savedAds, setSavedAds] = useState<string[]>([])
     const [failedToFetch, setFailedToFetch] = useState<boolean>(false)
     const [isFetching, setIsFetching] = useState<boolean>(false)
