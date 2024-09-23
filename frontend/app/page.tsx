@@ -1,19 +1,28 @@
+import FeatureCard from "@/components/FeatureCard";
+import PricingCard from "@/components/PricingCard";
 import {
   RegisterLink,
   LoginLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <nav className="fixed w-[30%] top-8 bg-[#f5f5f5] rounded-2xl p-4 py-2 left-1/2 -translate-x-1/2 flex gap-3 items-center justify-between shadow-sm border">
+      <nav className="fixed w-[30%] top-8 bg-[#f5f5f5] rounded-2xl p-4 py-2 left-1/2 -translate-x-1/2 flex gap-3 items-center justify-between shadow-sm border z-50">
         <ul className="flex gap-4 items-center">
-          <li className="cursor-pointer tracking-tight text-base p-1 px-2 rounded-md hover:bg-white transition text-black ">
+          <Link
+            href={"#features"}
+            className="cursor-pointer tracking-tight text-base p-1 px-2 rounded-md hover:bg-white transition text-black "
+          >
             Features
-          </li>
-          <li className="cursor-pointer tracking-tight text-base p-1 px-2 rounded-md hover:bg-white transition text-black ">
+          </Link>
+          <Link
+            href={"#pricing"}
+            className="cursor-pointer tracking-tight text-base p-1 px-2 rounded-md hover:bg-white transition text-black "
+          >
             Pricing
-          </li>
+          </Link>
         </ul>
         <div className="flex gap-2 ">
           <LoginLink className="border p-1 px-3 hover:bg-[#f0f0f0] rounded-md bg-white flex items-center justify-center">
@@ -28,10 +37,10 @@ export default function Home() {
         <h1 className=" text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
           Discover the entire digital advertising world of a website.
         </h1>
-        <h2 className="w-[42rem] text-center ">
-          Introduce a modern abstraction to any Kubernetes cluster, enabling
-          engineers to efficiently manage microservices with advanced tooling.
-        </h2>
+        <h3 className="w-[42rem] text-center ">
+          Peel back the curtain and see the ad copy and the creatives your
+          competitors are using to market their brands online.
+        </h3>
         <div className="flex gap-4">
           <RegisterLink className="border p-1 px-3 hover:bg-neutral-700 rounded-md bg-black text-white flex items-center justify-center gap-2">
             Get Started
@@ -49,6 +58,58 @@ export default function Home() {
           <button className="bg-[#f5f5f5] rounded-md px-3 p-1 border">
             Features
           </button>
+        </div>
+        <img src="/Untitled-189.png" />
+      </div>
+      <div id="features" className="flex flex-col items-center mt-5 gap-20">
+        <h2 className=" text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
+          Features
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row">
+          <FeatureCard
+            src="/0K2B5RegrHS6bVAFjYpN98vmfvI.webp"
+            title="Troubleshooting & Debugging"
+            description="Arm developers with efficient end-to-end application capabilities and ownership."
+          />
+          <FeatureCard
+            src="/0K2B5RegrHS6bVAFjYpN98vmfvI.webp"
+            title="Troubleshooting & Debugging"
+            description="Arm developers with efficient end-to-end application capabilities and ownership."
+          />
+          <FeatureCard
+            src="/0K2B5RegrHS6bVAFjYpN98vmfvI.webp"
+            title="Troubleshooting & Debugging"
+            description="Arm developers with efficient end-to-end application capabilities and ownership."
+          />
+        </div>
+      </div>
+      <div id="pricing" className="flex flex-col items-center mt-5 gap-20">
+        <h2 className=" text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
+          Pricing
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 place-items-start  grid-flow-row">
+          <PricingCard
+            planName="Starter Plan"
+            price="20"
+            features={[
+              "20 Searches Per Day",
+              "1 Month Ad History",
+              "Google and Meta Ads",
+              "Chat and Email Support",
+            ]}
+          />
+          <PricingCard
+            planName="Advanced Plan"
+            price="50"
+            features={[
+              "Unlimited Searches",
+              "1 Year Ad History",
+              "Google and Meta Ads",
+              "Download Ad Creatives",
+              "Chat and Email Support",
+              "Extract Ad Copy (coming soon)",
+            ]}
+          />
         </div>
       </div>
     </main>
