@@ -59,27 +59,31 @@ export default function Home() {
             Features
           </button>
         </div>
-        <img src="/Untitled-189.png" />
+        <img
+          src="/hero-image-adsinspect.jpeg"
+          className="border shadow-2xl mt-10 rounded-lg"
+        />
       </div>
       <div id="features" className="flex flex-col items-center mt-20 gap-20">
         <h2 className=" text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
           Features
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-start  grid-flow-row">
           <FeatureCard
             src="/0K2B5RegrHS6bVAFjYpN98vmfvI.webp"
-            title="Troubleshooting & Debugging"
-            description="Arm developers with efficient end-to-end application capabilities and ownership."
+            title="Google and Meta Ads"
+            description="Extract all google, facebook, instagram ads a business is running."
           />
           <FeatureCard
             src="/0K2B5RegrHS6bVAFjYpN98vmfvI.webp"
-            title="Troubleshooting & Debugging"
-            description="Arm developers with efficient end-to-end application capabilities and ownership."
+            title="Save and Download For Later"
+            description="Save or download the ad creatives."
           />
           <FeatureCard
             src="/0K2B5RegrHS6bVAFjYpN98vmfvI.webp"
-            title="Troubleshooting & Debugging"
-            description="Arm developers with efficient end-to-end application capabilities and ownership."
+            title="Extract the ad copy"
+            description="Extract the ad copy and video ad script used in an ad."
+            comingSoon={true}
           />
         </div>
       </div>
@@ -107,7 +111,7 @@ export default function Home() {
               "Google and Meta Ads",
               "Download Ad Creatives",
               "Chat and Email Support",
-              "Extract Ad Copy (coming soon)",
+              "Extract Ad Copy and Video Ad Script (coming soon)",
             ]}
           />
         </div>
@@ -116,9 +120,9 @@ export default function Home() {
         <p className="text-4xl font-extrabold tracking-tight text-white ">
           Try It For Free Today
         </p>
-        <button className="bg-white text-black rounded-md p-4 text-lg font-bold border tracking-tighter ">
+        <RegisterLink className="bg-white text-black rounded-md p-4 text-lg font-bold border tracking-tighter ">
           Get Started
-        </button>
+        </RegisterLink>
       </div>
     </main>
   );
