@@ -13,7 +13,7 @@ const PricingCard = ({ planName, price, features }: CardProps) => {
         <div className="text-sm font-light">per/mo</div>
       </div>
       <button className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter">
-        Start your 30 day free trial
+        Start your 7 day free trial
       </button>
       <div className="w-full flex flex-col items-start gap-4 ">
         <div className="text-xl font-bold ">Features:</div>
