@@ -31,7 +31,7 @@ export async function GET() {
         )
         console.log('Saved ads: ', userSavedAds)
         if (userSavedAds) {
-            return Response.json({
+            return new Response.json({
                 ads: userSavedAds.ads
             })
         } else {
