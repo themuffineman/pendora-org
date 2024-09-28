@@ -135,13 +135,13 @@ app.post("/api/get-meta-ads", async (req, res) => {
   const { url } = req.body;
   console.log("Received Request: ", url);
   const gridSelector =
-    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w";
+    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w";
   const adCardSelector =
-    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div";
+    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div";
   const adImgSelector =
-    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > a > div.x1ywc1zp.x78zum5.xl56j7k.x1e56ztr.x1277o0a > img";
+    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > a > div.x1ywc1zp.x78zum5.xl56j7k.x1e56ztr.x1277o0a > img";
   const adVideoSelector =
-    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x14ju556.x1n2onr6 > div > div > div > div > div > div > video";
+    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x14ju556.x1n2onr6 > div > div > div > div > div > div > video";
   let browser;
   let page;
 
@@ -198,34 +198,37 @@ app.post("/api/get-meta-ads", async (req, res) => {
     } catch (error) {
       console.log("Error in scroll loop", error.message);
     }
-    const adGrid = await page.$(gridSelector);
-    if (!adGrid) {
+    const adGrids = await page.$$(gridSelector);
+    console.log("we have: ", adGrids.length, "grids");
+    if (!adGrids) {
       return res.json({ adImages: [] }).status(200);
     }
-    const adCards = await adGrid.$$(adCardSelector);
-    console.log("Ad cards length: ", adCards.length);
     const adImages = [];
     const adVideos = [];
+    for (const grid of adGrids) {
+      const adCards = await grid.$$(adCardSelector);
+      console.log("Ad cards length: ", adCards.length);
 
-    for (const card of adCards) {
-      try {
-        const adImage = await card.$(adImgSelector);
-        if (adImage) {
-          const adImageSrc = await adImage
-            .getProperty("src")
-            .then((prop) => prop.jsonValue());
-          adImages.push(adImageSrc);
+      for (const card of adCards) {
+        try {
+          const adImage = await card.$(adImgSelector);
+          if (adImage) {
+            const adImageSrc = await adImage
+              .getProperty("src")
+              .then((prop) => prop.jsonValue());
+            adImages.push(adImageSrc);
+          }
+          const adVideo = await card.$(adVideoSelector);
+          if (adVideo) {
+            const adVideoSrc = await adVideo
+              .getProperty("src")
+              .then((prop) => prop.jsonValue());
+            adVideos.push(adVideoSrc);
+          }
+        } catch (error) {
+          console.log("Error processing an ad card:", error);
+          continue;
         }
-        const adVideo = await card.$(adVideoSelector);
-        if (adVideo) {
-          const adVideoSrc = await adVideo
-            .getProperty("src")
-            .then((prop) => prop.jsonValue());
-          adVideos.push(adVideoSrc);
-        }
-      } catch (error) {
-        console.log("Error processing an ad card:", error);
-        continue;
       }
     }
     return res.status(200).json({ adImages, adVideos });
