@@ -147,9 +147,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
 
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
-      browser = await puppeteer.launch({
-        args: ["--no-sandbox"],
-      });
+      browser = await puppeteer.launch();
       page = await browser.newPage();
       if (browser && page) {
         console.log("Browser and Page opended");
