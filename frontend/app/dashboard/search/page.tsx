@@ -56,6 +56,7 @@ const page = () => {
                 context?.setAdsData(initData)
             }else if(platform === 'meta'){
                 const initData:adTypes[] = []
+                console.log("meta Ads: ", ads)
                 ads?.adImages.forEach((string)=>{
                     initData.push({
                         url: string,

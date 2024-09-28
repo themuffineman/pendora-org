@@ -11,6 +11,7 @@ const page = () => {
     const [ads, setAds] = useState<string[] | []>([])
     const [failedToFetch, setFailedToFetch] = useState<boolean>(false)
     const [isFetching, setIsFetching] = useState<boolean>(true)
+    const [adsFound, setAdsFound] = useState<boolean>(true)
     const context = useContext(AdDataContext)
     const pathname = usePathname()
     const pathCondition = pathname === '/dashboard/search' || pathname === '/dashboard/saved-ads' || pathname === 'dashboard'
@@ -26,7 +27,6 @@ const page = () => {
                 throw new Error('Failed to fetch')               
             }
             const {ads} = await adResponse.json()
-            console.log('ads: ',ads)
             setAds(ads)
             setFailedToFetch(false)
         } catch (error: any) {
@@ -34,6 +34,11 @@ const page = () => {
             setFailedToFetch(true)
         }finally{
             setIsFetching(false)
+            if(ads.length === 0){
+                setAdsFound(false)
+            }else{
+                setAdsFound(true)
+            }
         }
     }
   return (
@@ -64,7 +69,7 @@ const page = () => {
                 </div>
             </nav>
         ): null}
-        <div className=' mt-16 flex flex-col w-full h-full items-center justify-center'>
+        <div className=' mt-16 p-10  flex flex-col w-full h-full items-center justify-center'>
             
             <div className={` ${failedToFetch || isFetching || ads?.length === 0 ? 'flex items-center justify-center mt-20': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>
                 {
@@ -74,9 +79,10 @@ const page = () => {
                                 key={src}
                                 adImage={src} 
                                 type="saved"
+                                format={src.endsWith("png") || src.endsWith("jpeg") || src.endsWith("jpg") || src.endsWith("gif") ? "image" : "video"}
                             />  
                         ))
-                    ) : ads?.length === 0 ? (
+                    ) : !adsFound ? (
                         <div 
                             className='w-max p-4 bg-[#f5f5f5] cursor-pointer transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
                         >

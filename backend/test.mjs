@@ -1,10 +1,10 @@
-fetch("https://pendora-org.onrender.com/api/get-meta-ads", {
+fetch("https://qg6477-8080.csb.app/api/get-meta-ads", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    username: "striphq",
+    url: "myoutfitonline",
   }),
 })
   .then(async (res) => {

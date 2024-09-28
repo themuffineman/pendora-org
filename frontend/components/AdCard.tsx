@@ -165,7 +165,7 @@ const AdCard: React.FC<componentProps> = ({adImage, type, format})=>{
         }
     }
     return (
-        <div className='size-max flex flex-col items-center justify-between bg-[#f5f5f5] p-2 rounded-md mx-auto'>
+        <div className='size-max gap-2 flex flex-col items-center justify-between bg-[#f5f5f5] p-2 rounded-md mx-auto'>
             {
                 format === 'image' ? (
                     <img 

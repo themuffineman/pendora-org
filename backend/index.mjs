@@ -82,7 +82,11 @@ app.post("/api/get-google-ads", async (req, res) => {
           previousHeight = await page.evaluate("document.body.scrollHeight");
 
           await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
-          await page.waitForTimeout(2000); // Wait for content to load
+          await new Promise((resolve, _) => {
+            setTimeout(() => {
+              resolve();
+            }, 3000);
+          }); // Wait for content to load
 
           let newHeight = await page.evaluate("document.body.scrollHeight");
 
@@ -128,23 +132,24 @@ app.post("/api/get-google-ads", async (req, res) => {
   }
 });
 app.post("/api/get-meta-ads", async (req, res) => {
-  const { username } = req.body;
-  console.log("req body: ", req.body);
-  console.log("Received Request: ", username);
+  const { url } = req.body;
+  console.log("Received Request: ", url);
   const gridSelector =
     "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w";
   const adCardSelector =
-    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div";
+    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div";
   const adImgSelector =
-    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div:nth-child(3) > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x1ywc1zp.x78zum5.xl56j7k.x1e56ztr.x1277o0a > img";
+    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > a > div.x1ywc1zp.x78zum5.xl56j7k.x1e56ztr.x1277o0a > img";
   const adVideoSelector =
-    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div:nth-child(2) > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x14ju556.x1n2onr6 > div > div > div > div > div > div > video";
+    "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div:nth-child(2) > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x14ju556.x1n2onr6 > div > div > div > div > div > div > video";
   let browser;
   let page;
 
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({
+        args: ["--no-sandbox"],
+      });
       page = await browser.newPage();
       if (browser && page) {
         console.log("Browser and Page opended");
@@ -164,7 +169,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
 
   try {
     await page.goto(
-      `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&media_type=all&q=${username}&search_type=keyword_unordered`
+      `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&media_type=all&q=${url}&search_type=keyword_unordered`
     );
     try {
       await page.waitForSelector(gridSelector);
@@ -178,7 +183,11 @@ app.post("/api/get-meta-ads", async (req, res) => {
         previousHeight = await page.evaluate("document.body.scrollHeight");
 
         await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
-        await page.waitForTimeout(2000); // Wait for content to load
+        await new Promise((resolve, _) => {
+          setTimeout(() => {
+            resolve();
+          }, 3000);
+        }); // Wait for content to load
 
         let newHeight = await page.evaluate("document.body.scrollHeight");
 
@@ -205,7 +214,6 @@ app.post("/api/get-meta-ads", async (req, res) => {
           const adImageSrc = await adImage
             .getProperty("src")
             .then((prop) => prop.jsonValue());
-          console.log("Src found: ", adImageSrc);
           adImages.push(adImageSrc);
         }
         const adVideo = await card.$(adVideoSelector);
@@ -213,7 +221,6 @@ app.post("/api/get-meta-ads", async (req, res) => {
           const adVideoSrc = await adVideo
             .getProperty("src")
             .then((prop) => prop.jsonValue());
-          console.log("Src found: ", adVideoSrc);
           adVideos.push(adVideoSrc);
         }
       } catch (error) {
