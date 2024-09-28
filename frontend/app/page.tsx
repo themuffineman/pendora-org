@@ -52,12 +52,11 @@ export default function Home() {
           <LoginLink className="border p-1 px-3 hover:bg-[#f0f0f0] rounded-md bg-white flex items-center justify-center">
             Login
           </LoginLink>
-          <Link
-            href={"#pricing"}
+          <RegisterLink
             className="border p-1 px-3 hover:bg-neutral-700 rounded-md bg-black text-white flex items-center justify-center"
           >
             Get Started
-          </Link>
+          </RegisterLink>
         </div>
       </nav>
       <nav className="fixed flex w-[300px] top-8 bg-[#f5f5f5] rounded-2xl p-4 py-2 left-1/2 -translate-x-1/2 md:hidden gap-3 items-center justify-between shadow-sm border z-50">
@@ -113,8 +112,7 @@ export default function Home() {
           competitors are using to market their brands online.
         </h3>
         <div className="flex gap-4">
-          <Link
-            href={"#pricing"}
+          <RegisterLink
             className="border p-1 px-3 hover:bg-neutral-700 rounded-md bg-black text-white flex items-center justify-center gap-2"
           >
             Get Started
@@ -128,7 +126,7 @@ export default function Home() {
             >
               <path d="M205.66,149.66l-72,72a8,8,0,0,1-11.32,0l-72-72a8,8,0,0,1,11.32-11.32L120,196.69V40a8,8,0,0,1,16,0V196.69l58.34-58.35a8,8,0,0,1,11.32,11.32Z"></path>
             </svg>
-          </Link>
+          </RegisterLink>
           <button className="bg-[#f5f5f5] rounded-md px-3 p-1 border">
             Features
           </button>
@@ -194,12 +192,11 @@ export default function Home() {
         <p className="sm:text-4xl text-2xl text-center font-extrabold tracking-tight text-white ">
           Try It For Free Today
         </p>
-        <Link
-          href={"#pricing"}
+        <RegisterLink
           className="bg-white text-black rounded-md p-4 text-lg font-bold border tracking-tighter "
         >
           Get Started
-        </Link>
+        </RegisterLink>
       </div>
     </main>
   );

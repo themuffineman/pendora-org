@@ -1,3 +1,5 @@
+import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
+
 type CardProps = {
   planName: string;
   price: string;
@@ -12,9 +14,9 @@ const PricingCard = ({ planName, price, features }: CardProps) => {
         <div className="text-3xl font-bold ">${price}</div>
         <div className="text-sm font-light">per/mo</div>
       </div>
-      <button className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter">
-        Start your 7 day free trial
-      </button>
+      <RegisterLink className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter">
+        Start your 5 day free trial
+      </RegisterLink>
       <div className="w-full flex flex-col items-start gap-4 ">
         <div className="text-xl font-bold ">Features:</div>
         <ul className="flex flex-col gap-2 items-start">
