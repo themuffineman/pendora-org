@@ -43,7 +43,13 @@ const PricingCard = ({ planName, price, features, priceId, landing }: CardProps)
         <div className="text-sm font-light">per/mo</div>
       </div>
       {
-        landing? (
+        !landing? (
+          <RegisterLink
+            className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
+          >
+            Start your 30 day free trial
+          </RegisterLink>
+        ):(
           <button
             onClick={()=> {
               handleCheckout()}}
@@ -51,12 +57,6 @@ const PricingCard = ({ planName, price, features, priceId, landing }: CardProps)
           >
             Start your 30 day free trial
           </button>
-        ):(
-          <RegisterLink
-            className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
-          >
-            Start your 30 day free trial
-          </RegisterLink>
         )
       }
       <div className="w-full flex flex-col items-start gap-4 ">
