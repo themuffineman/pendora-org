@@ -161,6 +161,7 @@ export default function Home() {
               "Extract Ad Copy and Video Ad Script (coming soon)",
             ]}
             priceId={process.env.ADVANCED_PRICE!}
+            landing={true}
           />
         </div>
       </div>
