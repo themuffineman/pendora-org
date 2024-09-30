@@ -151,7 +151,7 @@ export default function Home() {
         <div className="grid grid-cols-1 items-center  grid-flow-row">
           <PricingCard
             planName="Starter Plan"
-            price="35"
+            price="38"
             features={[
               "Unlimited Searches",
               "1 Year Ad History",

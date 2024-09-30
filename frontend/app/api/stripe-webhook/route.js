@@ -20,11 +20,10 @@ export async function POST(req) {
   // Handle the checkout.session.completed event
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-
+    console.log("Stripe Session captured");
     const userId = session.metadata.userId; // Get the user ID you passed during checkout creation
 
     // Update the user's plan in your database
-    // Assume you have a function updateUserSubscriptionPlan to update the user's plan
     await updateUserSubscriptionPlan(userId, session.subscription);
 
     return new Response("Success", { status: 200 });
@@ -51,14 +50,14 @@ async function updateUserSubscriptionPlan(userId, subscriptionId) {
         // Update the subscription status
         await collection.updateOne(
           { email: user.email },
-          { $set: { isSubscribed: true, subscriptionId } }
+          { $set: { isSubscribed: true, subscriptionId } },
         );
       }
     }
   } catch (error) {
     console.error(error.message);
     return new Error(error.message);
-  }finally{
-    await client.close()
+  } finally {
+    await client.close();
   }
 }

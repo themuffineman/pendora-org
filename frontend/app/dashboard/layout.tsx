@@ -40,7 +40,7 @@ const layout: React.FC<componentProps> = async ({ children }) => {
               
               <PricingCard
                 planName="Starter Plan"
-                price="35"
+                price="38"
                 features={[
                   "Unlimited Searches",
                   "1 Year Ad History",
