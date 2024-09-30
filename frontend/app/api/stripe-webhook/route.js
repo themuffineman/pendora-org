@@ -2,9 +2,8 @@ import Stripe from "stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET);
-
 export async function POST(req) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET);
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const sig = req.headers["stripe-signature"];
 
