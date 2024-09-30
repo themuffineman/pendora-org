@@ -11,7 +11,7 @@ type CardProps = {
 // Initialize Stripe.js with your Publishable Key
 const PricingCard = ({ planName, price, features, priceId }: CardProps) => {
   const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
-  const handleCheckout = async () => {
+  async function handleCheckout(){
     const res = await fetch("/api/create-stripe-session", {
       method: "POST",
       headers: {
@@ -39,7 +39,7 @@ const PricingCard = ({ planName, price, features, priceId }: CardProps) => {
         <div className="text-sm font-light">per/mo</div>
       </div>
       <button
-        onClick={handleCheckout}
+        onClick={()=> {handleCheckout()}}
         className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
       >
         Start your 30 day free trial
