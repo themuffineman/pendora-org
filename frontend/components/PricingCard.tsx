@@ -1,10 +1,36 @@
+"use client";
+import { loadStripe } from "@stripe/stripe-js";
+
 type CardProps = {
   planName: string;
   price: string;
   features: string[];
+  priceId: string;
 };
 
-const PricingCard = ({ planName, price, features }: CardProps) => {
+// Initialize Stripe.js with your Publishable Key
+const PricingCard = ({ planName, price, features, priceId }: CardProps) => {
+  const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
+  const handleCheckout = async () => {
+    const res = await fetch("/api/create-stripe-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ priceId }), // Replace with actual price ID
+    });
+
+    const { sessionId } = await res.json();
+
+    if (sessionId) {
+      // Redirect to Stripe Checkout page
+      const stripe = await stripePromise;
+      await stripe?.redirectToCheckout({ sessionId });
+    } else {
+      // Handle error
+      alert("Failed to initiate checkout. Try again later");
+    }
+  };
   return (
     <div className="w-[20rem] flex flex-col items-center gap-10 p-3 py-20 border hover:border-[#c9c9c9] rounded-md">
       <div className="text-4xl font-bold tracking-tighter">{planName}</div>
@@ -12,8 +38,11 @@ const PricingCard = ({ planName, price, features }: CardProps) => {
         <div className="text-3xl font-bold ">${price}</div>
         <div className="text-sm font-light">per/mo</div>
       </div>
-      <button className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter">
-        Start your 7 day free trial
+      <button
+        onClick={handleCheckout}
+        className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
+      >
+        Start your 30 day free trial
       </button>
       <div className="w-full flex flex-col items-start gap-4 ">
         <div className="text-xl font-bold ">Features:</div>

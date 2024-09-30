@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient } from "mongodb";
 
 export async function POST(req) {
   const stripe = new Stripe(process.env.STRIPE_SECRET);
@@ -58,5 +58,7 @@ async function updateUserSubscriptionPlan(userId, subscriptionId) {
   } catch (error) {
     console.error(error.message);
     return new Error(error.message);
+  }finally{
+    await client.close()
   }
 }

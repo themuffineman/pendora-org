@@ -1,8 +1,7 @@
 import React from 'react'
-import {getKindeServerSession, LogoutLink} from "@kinde-oss/kinde-auth-nextjs/server";
+import {getKindeServerSession} from "@kinde-oss/kinde-auth-nextjs/server";
 import {redirect} from "next/navigation";
 import AppContent from '@/components/AppContent';
-import StripePricingTable from '@/components/StripePricingTable';
 import PricingCard from '@/components/PricingCard';
 interface componentProps {
     children: React.ReactNode;
@@ -31,27 +30,17 @@ const layout: React.FC<componentProps> = async ({ children }) => {
     
     
   return (
-    <main className='flex min-h-screen flex-col w-screen items-center bg-white'>
+    <main className='flex min-h-screen flex-col w-full items-center bg-white'>
         {!isUserSubscribed? (
             <div id="pricing" className="flex flex-col items-center w-full mt-20 gap-20 p-20">
             <h2 className=" text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
               Pricing
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 place-items-start  grid-flow-row">
+              
               <PricingCard
                 planName="Starter Plan"
-                price="15"
-                features={[
-                  "20 Searches Per Day",
-                  "1 Month Ad History",
-                  "Google and Meta Ads",
-                  "Chat and Email Support",
-                ]}
-                priceId={process.env.STARTER_PRICE!}
-              />
-              <PricingCard
-                planName="Advanced Plan"
-                price="25"
+                price="35"
                 features={[
                   "Unlimited Searches",
                   "1 Year Ad History",

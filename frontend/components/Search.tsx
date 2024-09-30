@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState } from 'react'
 import { usePathname } from 'next/navigation';
 import {
     Select,
@@ -32,7 +32,7 @@ const Search = ({context}: {context: any}) => {
         context?.setFailedToFetch(false)
         console.log('Platform is: ', platform)
         try {
-            const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
+            const fetchUrl = platform === 'google' ? `${process.env.BACKEND_URL}/api/get-google-ads` : `${process.env.BACKEND_URL}/api/get-meta-ads`
             const adResponse = await fetch(fetchUrl, {
                 method: 'POST',
                 headers: {

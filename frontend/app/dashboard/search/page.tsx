@@ -30,7 +30,7 @@ const page = () => {
         context?.setFailedToFetch(false)
         console.log('Platform is: ', platform, ' and url is: ', url)
         try{
-            const fetchUrl = platform === 'google' ? 'https://pendora-org.onrender.com/api/get-google-ads' : 'https://pendora-org.onrender.com/api/get-meta-ads'
+            const fetchUrl = platform === 'google' ? `${process.env.BACKEND_URL}/api/get-google-ads` : `${process.env.BACKEND_URL}/api/get-meta-ads`
             const adResponse = await fetch(fetchUrl, {
                 method: 'POST',
                 headers: {
