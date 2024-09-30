@@ -173,6 +173,7 @@ export default function Home() {
               "Google and Meta Ads",
               "Chat and Email Support",
             ]}
+            priceId={process.env.STARTER_PRICE!}
           />
           <PricingCard
             planName="Advanced Plan"
@@ -185,6 +186,7 @@ export default function Home() {
               "Chat and Email Support",
               "Extract Ad Copy and Video Ad Script (coming soon)",
             ]}
+            priceId={process.env.ADVANCED_PRICE!}
           />
         </div>
       </div>
