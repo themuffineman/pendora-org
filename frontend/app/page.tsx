@@ -164,7 +164,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className=" mt-20 w-[80%] min-w-[340px] h-[10rem] rounded-lg p-2 sm:p-10 bg-gradient-to-r from-orange-400 to-blue-600 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2">
+      <div className=" mx-auto mt-20 w-[80%] min-w-[340px] h-[10rem] rounded-lg p-2 sm:p-10 bg-gradient-to-r from-orange-400 to-blue-600 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2">
         <p className="sm:text-4xl text-2xl text-center font-extrabold tracking-tight text-white ">
           Try It For Free Today
         </p>
