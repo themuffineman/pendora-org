@@ -1,43 +1,10 @@
-import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { loadStripe } from '@stripe/stripe-js';
-
-// Initialize Stripe.js with your Publishable Key
-
 type CardProps = {
   planName: string;
   price: string;
   features: string[];
-  priceId: string;
 };
 
-const PricingCard = ({ planName, price, features, priceId }: CardProps) => {
-  const stripePromise = loadStripe(process.env.STRIPE_TABLE_PUBLISHABLE_KEY!); //trust me bro
-  const router = useRouter();
-
-  const handleCheckout = async () => {
-
-    const res = await fetch('/api/create-stripe-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ priceId}), // Replace with actual price ID
-    });
-
-    const { sessionId } = await res.json();
-    
-    if (sessionId) {
-      // Redirect to Stripe Checkout page
-      const stripe = await stripePromise;
-      await stripe?.redirectToCheckout({ sessionId });
-    } else {
-      // Handle error
-      alert("Failed to initiate checkout.");
-    }
-
-  };
+const PricingCard = ({ planName, price, features }: CardProps) => {
   return (
     <div className="w-[20rem] flex flex-col items-center gap-10 p-3 py-20 border hover:border-[#c9c9c9] rounded-md">
       <div className="text-4xl font-bold tracking-tighter">{planName}</div>
@@ -45,9 +12,9 @@ const PricingCard = ({ planName, price, features, priceId }: CardProps) => {
         <div className="text-3xl font-bold ">${price}</div>
         <div className="text-sm font-light">per/mo</div>
       </div>
-      <RegisterLink className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter">
-        Start your 5 day free trial
-      </RegisterLink>
+      <button className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter">
+        Start your 7 day free trial
+      </button>
       <div className="w-full flex flex-col items-start gap-4 ">
         <div className="text-xl font-bold ">Features:</div>
         <ul className="flex flex-col gap-2 items-start">
