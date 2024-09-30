@@ -1,5 +1,6 @@
 "use client";
 import { loadStripe } from "@stripe/stripe-js";
+import {useState} form 'react'
 import {
   RegisterLink
 } from "@kinde-oss/kinde-auth-nextjs/components";
@@ -14,8 +15,10 @@ type CardProps = {
 
 // Initialize Stripe.js with your Publishable Key
 const PricingCard = ({ planName, price, features, priceId, landing }: CardProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
   async function handleCheckout(){
+    setIsLoading(true)
     const res = await fetch("/api/create-stripe-session", {
       method: "POST",
       headers: {
@@ -34,6 +37,7 @@ const PricingCard = ({ planName, price, features, priceId, landing }: CardProps)
       // Handle error
       alert("Failed to initiate checkout. Try again later");
     }
+    setIsLoading(false)
   };
   return (
     <div className="w-[20rem] flex flex-col items-center gap-10 p-3 py-20 border hover:border-[#c9c9c9] rounded-md">
@@ -55,7 +59,7 @@ const PricingCard = ({ planName, price, features, priceId, landing }: CardProps)
               handleCheckout()}}
             className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
           >
-            Start your 30 day free trial
+            {isLoading? '...Loading' : 'Start Your 30 Day Free Trial'}
           </button>
         )
       }
