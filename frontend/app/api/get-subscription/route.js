@@ -32,13 +32,11 @@ export async function GET(){
         if (subscriptionDetails) {
             return new Response.json({
                 isSubscribed: subscriptionDetails.isSubscribed,
-                planName: subscriptionDetails.planName
-            })
+            },{status:200})
         } else {
             return new Response.json({
                 isSubscribed: false,
-                planName: "None"
-            });
+            }, {status: 200});
         }
     } catch (error) {
         console.log('main error: ',error.message)

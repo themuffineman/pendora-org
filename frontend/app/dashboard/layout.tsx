@@ -52,7 +52,6 @@ const layout: React.FC<componentProps> = async ({ children }) => {
                                 "Chat and Email Support",
                                 "Extract Ad Copy and Video Ad Script (coming soon)",
                             ]}
-                            priceId={process.env.STARTER_PRICE!}
                         />
                     </div>
                 </div>

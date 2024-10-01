@@ -1,6 +1,4 @@
-"use client";
-import { loadStripe } from "@stripe/stripe-js";
-import {useState} from 'react'
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
   RegisterLink
 } from "@kinde-oss/kinde-auth-nextjs/components";
@@ -9,36 +7,14 @@ type CardProps = {
   planName: string;
   price: string;
   features: string[];
-  priceId: string;
-  landing?: boolean;
 };
 
 // Initialize Stripe.js with your Publishable Key
-const PricingCard = ({ planName, price, features, priceId, landing }: CardProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
-  async function handleCheckout(){
-    setIsLoading(true)
-    const res = await fetch("/api/create-stripe-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ priceId }), // Replace with actual price ID
-    });
-
-    const { sessionId } = await res.json();
-
-    if (sessionId) {
-      // Redirect to Stripe Checkout page
-      const stripe = await stripePromise;
-      await stripe?.redirectToCheckout({ sessionId });
-    } else {
-      // Handle error
-      alert("Failed to initiate checkout. Try again later");
-    }
-    setIsLoading(false)
-  };
+const PricingCard = ({ planName, price, features }: CardProps) => {
+  const { isAuthenticated } = getKindeServerSession();
+  const isUserAuthenticated = await isAuthenticated();
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
   return (
     <div className="w-[20rem] flex flex-col items-center gap-10 p-3 py-20 border hover:border-[#c9c9c9] rounded-md">
       <div className="text-4xl font-bold tracking-tighter">{planName}</div>
@@ -47,20 +23,20 @@ const PricingCard = ({ planName, price, features, priceId, landing }: CardProps)
         <div className="text-sm font-light">per/mo</div>
       </div>
       {
-        landing? (
+        isUserAuthenticated? (
           <RegisterLink
             className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
           >
             Start your 30 day free trial
           </RegisterLink>
         ):(
-          <button
-            onClick={()=> {
-              handleCheckout()}}
+          <a
+            target="_blank"
+            href={`${process.env.STRIPE_PAYMENT_LINK}?prefilled-email=${user.email}`}
             className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
           >
-            {isLoading? '...Loading' : 'Start Your 30 Day Free Trial'}
-          </button>
+            Start your 30 day free trial
+          </a>
         )
       }
       <div className="w-full flex flex-col items-start gap-4 ">
