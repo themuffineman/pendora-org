@@ -31,7 +31,7 @@ const PricingCard = async ({ planName, price, features }: CardProps) => {
         ):(
           <a
             target="_blank"
-            href={`${process.env.STRIPE_PAYMENT_LINK}?prefilled-email=${user?.email}`}
+            href={`${process.env.STRIPE_PAYMENT_LINK}?prefilled_email=${user?.email}`}
             className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
           >
             Start your 30 day free trial

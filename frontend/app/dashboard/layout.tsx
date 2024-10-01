@@ -39,7 +39,7 @@ const layout: React.FC<componentProps> = async ({ children }) => {
                     <h2 className=" text-5xl w-full leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
                         Time to pick a plan
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 place-items-start  grid-flow-row">
+                    <div className="grid grid-cols-1 gap-5 place-items-center w-full  grid-flow-row">
                         <PricingCard
                             planName="Starter Plan"
                             price="38"
