@@ -9,12 +9,12 @@ export async function GET(){
             const isUserAuthenticated = await isAuthenticated();
             console.log('Is auth: ', isUserAuthenticated)
             if(!isUserAuthenticated){
-                return new Response('Failed to authenticate', {
+                return Response.json({error: 'Failed to authenticate'}, {
                     status: 401
                 })
             }
         }catch(error){
-            return new Response('Failed to authenticate',{
+            return Response.json({error:'Failed to authenticate'},{
                 status: 500
             })         
         }
