@@ -46,10 +46,8 @@ const layout: React.FC<componentProps> = async ({ children }) => {
                             price="38"
                             features={[
                                 "Unlimited Searches",
-                                "1 Year Ad History",
                                 "Google and Meta Ads",
                                 "Download Ad Creatives",
-                                "Chat and Email Support",
                                 "Extract Ad Copy and Video Ad Script (coming soon)",
                             ]}
                         />
