@@ -9,8 +9,7 @@ type CardProps = {
   features: string[];
 };
 
-// Initialize Stripe.js with your Publishable Key
-const PricingCard = ({ planName, price, features }: CardProps) => {
+const PricingCard = async ({ planName, price, features }: CardProps) => {
   const { isAuthenticated } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
   const { getUser } = getKindeServerSession();
@@ -23,7 +22,7 @@ const PricingCard = ({ planName, price, features }: CardProps) => {
         <div className="text-sm font-light">per/mo</div>
       </div>
       {
-        isUserAuthenticated? (
+        !isUserAuthenticated? (
           <RegisterLink
             className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
           >
@@ -32,7 +31,7 @@ const PricingCard = ({ planName, price, features }: CardProps) => {
         ):(
           <a
             target="_blank"
-            href={`${process.env.STRIPE_PAYMENT_LINK}?prefilled-email=${user.email}`}
+            href={`${process.env.STRIPE_PAYMENT_LINK}?prefilled-email=${user?.email}`}
             className="rounded-md w-[100%] p-2 px-4 flex items-center justify-center bg-[#E4F222] text-light text-sm text-black/75 tracking-tighter"
           >
             Start your 30 day free trial

@@ -112,9 +112,9 @@ export default function Home() {
               <path d="M205.66,149.66l-72,72a8,8,0,0,1-11.32,0l-72-72a8,8,0,0,1,11.32-11.32L120,196.69V40a8,8,0,0,1,16,0V196.69l58.34-58.35a8,8,0,0,1,11.32,11.32Z"></path>
             </svg>
           </RegisterLink>
-          <button className="bg-white shadow-md font-medium md:w-[15rem]  w-[60%] min-w-max rounded-md px-3 p-4 text-sm p-1 border">
+          <a href="#features" className="bg-white text-center shadow-md font-medium md:w-[15rem]  w-[60%] min-w-max rounded-md px-3 p-4 text-sm p-1 border">
             Features
-          </button>
+          </a>
         </div>
         <img
           src="/hero-image-adsinspect.jpeg"
