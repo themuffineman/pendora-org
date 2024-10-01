@@ -16,7 +16,6 @@ const layout: React.FC<componentProps> = async ({ children }) => {
             return isSubscribed;
         } catch (error: any) {
             console.log(error.message);
-            alert(error.message)
             return null;
         }
     }
