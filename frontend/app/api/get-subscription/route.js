@@ -42,7 +42,7 @@ export async function GET(){
         }
     } catch (error) {
         console.log('main error: ',error.message)
-        return new Response(null, {
+        return Response.json({error: error.message}, {
             status:500
         })
     } finally {

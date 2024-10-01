@@ -1,4 +1,3 @@
-import React from "react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import AppContent from "@/components/AppContent";
@@ -10,10 +9,14 @@ const layout: React.FC<componentProps> = async ({ children }) => {
     async function isSubscribed() {
         try {
             const isSubscribedRes = await fetch("/api/get-subscription");
+            if(!isSubscribedRes.ok){
+                throw new Error('Failed to fetch subscrption details')
+            }
             const { isSubscribed } = await isSubscribedRes.json();
             return isSubscribed;
         } catch (error: any) {
             console.log(error.message);
+            alert(error.message)
             return null;
         }
     }
@@ -32,7 +35,7 @@ const layout: React.FC<componentProps> = async ({ children }) => {
             {!isUserSubscribed ? (
                 <div
                     id="pricing"
-                    className="flex flex-col items-center w-full mt-20 gap-20 p-20"
+                    className="flex flex-col items-center w-full mt-10 gap-10 p-10"
                 >
                     <h2 className=" text-5xl w-full leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
                         Time to pick a plan
@@ -49,7 +52,7 @@ const layout: React.FC<componentProps> = async ({ children }) => {
                                 "Chat and Email Support",
                                 "Extract Ad Copy and Video Ad Script (coming soon)",
                             ]}
-                            priceId={process.env.ADVANCED_PRICE!}
+                            priceId={process.env.STARTER_PRICE!}
                         />
                     </div>
                 </div>

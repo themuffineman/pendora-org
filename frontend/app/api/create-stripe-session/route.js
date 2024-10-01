@@ -22,28 +22,25 @@ export async function POST(req) {
       });
     }
     const { priceId } = await req.json();
-    const checkoutSession = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "subscription",
-      line_items: [
-        {
-          price: priceId, // Use the retrieved price ID
-          quantity: 1,
-        },
-      ],
+    console.log(priceId, ": priceId")
+    const subscription = await stripe.subscriptions.create({
+      customer: customerId, // The Stripe customer ID of the user
+      items: [{ price: priceId }], // The price ID for the subscription product
+      trial_period_days: 30, // Set the 30-day trial
       metadata: {
         userId: user.id,
       },
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?subscription_id={SUBSCRIPTION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
     });
+
     return Response.json(
-      { sessionId: checkoutSession.id },
+      { sessionId: subscription.id },
       { status: 200 }
     );
   } catch (err) {
     console.error(err);
-    return new Response.json(
+    return Response.json(
       { error: "Unable to create checkout session" },
       { status: 500 }
     );
