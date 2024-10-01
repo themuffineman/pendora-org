@@ -1,6 +1,9 @@
 "use client"
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { AdDataContext } from '@/components/AppWrapper'
+import { Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
+
 import {
   Select,
   SelectContent,
@@ -8,9 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
 
 const Page = () => {
   const router = useRouter()
+  const context = useContext(AdDataContext)
   const [inputValue, setInputValue] = useState<string | null>()
   const [platform, setPlatform] = useState<string>('google')
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -23,6 +28,21 @@ const Page = () => {
 
   return (
     <>
+      <div className="flex items-center justify-end p-5 fixed top-0 w-full">
+        <Popover>
+            <PopoverTrigger >
+                <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
+                    {context?.user}
+                </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-max h-max flex flex-col gap-2 rounded-md bg-[#f5f5f5]">
+                <a className="border p-1 px-3 hover:bg-neutral-700 rounded-md bg-black text-white flex items-center justify-center" href={process.env.BILLING_PORTAL_URL}>Manage Billing</a>
+                  <LogoutLink className="border p-1 px-3 hover:bg-[#f0f0f0] rounded-md bg-white flex items-center justify-center">
+                    Sign Out
+                </LogoutLink>
+            </PopoverContent>
+        </Popover>
+      </div>
       <div className="flex flex-col gap-10 items-center w-full h-full my-auto">
         <h1 className="text-5xl w-[42rem] leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">Discover the entire digital advertising world of a website</h1>
         <div className='w-full max-w-[700px] search: flex gap-2 items-center justify-center justify-self-start'>

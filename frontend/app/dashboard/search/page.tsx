@@ -98,6 +98,7 @@ const page = () => {
                                 </div>
                             </PopoverTrigger>
                             <PopoverContent className="w-max h-max rounded-md bg-[#f5f5f5]">
+                                <a href={process.env.BILLING_PORTAL_URL}>Manage Billing</a>
                                 <LogoutLink className='hover:bg-[#ffffff] rounded-md text-black text-base font-medium'>
                                     Sign Out
                                 </LogoutLink>
