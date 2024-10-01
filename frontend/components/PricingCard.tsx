@@ -1,6 +1,6 @@
 "use client";
 import { loadStripe } from "@stripe/stripe-js";
-import {useState} form 'react'
+import {useState} from 'react'
 import {
   RegisterLink
 } from "@kinde-oss/kinde-auth-nextjs/components";
