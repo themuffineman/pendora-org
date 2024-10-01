@@ -6,24 +6,24 @@ interface componentProps {
     children: React.ReactNode;
 }
 const layout: React.FC<componentProps> = async ({ children }) => {
-    async function isSubscribed() {
+    async function isSubscribed(){
         try {
-            const isSubscribedRes = await fetch("/api/get-subscription");
+            const isSubscribedRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/get-subscription`)
             if(!isSubscribedRes.ok){
                 throw new Error('Failed to fetch subscrption details')
             }
-            const { isSubscribed } = await isSubscribedRes.json();
-            return isSubscribed;
+            const { isSubscribed } = await isSubscribedRes.json()
+            return isSubscribed
         } catch (error: any) {
-            console.log(error.message);
+            console.log(error.message)
             return null;
         }
     }
-    const { isAuthenticated } = getKindeServerSession();
-    const isUserAuthenticated = await isAuthenticated();
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    const isUserSubscribed = await isSubscribed();
+    const { isAuthenticated } = getKindeServerSession()
+    const isUserAuthenticated = await isAuthenticated()
+    const { getUser } = getKindeServerSession()
+    const user = await getUser()
+    const isUserSubscribed = await isSubscribed()
 
     if (!isUserAuthenticated) {
         redirect("/api/auth/login");

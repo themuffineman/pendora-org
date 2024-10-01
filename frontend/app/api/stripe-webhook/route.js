@@ -1,10 +1,11 @@
 import Stripe from "stripe";
 import { MongoClient } from "mongodb";
+import { headers } from "next/headers";
 
 export async function POST(req) {
   const stripe = new Stripe(process.env.STRIPE_SECRET);
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  const sig = req.headers["stripe-signature"];
+  const sig = headers().get("stripe-signature");
 
   let event;
   //verify is signature is legit
