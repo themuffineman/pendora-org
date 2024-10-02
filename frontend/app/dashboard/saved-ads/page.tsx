@@ -54,18 +54,21 @@ const page = () => {
                         </span>
                     </Link>
                     <button className='w-max px-4 p-2 rounded-md text-black flex items-center justify-center bg-yellow-200'>Upgrade</button>
-                    <Popover>
-                        <PopoverTrigger>
-                            <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
-                                {context?.user}
-                            </div>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-max h-max rounded-md bg-[#f5f5f5] hover:bg-[#ffffff]">
-                            <LogoutLink className='rounded-md text-black text-base font-medium p-3'>
-                                Sign Out
-                            </LogoutLink>
-                        </PopoverContent>
-                    </Popover>
+                    <div className="flex items-center justify-end p-5">
+                        <Popover>
+                            <PopoverTrigger >
+                                <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
+                                    {context?.user}
+                                </div>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-max h-max flex flex-col gap-2 rounded-md bg-[#f5f5f5]">
+                                <a className="border p-1 px-3 hover:bg-neutral-700 rounded-md bg-black text-white flex items-center justify-center" href={process.env.BILLING_PORTAL_URL}>Manage Billing</a>
+                                  <LogoutLink className="border p-1 px-3 hover:bg-[#f0f0f0] rounded-md bg-white flex items-center justify-center">
+                                    Sign Out
+                                </LogoutLink>
+                            </PopoverContent>
+                        </Popover>
+                      </div>
                 </div>
             </nav>
         ): null}

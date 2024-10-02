@@ -94,19 +94,21 @@ const page = () => {
                                 Saved Ads
                             </span>
                         </Link>
-                        <Popover>
-                            <PopoverTrigger>
-                                <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
-                                    {context?.user}
-                                </div>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-max h-max rounded-md bg-[#f5f5f5]">
-                                <a href={process.env.BILLING_PORTAL_URL}>Manage Billing</a>
-                                <LogoutLink className='hover:bg-[#ffffff] rounded-md text-black text-base font-medium'>
-                                    Sign Out
-                                </LogoutLink>
-                            </PopoverContent>
-                        </Popover>
+                        <div className="flex items-center justify-end p-5">
+                            <Popover>
+                                <PopoverTrigger >
+                                    <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
+                                        {context?.user}
+                                    </div>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-max h-max flex flex-col gap-2 rounded-md bg-[#f5f5f5]">
+                                    <a className="border p-1 px-3 hover:bg-neutral-700 rounded-md bg-black text-white flex items-center justify-center" href={process.env.BILLING_PORTAL_URL}>Manage Billing</a>
+                                      <LogoutLink className="border p-1 px-3 hover:bg-[#f0f0f0] rounded-md bg-white flex items-center justify-center">
+                                        Sign Out
+                                    </LogoutLink>
+                                </PopoverContent>
+                            </Popover>
+                          </div>
                     </div>
                     
                 </nav>
