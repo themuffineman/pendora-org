@@ -49,16 +49,11 @@ const layout: React.FC<componentProps> = async ({ children }) => {
     const user = await getUser()
     const isUserSubscribed = await isSubscribed()
 
-<<<<<<< HEAD
+
     if (!isUserAuthenticated) {
         redirect("/api/auth/login");
     }
-    
-=======
-    if (!isUserAuthenticated) {
-        redirect("/api/auth/login");
-    }
->>>>>>> 448e7c5 (Fetching env)
+
 
     return (
         <main className="flex min-h-screen flex-col w-full items-center bg-white">
