@@ -25,7 +25,7 @@ export async function POST(req) {
         expand: ['line_items']
       }
     )
-    const customerId = session?.id
+    const customerId = session.customer // This will give you the correct customer ID (starting with "cus_")
     const customer = await stripe.customers.retrieve(customerId)
     console.log("Stripe Session captured");
     console.log("Customer email is: ", customer.email)
