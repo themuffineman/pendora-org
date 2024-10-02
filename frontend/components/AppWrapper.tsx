@@ -1,6 +1,6 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState } from "react";
 
-interface contextType{ 
+interface contextType {
     adsData: adTypes[];
     setAdsData: React.Dispatch<React.SetStateAction<adTypes[]>>;
     savedAds: string[];
@@ -10,19 +10,28 @@ interface contextType{
     isFetching: boolean;
     setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
     user: string;
+    backendUrl: string;
 }
 
 type adTypes = {
-  url: string;
-  type: "image" | "video";
-}
-export const AdDataContext = createContext<contextType | null>(null)
+    url: string;
+    type: "image" | "video";
+};
+export const AdDataContext = createContext<contextType | null>(null);
 
-export const AppWrapper = ({children, user}:{children: React.ReactNode, user: string}) => {
-    const [adsData, setAdsData] = useState<adTypes[]>([])
-    const [savedAds, setSavedAds] = useState<string[]>([])
-    const [failedToFetch, setFailedToFetch] = useState<boolean>(false)
-    const [isFetching, setIsFetching] = useState<boolean>(false)
+export const AppWrapper = ({
+    children,
+    user,
+    backendUrl,
+}: {
+    children: React.ReactNode;
+    user: string;
+    backendUrl: string;
+}) => {
+    const [adsData, setAdsData] = useState<adTypes[]>([]);
+    const [savedAds, setSavedAds] = useState<string[]>([]);
+    const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
+    const [isFetching, setIsFetching] = useState<boolean>(false);
     const contextObject = {
         adsData,
         setAdsData,
@@ -32,11 +41,12 @@ export const AppWrapper = ({children, user}:{children: React.ReactNode, user: st
         setFailedToFetch,
         isFetching,
         setIsFetching,
-        user
-    }
-  return (
-    <AdDataContext.Provider value={contextObject}>
-        {children}
-    </AdDataContext.Provider>
-  )
-}
+        user,
+        backendUrl,
+    };
+    return (
+        <AdDataContext.Provider value={contextObject}>
+            {children}
+        </AdDataContext.Provider>
+    );
+};

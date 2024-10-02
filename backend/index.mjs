@@ -14,7 +14,7 @@ app.use(
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
-);
+)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.post("/api/get-google-ads", async (req, res) => {

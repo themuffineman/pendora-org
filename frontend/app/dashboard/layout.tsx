@@ -49,10 +49,16 @@ const layout: React.FC<componentProps> = async ({ children }) => {
     const user = await getUser()
     const isUserSubscribed = await isSubscribed()
 
+<<<<<<< HEAD
     if (!isUserAuthenticated) {
         redirect("/api/auth/login");
     }
     
+=======
+    if (!isUserAuthenticated) {
+        redirect("/api/auth/login");
+    }
+>>>>>>> 448e7c5 (Fetching env)
 
     return (
         <main className="flex min-h-screen flex-col w-full items-center bg-white">
@@ -80,7 +86,7 @@ const layout: React.FC<componentProps> = async ({ children }) => {
             ) : isSubscribed === null ? (
                 <div className=" p-4 bg-[#f5f5f5] text-black rounded-md font-bold w-max ">Sorry unable to verify subscription details</div>
             ) : (
-                <AppContent user={user?.given_name?.charAt(0)}>
+                <AppContent user={user?.given_name?.charAt(0)} backendUrl={process.env.BACKEND_URL!}>
                     {children}
                 </AppContent>
             )}

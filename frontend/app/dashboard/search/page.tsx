@@ -1,7 +1,7 @@
 "use client"
 import AdCard from '@/components/AdCard'
 import { useSearchParams } from 'next/navigation'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AdDataContext } from '@/components/AppWrapper'
 import Search from '@/components/Search'
 import Link from 'next/link'
@@ -19,10 +19,15 @@ const page = () => {
     const platform = searchParams.get("platform")
     const pathname = usePathname()
     const pathCondition = pathname === '/dashboard/search' || pathname === '/dashboard/saved-ads' || pathname === 'dashboard'
+    const [fetchUrl, setFetchUrl] = useState<string>('')
 
     useEffect(() => {
         fetchData();
     },[])
+
+    useEffect(()=>{
+        setFetchUrl(`${context?.backendUrl}/api/get-${platform}-ads`)
+    },[platform, url])
 
     async function fetchData(){
         context?.setAdsData([])
@@ -30,7 +35,6 @@ const page = () => {
         context?.setFailedToFetch(false)
         console.log('Platform is: ', platform, ' and url is: ', url)
         try{
-            const fetchUrl = platform === 'google' ? `${process.env.BACKEND_URL}/api/get-google-ads` : `${process.env.BACKEND_URL}/api/get-meta-ads`
             const adResponse = await fetch(fetchUrl, {
                 method: 'POST',
                 headers: {
@@ -81,7 +85,7 @@ const page = () => {
     return(
         <> 
             {pathCondition? (
-                <nav className="w-full min-w-[454px] px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
+                <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
                     <Search context={context}/>
                     <div className="flex items-center gap-2 w-max">
                         <Link href={'/dashboard/saved-ads'} className='flex w-max gap-2 p-2 rounded-md bg-[#f5f5f5] items-center justify-center cursor-pointer hover:bg-[#f0f0f0]'>
@@ -90,7 +94,6 @@ const page = () => {
                                 Saved Ads
                             </span>
                         </Link>
-                        <button className='w-max px-4 p-2 rounded-md text-black flex items-center justify-center bg-yellow-200'>Upgrade</button>
                         <Popover>
                             <PopoverTrigger>
                                 <div className='p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase'>
