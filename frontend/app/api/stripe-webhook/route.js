@@ -13,7 +13,7 @@ export async function POST(req) {
     const body = await req.text();
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
   } catch (err) {
-    console.error("Webhook signature verification failed.", err);
+    console.error("Webhook signature verification failed: ", err);
     return new Response("Webhook Error", { status: 400 });
   }
 
@@ -28,6 +28,7 @@ export async function POST(req) {
     const customerId = session?.id
     const customer = await stripe.customers.retrieve(customerId)
     console.log("Stripe Session captured");
+    console.log("Customer email is: ", customer.email)
     await updateUserSubscriptionPlan(customer.email, customerId, event.type );
     return new Response("Success", { status: 200 });
   }
