@@ -8,47 +8,38 @@ import Link from 'next/link'
 import { Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { usePathname } from 'next/navigation'
-const page = () => {
+const page = ({params}) => {
     interface adTypes{
         url: string;
         type: "image" | "video";
     }
     const context = useContext(AdDataContext)
-    const searchParams = useSearchParams()
-    const url = searchParams.get("url")
-    const platform = searchParams.get("platform")
-    const pathname = usePathname()
-    const pathCondition = pathname === '/dashboard/search' || pathname === '/dashboard/saved-ads' || pathname === 'dashboard'
-    const [fetchUrl, setFetchUrl] = useState<string>('')
-
-    
     useEffect(() => {
-        setFetchUrl(`${context?.backendUrl}/api/get-${platform}-ads`)
         fetchData();
-    },[platform, url])
+    },[])
 
 
     async function fetchData(){
         context?.setAdsData([])
         context?.setIsFetching(true)
         context?.setFailedToFetch(false)
-        console.log('Platform is: ', platform, ' and url is: ', url)
+        console.log('Platform is: ', params.platform[0], ' and url is: ', params.platform[1])
         try{
-            const adResponse = await fetch(fetchUrl, {
+            const adResponse = await fetch(`${context?.backendUrl}/api/get-${params.platform[0]}-ads`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    url: url,
-                    platform: platform 
+                    url: params.platform[1],
+                    platform: params.platform[0] 
                 })
             })
             if(!adResponse.ok){
                 throw new Error('Failed to fetch')
             }
             const ads: {adImages: string[], adVideos?: string[]}  = await adResponse.json()
-            if(platform === 'google'){
+            if(params.platform[0] === 'google'){
                 const initData:adTypes[] = []
                 ads?.adImages.forEach((string)=>{
                     initData.push({
@@ -57,7 +48,8 @@ const page = () => {
                     })
                 })
                 context?.setAdsData(initData)
-            }else if(platform === 'meta'){
+            }
+            if(params.platform[0] === 'meta'){
                 const initData:adTypes[] = []
                 console.log("meta Ads: ", ads)
                 ads?.adImages.forEach((string)=>{
@@ -82,10 +74,9 @@ const page = () => {
         }
     }
 
-    return(
+    return (
         <> 
-            {pathCondition? (
-                <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
+            <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
                     <Search context={context}/>
                     <div className="flex items-center gap-2 w-max">
                         <Link href={'/dashboard/saved-ads'} className='flex w-max gap-2 p-2 rounded-md bg-[#f5f5f5] items-center justify-center cursor-pointer hover:bg-[#f0f0f0]'>
@@ -112,7 +103,6 @@ const page = () => {
                     </div>
                     
                 </nav>
-            ): null}
             <div className='w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white'>
                 <div className='flex flex-col w-full h-full items-center justify-start gap-10'>
                     <div className='w-full px-4 flex items-center justify-start'>

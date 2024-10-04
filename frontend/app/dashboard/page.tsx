@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation';
 import React, { useState, useContext } from 'react'
 import { AdDataContext } from '@/components/AppWrapper'
 import { Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
-
 import {
   Select,
   SelectContent,
@@ -23,7 +22,7 @@ const Page = () => {
   function goToSearch(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault()
     setIsLoading(true)
-    router.push(`/dashboard/search?url=${inputValue}&platform=${platform}`);
+    router.push(`/dashboard/search/${platform}/${inputValue}`);
   }
 
   return (

@@ -11,19 +11,10 @@ import {
 import { useRouter } from 'next/navigation';
 
 const Search = ({context}: {context: any}) => {
-    const pathname = usePathname()
-    const [input, setInput] = useState<string>('')
-    const [platform, setPlatform] = useState<string>('google')
     const router = useRouter()
-    const pathCondition = pathname === '/dashboard/search' || pathname === '/dashboard/saved-ads'
     async function goToSearch(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
-        if(pathname === '/dashboard/saved-ads'){
-            router.push(`/dashboard/search?url=${input}&platform=${platform}`)
-        }else{
-            router.push(`/dashboard/search?url=${input}&platform=${platform}`)
-            // await fetchData()
-        }
+        router.push(`/dashboard/search/${platform}/${inputValue}`);
     }
     async function fetchData(){
         console.log('search context is: ',context)
@@ -62,7 +53,6 @@ const Search = ({context}: {context: any}) => {
         }
     }
   return (
-    pathCondition? (
         <div className='w-max flex items-center justify-start gap-3 max-w-[700px] '>
             <form onSubmit={(e)=> goToSearch(e)} className='relative w-[70%] min-w-[500px]  max-w-[600px] flex justify-center items-center self-start'>
                 <input required={true} onChange={(e)=>{setInput(e.target.value)}} className='w-[100%] h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md ' placeholder={platform === 'google' ? 'Enter new website domain e.g. domain.com' : 'Enter Facebook or Instagram username'} type="search" />
@@ -89,9 +79,6 @@ const Search = ({context}: {context: any}) => {
                 </SelectContent>
             </Select>
         </div>
-    ):(
-        null
-    )
   )
   
 }
