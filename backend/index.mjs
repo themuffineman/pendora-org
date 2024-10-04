@@ -1,5 +1,4 @@
 import express from "express";
-import axios from "axios";
 import puppeteer from "puppeteer";
 import cors from "cors";
 import { config } from "dotenv";
@@ -229,6 +228,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
         }
       }
     }
+    console.log("Content: ", { adImages, adVideos })
     return res.status(200).json({ adImages, adVideos });
   } catch (error) {
     console.log(error.message);

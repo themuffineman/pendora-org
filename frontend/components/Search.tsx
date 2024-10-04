@@ -22,7 +22,7 @@ const Search = ({context}: {context: any}) => {
             router.push(`/dashboard/search?url=${input}&platform=${platform}`)
         }else{
             router.push(`/dashboard/search?url=${input}&platform=${platform}`)
-            await fetchData()
+            // await fetchData()
         }
     }
     async function fetchData(){

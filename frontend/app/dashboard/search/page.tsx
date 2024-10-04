@@ -21,13 +21,12 @@ const page = () => {
     const pathCondition = pathname === '/dashboard/search' || pathname === '/dashboard/saved-ads' || pathname === 'dashboard'
     const [fetchUrl, setFetchUrl] = useState<string>('')
 
+    
     useEffect(() => {
-        fetchData();
-    },[])
-
-    useEffect(()=>{
         setFetchUrl(`${context?.backendUrl}/api/get-${platform}-ads`)
+        fetchData();
     },[platform, url])
+
 
     async function fetchData(){
         context?.setAdsData([])
@@ -73,6 +72,7 @@ const page = () => {
                         type: 'video'
                     })
                 })
+                console.log("Init Data:", initData)
                 context?.setAdsData(initData)
             }
         } catch (error) {
