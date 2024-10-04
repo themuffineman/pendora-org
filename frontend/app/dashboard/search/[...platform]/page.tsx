@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { usePathname } from 'next/navigation'
-const page = ({params}) => {
+const page = ({params}:{params: any}) => {
     interface adTypes{
         url: string;
         type: "image" | "video";
