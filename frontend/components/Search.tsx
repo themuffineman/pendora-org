@@ -11,10 +11,13 @@ import {
 import { useRouter } from 'next/navigation';
 
 const Search = ({context}: {context: any}) => {
+    const pathname = usePathname()
+    const [input, setInput] = useState<string>('')
+    const [platform, setPlatform] = useState<string>('google')
     const router = useRouter()
     async function goToSearch(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
-        router.push(`/dashboard/search/${platform}/${inputValue}`);
+        router.push(`/dashboard/search/${platform}/${input}`);
     }
     async function fetchData(){
         console.log('search context is: ',context)
