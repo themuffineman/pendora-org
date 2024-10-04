@@ -178,6 +178,10 @@ const AdCard: React.FC<componentProps> = ({adImage, type, format})=>{
                     <video 
                         src={adImage}
                         className="object-cover rounded-md w-[20rem] h-auto"
+                        autoPlay
+                        loop
+                        muted
+                        controls
                     />
                 )
             }
