@@ -126,7 +126,7 @@ const page = ({params}:{params: any}) => {
                                 onClick={fetchData} 
                                 className='w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
                                 >
-                                Failed To Fetch. Try Again
+                                Failed To Fetch. Try Again.
                                 </button>
                             ) : context?.isFetching ? (
                                 <div className='size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]'/>
@@ -135,7 +135,7 @@ const page = ({params}:{params: any}) => {
                                 onClick={fetchData} 
                                 className='w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]'
                                 >
-                                No Ads Found. Try Again
+                                No Ads Found. Try Again Later.
                                 </button>
                             ) : null
                         }
