@@ -174,7 +174,7 @@ const AdCard: React.FC<componentProps> = ({adImage, type, format})=>{
                         className="object-cover rounded-md w-[20rem] h-auto"
                     />
 
-                ):(
+                ): format === 'video' ?(
                     <video 
                         src={adImage}
                         className="object-cover rounded-md w-[20rem] h-auto"
@@ -183,7 +183,7 @@ const AdCard: React.FC<componentProps> = ({adImage, type, format})=>{
                         muted
                         controls
                     />
-                )
+                ): null
             }
             {
                 type === "search" ? (
