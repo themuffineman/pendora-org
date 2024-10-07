@@ -1,19 +1,24 @@
 import {getKindeServerSession} from "@kinde-oss/kinde-auth-nextjs/server";
 import { MongoClient, ServerApiVersion } from 'mongodb'
 import { v2 as cloudinary } from 'cloudinary';
+import AWS from 'aws-sdk'
 
 export async function POST(req) {
     const body = await req.json()
     const url = body.url
+    const s3 = new AWS.S3({
+        accessKeyId: process.env.AWS_ACCESS_KEY,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    })
     let client;
     let uploadedResult;
-    function generateUniqueId() {
+    function generateUniqueId(){
         const randomId = crypto.randomUUID();  
         const timestamp = Date.now();          
         return `${randomId}_${timestamp}`;   
     }
     console.log('Url is: ', url)
-    try {
+    try{
         try {
             const {isAuthenticated} = getKindeServerSession();
             const isUserAuthenticated = await isAuthenticated();
@@ -32,15 +37,19 @@ export async function POST(req) {
         try{
             
             const uniqueId = generateUniqueId()
-            cloudinary.config({ 
-                cloud_name: process.env.CLOUDINARY_NAME, 
-                api_key: process.env.CLOUDINARY_API_KEY, 
-                api_secret: process.env.CLOUDINARY_API_SECRET
-            })
-            uploadedResult = await cloudinary.uploader.upload(url, {public_id: uniqueId})
-            console.log("Uploaded url: ", uploadedResult.url)
+            const response = await fetch(url);
+            const imageBuffer = await response.buffer(); // Get image data as a buffer
+
+            // Set up S3 upload parameters
+            const params = {
+                Bucket: 'adsinspectbucket',
+                Key: uniqueId,  // Name you want the file to have in the bucket
+                Body: imageBuffer,  // Image buffer fetched from the URL
+                ContentType: response.headers.get('content-type'),  // Set correct content type
+            }
+            uploadedResult = await s3.upload(params).promise()
         }catch(error){
-            console.log('Error with cloudinary: ', error.message)
+            console.log('Error with S3 bucket: ', error.message)
             return new Response('Failed to upload image',{
                 status: 500
             })
@@ -55,7 +64,7 @@ export async function POST(req) {
         console.log('User email is:', user.email)
         const result = await collection.updateOne(
             { email: user.email },            
-            { $push: { ads: uploadedResult.url} },
+            { $push: { ads: uploadedResult.Location} },
             { upsert: true } // If no document is found, insert a new one 
         )
         if (result.acknowledged) {
