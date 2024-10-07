@@ -11,6 +11,8 @@ interface contextType {
     setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
     user: string;
     backendUrl: string;
+    timeframe: string;
+    setTimeframe: React.Dispatch<React.SetStateAction<string>>;
 }
 
 type adTypes = {
@@ -32,6 +34,7 @@ export const AppWrapper = ({
     const [savedAds, setSavedAds] = useState<string[]>([]);
     const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
     const [isFetching, setIsFetching] = useState<boolean>(false);
+    const [timeframe, setTimeframe] = useState('7')
     const contextObject = {
         adsData,
         setAdsData,
@@ -43,6 +46,8 @@ export const AppWrapper = ({
         setIsFetching,
         user,
         backendUrl,
+        timeframe,
+        setTimeframe
     };
     return (
         <AdDataContext.Provider value={contextObject}>

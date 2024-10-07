@@ -20,11 +20,9 @@ const Search = ({context}: {context: any}) => {
         router.push(`/dashboard/search/${platform}/${input}`);
     }
     async function fetchData(){
-        console.log('search context is: ',context)
         context?.setAdsData([])
         context?.setIsFetching(true)
         context?.setFailedToFetch(false)
-        console.log('Platform is: ', platform)
         try {
             const fetchUrl = platform === 'google' ? `${context?.backendUrl}/api/get-google-ads` : `${context?.backendUrl}/api/get-meta-ads`
             const adResponse = await fetch(fetchUrl, {
@@ -34,7 +32,8 @@ const Search = ({context}: {context: any}) => {
                 },
                 body: JSON.stringify({
                     url: input,
-                    platform: platform 
+                    platform: platform,
+                    timeframe: context.timeframe
                 })
             })
             if(!adResponse.ok){

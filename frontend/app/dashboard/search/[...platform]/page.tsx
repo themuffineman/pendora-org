@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { usePathname } from 'next/navigation'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 const page = ({params}:{params: any}) => {
     interface adTypes{
         url: string;
@@ -15,9 +16,8 @@ const page = ({params}:{params: any}) => {
     }
     const context = useContext(AdDataContext)
     useEffect(() => {
-        fetchData();
+        fetchData()
     },[])
-
 
     async function fetchData(){
         context?.setAdsData([])
@@ -32,7 +32,8 @@ const page = ({params}:{params: any}) => {
                 },
                 body: JSON.stringify({
                     url: params.platform[1],
-                    platform: params.platform[0] 
+                    platform: params.platform[0],
+                    timeframe: context?.timeframe
                 })
             })
             if(!adResponse.ok){
@@ -73,7 +74,6 @@ const page = ({params}:{params: any}) => {
             context?.setIsFetching(false)
         }
     }
-
     return (
         <> 
             <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
@@ -105,9 +105,26 @@ const page = ({params}:{params: any}) => {
                 </nav>
             <div className='w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white'>
                 <div className='flex flex-col w-full h-full items-center justify-start gap-10'>
-                    <div className='w-full px-4 flex items-center justify-start'>
-                        <div className='text-xl font-semibold text-black tracking-tight'>  
-                            Results Found: {context?.adsData.length}
+                    <div className='w-full px-1 flex items-center justify-start'>
+                        <div className='text-xl font-semibold text-black tracking-tight flex items-center justify-between'>  
+                            <span>Results Found: {context?.adsData.length}</span>
+                            <Select value={context?.timeframe} onValueChange={(value: string)=>{context?.setTimeframe(value)}}>
+                                <SelectTrigger className="min-w-max h-12">
+                                    <SelectValue placeholder="Timeframe" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="7">
+                                        <div className='flex gap-2 items-center justify-between '>
+                                            <span className='text-base font-medium text-center'>Past 7 Days</span>
+                                        </div>
+                                    </SelectItem>
+                                    <SelectItem value="30">
+                                        <div className='flex gap-2 items-center justify-between'>
+                                            <span className='text-base font-medium text-center'>Past 30 Days</span>
+                                        </div>
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                     <div className={` ${context?.adsData?.length === 0 || context?.failedToFetch || context?.isFetching ? 'flex items-center justify-center': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row'}  w-full h-full`}>

@@ -10,8 +10,8 @@ export async function POST(req) {
         accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     })
-    let client;
-    let uploadedResult;
+    let client
+    let uploadedResult
     function generateUniqueId(){
         const randomId = crypto.randomUUID();  
         const timestamp = Date.now();          
