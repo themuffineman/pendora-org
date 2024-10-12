@@ -1,7 +1,5 @@
 import express from "express";
 import puppeteer from "puppeteer";
-import axios from 'axios'
-import * as cheerio from 'cheerio'
 import cors from "cors";
 import { config } from "dotenv";
 config();
@@ -9,6 +7,16 @@ const app = express();
 app.listen(8080, () => {
   console.log("Server running");
 });
+function checkApiKey(req, res, next) {
+  const apiKey = req.headers['x-api-key'];
+  if (!apiKey) {
+      return res.status(401).json({ message: 'API key is missing' });
+  }
+  if (apiKey !== process.env.API_KEY) {
+      return res.status(403).json({ message: 'Invalid API key' });
+  }
+  next()
+}
 app.use(
   cors({
     origin: process.env.ALLOWED_ORIGIN,
@@ -18,8 +26,9 @@ app.use(
 )
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(checkApiKey)
 app.post("/api/get-google-ads", async (req, res) => {
-  const { url, timeframe } = req.body;
+  const { url, timeframe } = req.body
   console.log("Received request:", url);
 
   const gridSelector =
@@ -145,20 +154,14 @@ app.post("/api/get-meta-ads", async (req, res) => {
     "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x14ju556.x1n2onr6 > div > div > div > div > div > div > video";
   let browser;
   let page;
-  async function getPageId(username){
+  async function getPageId(username, page){
     try {
       // Fetch the HTML content of the page
       const pageUrl = `https://facebook.com/${username}`
-      const { data } = await axios.get(pageUrl)
-      
-      // Load the HTML using cheerio
-      const $ = cheerio.load(data);
-  
-      // Extract associated_page_id from the page source
-      const htmlContent = $.html();
-      const associatedPageIdRegex = /"associated_page_id":"(\d+)"/;
-      const match = associatedPageIdRegex.exec(htmlContent);
-      
+      await page.goto(pageUrl)
+      const pageSource = await page.content()
+      const associatedPageIdRegex =  /"associated_page_id":"(\d+)"/;
+      const match = associatedPageIdRegex.exec(pageSource);
       if (match && match[1]) {
         return match[1]; // Return the page ID
       } else {
@@ -190,7 +193,8 @@ app.post("/api/get-meta-ads", async (req, res) => {
   }
 
   try {
-    const pageId = await getPageId(url)
+    const pageId = await getPageId(url, page)
+    console.log("Id is: ", pageId)
     await page.goto(
       `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&media_type=all&search_type=page&view_all_page_id=${pageId}`
     )
