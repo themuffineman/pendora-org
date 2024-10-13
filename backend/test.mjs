@@ -1,10 +1,10 @@
-fetch("https://qg6477-8080.csb.app/api/get-meta-ads", {
+fetch("https://9x6c2n-8080.csb.app/api/get-meta-ads", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    url: "myoutfitonline",
+    url: "myoutfitonlineusa",
   }),
 })
   .then(async (res) => {
