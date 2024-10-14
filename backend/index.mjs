@@ -26,7 +26,7 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(checkApiKey);
+// app.use(checkApiKey);
 app.post("/api/get-google-ads", async (req, res) => {
   const { url, timeframe } = req.body;
   console.log("Received request:", url);
