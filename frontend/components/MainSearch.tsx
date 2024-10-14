@@ -39,7 +39,7 @@ const MainSearch = () => {
             placeholder={
               platform === "google"
                 ? "Enter domain e.g. domain.com"
-                : "Enter Username"
+                : "Enter Facebook username"
             }
             type="search"
           />
