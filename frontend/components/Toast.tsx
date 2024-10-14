@@ -6,7 +6,7 @@ interface propTypes {
 const Toast: React.FC<propTypes> = ({ message, error }) => {
   return (
     <div
-      className={`flex gap-5 items-center rounded-md bg-[#f0f0f0] p-4 fixed bottom-8 right-16 border-2 border-neutral-500 w-max shadow-lg shadow-neutral-500`}
+      className={`flex gap-5 items-center rounded-md bg-[#f0f0f0] p-4 fixed bottom-8 right-16 border-2 border-neutral-500 w-max shadow-lg shadow-neutral-300`}
     >
       <div className="size-5 rounded-full border-2  border-black border-t-[#f5f5f5] animate-spin [animation-duration:0.7s]" />
       <p className="text-black text-sm flex items-center justify-center">
