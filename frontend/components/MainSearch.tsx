@@ -38,8 +38,8 @@ const MainSearch = () => {
             className="w-[100%] h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md "
             placeholder={
               platform === "google"
-                ? "Enter new website domain e.g. domain.com"
-                : "Enter Facebook or Instagram username"
+                ? "Enter domain e.g. domain.com"
+                : "Enter Username"
             }
             type="search"
           />
@@ -61,7 +61,7 @@ const MainSearch = () => {
           </button>
         </form>
         <Select value={platform} onValueChange={(value) => setPlatform(value)}>
-          <SelectTrigger className=" w-[50%] md:w-max h-12 min-w-[200px]">
+          <SelectTrigger className=" w-[80%] md:w-max h-12 min-w-[300px] max-w-[30rem]">
             <SelectValue placeholder="Platform" />
           </SelectTrigger>
           <SelectContent>

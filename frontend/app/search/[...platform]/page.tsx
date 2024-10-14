@@ -1,13 +1,6 @@
 "use client";
 import AdCard from "@/components/AdCard";
 import React, { useEffect, useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import GetPro from "@/components/GetPro";
 import {
@@ -22,6 +15,7 @@ const page = ({ params }: { params: any }) => {
     url: string;
     type: "image" | "video";
   }
+  console.log("URL backend is: ", process.env.BACKEND_URL);
   const [ads, setAds] = useState<any[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
@@ -49,7 +43,7 @@ const page = ({ params }: { params: any }) => {
     );
     try {
       const adResponse = await fetch(
-        `${process.env.BACKEND_URl}/api/get-${params.platform[0]}-ads`,
+        `${process.env.BACKEND_URL}/api/get-${params.platform[0]}-ads`,
         {
           method: "POST",
           headers: {
