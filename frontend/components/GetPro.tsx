@@ -10,6 +10,7 @@ const features = [
   "Save Ads for later",
   "Faster lookup speeds",
   "No daily limit",
+  "Access to all ads",
 ];
 function GetPro() {
   return (
