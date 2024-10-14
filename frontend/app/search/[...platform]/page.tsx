@@ -43,7 +43,7 @@ const page = ({ params }: { params: any }) => {
     );
     try {
       const adResponse = await fetch(
-        `${process.env.BACKEND_URL}/api/get-${params.platform[0]}-ads`,
+        `https://pendora-org.onrender.com/api/get-${params.platform[0]}-ads`,
         {
           method: "POST",
           headers: {
