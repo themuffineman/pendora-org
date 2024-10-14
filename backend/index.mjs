@@ -67,6 +67,7 @@ app.post("/api/get-google-ads", async (req, res) => {
     }
   }
   try {
+    page.setDefaultTimeout(150000);
     await page.goto(
       `https://adstransparency.google.com/?region=US&domain=${url}&preset-date=${
         timeframe === "30" ? "Last+30+days" : "Last+7+days"
@@ -90,7 +91,7 @@ app.post("/api/get-google-ads", async (req, res) => {
       });
       try {
         let previousHeight;
-        while (true) {
+        for(let count=0; count < 3; count++) {
           previousHeight = await page.evaluate("document.body.scrollHeight");
 
           await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -195,6 +196,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
   }
 
   try {
+    page.setDefaultTimeout(150000);
     const pageId = await getPageId(url, page);
     await page.goto(
       `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&media_type=all&search_type=page&view_all_page_id=${pageId}`
