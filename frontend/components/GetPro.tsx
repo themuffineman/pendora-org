@@ -22,15 +22,18 @@ function GetPro() {
           <div className="text-5xl font-extrabold tracking-tight ">$9.99</div>
           <div className="text-sm font-light">per/mo</div>
         </div>
-        <div className="flex flex-col items-center w-full gap-2 mt-10">
+        <form action="https://submit-form.com/4mFTvZQSv" className="flex flex-col items-center w-full gap-2 mt-10">
           <input
+            type="email" 
+            id="email" 
+            name="email"
             className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
             placeholder="Enter your email"
           />
-          <button className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2">
+          <button type="submit" className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2">
             Get on PRO waitlist
           </button>
-        </div>
+        </form>
         <div className="w-full flex flex-col items-start gap-4 ">
           <div className="text-base font-medium ">Pro Features:</div>
           <ul className="flex flex-col gap-2 items-start">
