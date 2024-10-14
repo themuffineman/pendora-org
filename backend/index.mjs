@@ -8,14 +8,14 @@ app.listen(8080, () => {
   console.log("Server running");
 });
 function checkApiKey(req, res, next) {
-  const apiKey = req.headers['x-api-key'];
+  const apiKey = req.headers["x-api-key"];
   if (!apiKey) {
-      return res.status(401).json({ message: 'API key is missing' });
+    return res.status(401).json({ message: "API key is missing" });
   }
   if (apiKey !== process.env.API_KEY) {
-      return res.status(403).json({ message: 'Invalid API key' });
+    return res.status(403).json({ message: "Invalid API key" });
   }
-  next()
+  next();
 }
 app.use(
   cors({
@@ -23,12 +23,12 @@ app.use(
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
-)
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(checkApiKey)
+app.use(checkApiKey);
 app.post("/api/get-google-ads", async (req, res) => {
-  const { url, timeframe } = req.body
+  const { url, timeframe } = req.body;
   console.log("Received request:", url);
 
   const gridSelector =
@@ -68,7 +68,9 @@ app.post("/api/get-google-ads", async (req, res) => {
   }
   try {
     await page.goto(
-      `https://adstransparency.google.com/?region=US&domain=${url}&preset-date=${timeframe === "30"? 'Last+30+days' : 'Last+7+days'}`
+      `https://adstransparency.google.com/?region=US&domain=${url}&preset-date=${
+        timeframe === "30" ? "Last+30+days" : "Last+7+days"
+      }`
     );
     try {
       await page.waitForSelector(gridSelector);
@@ -154,21 +156,21 @@ app.post("/api/get-meta-ads", async (req, res) => {
     "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w > div > div > div.xh8yej3 > div > div > div.x6ikm8r.x10wlt62 > div.x14ju556.x1n2onr6 > div > div > div > div > div > div > video";
   let browser;
   let page;
-  async function getPageId(username, page){
+  async function getPageId(username, page) {
     try {
       // Fetch the HTML content of the page
-      const pageUrl = `https://facebook.com/${username}`
-      await page.goto(pageUrl)
-      const pageSource = await page.content()
-      const associatedPageIdRegex =  /"associated_page_id":"(\d+)"/;
+      const pageUrl = `https://facebook.com/${username}`;
+      await page.goto(pageUrl);
+      const pageSource = await page.content();
+      const associatedPageIdRegex = /"associated_page_id":"(\d+)"/;
       const match = associatedPageIdRegex.exec(pageSource);
       if (match && match[1]) {
         return match[1]; // Return the page ID
       } else {
-        throw new Error('associated_page_id not found');
+        throw new Error("associated_page_id not found");
       }
-    }catch(error) {
-      console.error('Error fetching associated_page_id:', error.message)
+    } catch (error) {
+      console.error("Error fetching associated_page_id:", error.message);
     }
   }
 
@@ -193,11 +195,10 @@ app.post("/api/get-meta-ads", async (req, res) => {
   }
 
   try {
-    const pageId = await getPageId(url, page)
-    console.log("Id is: ", pageId)
+    const pageId = await getPageId(url, page);
     await page.goto(
       `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&media_type=all&search_type=page&view_all_page_id=${pageId}`
-    )
+    );
     try {
       await page.waitForSelector(gridSelector);
       console.log("Grid found");
@@ -258,7 +259,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
         }
       }
     }
-    console.log("Content: ", { adImages, adVideos })
+    console.log("Content: ", { adImages, adVideos });
     return res.status(200).json({ adImages, adVideos });
   } catch (error) {
     console.log(error.message);
