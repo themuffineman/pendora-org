@@ -134,6 +134,7 @@ app.post("/api/get-google-ads", async (req, res) => {
         console.log("Error processing an ad card:", error);
         continue;
       }
+      break;
     }
     return res.status(200).json({ adImages });
   } catch (error) {
@@ -261,6 +262,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
           console.log("Error processing an ad card:", error.message);
           continue;
         }
+        break;
       }
     }
     return res.status(200).json({ adImages, adVideos });
