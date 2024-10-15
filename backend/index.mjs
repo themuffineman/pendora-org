@@ -41,7 +41,9 @@ app.post("/api/get-google-ads", async (req, res) => {
   let page;
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({
+        protocolTimeout: 240000
+      });
       page = await browser.newPage();
       // await page.setRequestInterception(true);
       // page.on('request', (request) => {
@@ -177,7 +179,9 @@ app.post("/api/get-meta-ads", async (req, res) => {
 
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({
+        protocolTimeout: 240000
+      });
       page = await browser.newPage();
       if (browser && page) {
         console.log("Browser and Page opended");
@@ -188,7 +192,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     } catch (error) {
       await page?.close();
       await browser?.close();
-      console.log(error.message);
+      console.log("Browser launch error: ", error.message);
       if (browserRetries === 3) {
         return res.sendStatus(500);
       }
@@ -209,7 +213,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     }
     try {
       let previousHeight;
-      while (true) {
+      for(let count = 0; count < 3; count++){
         previousHeight = await page.evaluate("document.body.scrollHeight");
 
         await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -256,12 +260,11 @@ app.post("/api/get-meta-ads", async (req, res) => {
             adVideos.push(adVideoSrc);
           }
         } catch (error) {
-          console.log("Error processing an ad card:", error);
+          console.log("Error processing an ad card:", error.message);
           continue;
         }
       }
     }
-    console.log("Content: ", { adImages, adVideos });
     return res.status(200).json({ adImages, adVideos });
   } catch (error) {
     console.log(error.message);
