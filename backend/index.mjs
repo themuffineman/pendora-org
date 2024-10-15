@@ -131,14 +131,14 @@ app.post("/api/get-google-ads", async (req, res) => {
           adImages.push(adImageSrc);
         }
       } catch (error) {
-        console.log("Error processing an ad card:", error);
+        console.log("Error processing an ad card:", error.message);
         continue;
       }
       break;
     }
     return res.status(200).json({ adImages });
   } catch (error) {
-    console.error("Error fetching ads:", error);
+    console.error("Error fetching ads:", error.message);
     return res.sendStatus(500);
   } finally {
     await page?.close();
