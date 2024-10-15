@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(checkApiKey);
 app.post("/api/get-google-ads", async (req, res) => {
-  const { url, timeframe } = req.body;
+  const { url } = req.body;
   console.log("Received request:", url);
 
   const gridSelector =
@@ -71,9 +71,7 @@ app.post("/api/get-google-ads", async (req, res) => {
   try {
     page.setDefaultTimeout(150000);
     await page.goto(
-      `https://adstransparency.google.com/?region=US&domain=${url}&preset-date=${
-        timeframe === "30" ? "Last+30+days" : "Last+7+days"
-      }`
+      `https://adstransparency.google.com/?region=US&domain=${url}&preset-date=Last+7+days`
     );
     try {
       await page.waitForSelector(gridSelector);
@@ -93,7 +91,7 @@ app.post("/api/get-google-ads", async (req, res) => {
       });
       try {
         let previousHeight;
-        for(let count=0; count < 3; count++) {
+        for(let count= 0; count < 2; count++) {
           previousHeight = await page.evaluate("document.body.scrollHeight");
 
           await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -192,7 +190,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     } catch (error) {
       await page?.close();
       await browser?.close();
-      console.log("Browser launch error: ", error.message);
+      console.log("Browser launch error: ",error.message);
       if (browserRetries === 3) {
         return res.sendStatus(500);
       }
@@ -213,7 +211,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     }
     try {
       let previousHeight;
-      for(let count = 0; count < 3; count++){
+      for(let count = 0; count < 2; count++){
         previousHeight = await page.evaluate("document.body.scrollHeight");
 
         await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
