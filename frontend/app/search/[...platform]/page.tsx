@@ -33,6 +33,7 @@ const page = ({ params }: { params: any }) => {
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
   const [platform, setPlatform] = useState<string>("google");
+  const [isOpen, setIsOpen] = useState(false);
   const controller = new AbortController();
   const signal = controller.signal;
   const [usageCount, incrementUsage] = useServiceUsage();
@@ -49,60 +50,63 @@ const page = ({ params }: { params: any }) => {
     setAds([]);
     setIsFetching(true);
     setFailedToFetch(false);
-    
-    try {
-      const adResponse = await fetch(
-        `https://pendora-org-production.up.railway.app/api/get-${params.platform[0]}-ads`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            url: params.platform[1],
-            platform: params.platform[0],
-          }),
-          signal
+    if(usageCount > 4){
+      setIsOpen(true)
+    }else{
+      try {
+        const adResponse = await fetch(
+          `https://pendora-org-production.up.railway.app/api/get-${params.platform[0]}-ads`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              url: params.platform[1],
+              platform: params.platform[0],
+            }),
+            signal
+          }
+        );
+        if (!adResponse.ok) {
+          throw new Error("Failed to fetch");
         }
-      );
-      if (!adResponse.ok) {
-        throw new Error("Failed to fetch");
-      }
-      const ads: { adImages: string[]; adVideos?: string[] } =
-        await adResponse.json();
-      if (params.platform[0] === "google") {
-        const initData: adTypes[] = [];
-        ads?.adImages.forEach((string) => {
-          initData.push({
-            url: string,
-            type: "image",
-          });
-        });
-        setAds(initData);
-        incrementUsage();
-      }
-      if (params.platform[0] === "meta") {
-        const initData: adTypes[] = [];
-        ads?.adImages.forEach((string) => {
-          initData.push({
-            url: string,
-            type: "image",
-          });
-        });
-        ads.adVideos &&
-          ads?.adVideos.forEach((string) => {
+        const ads: { adImages: string[]; adVideos?: string[] } =
+          await adResponse.json();
+        if (params.platform[0] === "google") {
+          const initData: adTypes[] = [];
+          ads?.adImages.forEach((string) => {
             initData.push({
               url: string,
-              type: "video",
+              type: "image",
             });
           });
-        setAds(initData);
-        incrementUsage();
+          setAds(initData);
+          incrementUsage();
+        }
+        if (params.platform[0] === "meta") {
+          const initData: adTypes[] = [];
+          ads?.adImages.forEach((string) => {
+            initData.push({
+              url: string,
+              type: "image",
+            });
+          });
+          ads.adVideos &&
+            ads?.adVideos.forEach((string) => {
+              initData.push({
+                url: string,
+                type: "video",
+              });
+            });
+          setAds(initData);
+          incrementUsage();
+        }
+      } catch (error) {
+        setFailedToFetch(true);
+      } finally {
+        setIsFetching(false);
       }
-    } catch (error) {
-      setFailedToFetch(true);
-    } finally {
-      setIsFetching(false);
     }
   }
   return (
@@ -144,7 +148,7 @@ const page = ({ params }: { params: any }) => {
                 Search
               </button>
             ):(
-              <Dialog>
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black absolute top-1/2 -translate-y-1/2 right-[1%]">
                   <DialogTitle>Search</DialogTitle>
                 </DialogTrigger>
@@ -336,7 +340,7 @@ const page = ({ params }: { params: any }) => {
                 </DialogContent>
               </Dialog>
             ) : null}
-            {isFetching && (
+            {/* {isFetching && (
               <div
                 className={`flex gap-5 items-center rounded-md bg-[#f0f0f0] p-4 fixed bottom-8 right-16 border-2 border-neutral-500 w-max shadow-lg shadow-neutral-300`}
               >
@@ -345,7 +349,7 @@ const page = ({ params }: { params: any }) => {
                   Cancel
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
