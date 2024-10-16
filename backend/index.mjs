@@ -42,7 +42,8 @@ app.post("/api/get-google-ads", async (req, res) => {
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
       browser = await puppeteer.launch({
-        protocolTimeout: 240000
+        protocolTimeout: 240000,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
       });
       page = await browser.newPage();
       // await page.setRequestInterception(true);
@@ -179,7 +180,8 @@ app.post("/api/get-meta-ads", async (req, res) => {
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
       browser = await puppeteer.launch({
-        protocolTimeout: 240000
+        protocolTimeout: 240000,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
       });
       page = await browser.newPage();
       if (browser && page) {
