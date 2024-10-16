@@ -20,7 +20,7 @@ function GetPro() {
       </DialogTrigger>
       <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
         <div className="flex items-end">
-          <div className="text-5xl font-extrabold tracking-tight ">$9.99</div>
+          <div className="text-5xl font-extrabold tracking-tight ">$14.99</div>
           <div className="text-sm font-light">per/mo</div>
         </div>
         <form action="https://submit-form.com/4mFTvZQSv" className="flex flex-col items-center w-full gap-2 mt-10">
