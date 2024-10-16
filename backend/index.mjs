@@ -92,7 +92,7 @@ app.post("/api/get-google-ads", async (req, res) => {
       });
       try {
         let previousHeight;
-        for(let count= 0; count < 2; count++) {
+        for(let count= 0; count < 3; count++) {
           previousHeight = await page.evaluate("document.body.scrollHeight");
 
           await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -135,7 +135,6 @@ app.post("/api/get-google-ads", async (req, res) => {
         console.log("Error processing an ad card:", error.message);
         continue;
       }
-      break;
     }
     return res.status(200).json({ adImages });
   } catch (error) {
@@ -214,7 +213,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     }
     try {
       let previousHeight;
-      for(let count = 0; count < 2; count++){
+      for(let count = 0; count < 3; count++){
         previousHeight = await page.evaluate("document.body.scrollHeight");
 
         await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -264,7 +263,6 @@ app.post("/api/get-meta-ads", async (req, res) => {
           console.log("Error processing an ad card:", error.message);
           continue;
         }
-        break;
       }
     }
     return res.status(200).json({ adImages, adVideos });
