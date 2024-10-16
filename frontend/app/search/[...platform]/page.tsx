@@ -47,12 +47,12 @@ const page = ({ params }: { params: any }) => {
   }, []);
   async function fetchData(e?: any) {
     e?.preventDefault();
-    setAds([]);
-    setIsFetching(true);
-    setFailedToFetch(false);
     if(usageCount > 4){
       setIsOpen(true)
     }else{
+      setAds([]);
+      setIsFetching(true);
+      setFailedToFetch(false);
       try {
         const adResponse = await fetch(
           `https://pendora-org-production.up.railway.app/api/get-${params.platform[0]}-ads`,
@@ -149,7 +149,7 @@ const page = ({ params }: { params: any }) => {
               </button>
             ):(
               <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogTrigger className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black absolute top-1/2 -translate-y-1/2 right-[1%]">
+                <DialogTrigger className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black font-medium absolute top-1/2 -translate-y-1/2 right-[1%]">
                   <DialogTitle>Search</DialogTitle>
                 </DialogTrigger>
                 <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
