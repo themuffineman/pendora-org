@@ -230,7 +230,7 @@ const page = ({ params }: { params: any }) => {
             </SelectContent>
           </Select>
         </div>
-        <div className="text-black" >Trials Left: {usageCount}</div>
+        <div className="text-black rounded-md p-2 bg-[#f5f5f5]" >Trials Left: {5 - usageCount}</div>
         <GetPro />
       </nav>
       <div className="w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white">
@@ -276,7 +276,7 @@ const page = ({ params }: { params: any }) => {
           </div>
           {ads && ads.length > 0 && (
             <Dialog>
-              <DialogTrigger className="w-[5rem] h-[2.3rem] rounded-md bg-[#f5f5f5] text-black font-medium">
+              <DialogTrigger className="w-max p-3 rounded-md bg-black text-white font-medium">
                 <DialogTitle className="font-medium">Load More</DialogTitle>
               </DialogTrigger>
               <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">

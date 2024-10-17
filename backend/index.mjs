@@ -30,7 +30,6 @@ app.use(express.json());
 app.post("/api/get-google-ads", async (req, res) => {
   const { url } = req.body;
   console.log("Received request:", url);
-
   const gridSelector =
     "body > div:nth-child(9) > root > start-page > creative-grid > priority-creative-grid";
   const adCardSelector =
@@ -39,6 +38,7 @@ app.post("/api/get-google-ads", async (req, res) => {
     "body > div:nth-child(9) > root > start-page > creative-grid > material-button > material-ripple";
   let browser;
   let page;
+  
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
       browser = await puppeteer.launch({
@@ -69,10 +69,11 @@ app.post("/api/get-google-ads", async (req, res) => {
       }
     }
   }
+
   try {
     page.setDefaultTimeout(150000);
     await page.goto(
-      `https://adstransparency.google.com/?region=US&domain=${url}&preset-date=Last+7+days`
+      `https://adstransparency.google.com/?region=US&domain=${url}&preset-date=Last+30+days`
     );
     try {
       await page.waitForSelector(gridSelector);
@@ -92,7 +93,7 @@ app.post("/api/get-google-ads", async (req, res) => {
       });
       try {
         let previousHeight;
-        for(let count= 0; count < 7; count++) {
+        for(let count= 0; count < 5; count++) {
           previousHeight = await page.evaluate("document.body.scrollHeight");
 
           await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
