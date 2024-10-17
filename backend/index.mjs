@@ -92,7 +92,7 @@ app.post("/api/get-google-ads", async (req, res) => {
       });
       try {
         let previousHeight;
-        for(let count= 0; count < 3; count++) {
+        for(let count= 0; count < 7; count++) {
           previousHeight = await page.evaluate("document.body.scrollHeight");
 
           await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -119,17 +119,21 @@ app.post("/api/get-google-ads", async (req, res) => {
       return res.json({ adImages: [] }).status(200);
     }
     console.log("Grid found");
+    let cardsCount = 0
     const adCards = await adGrid.$$(adCardSelector);
     const adImages = [];
     for (const card of adCards) {
+      if(cardsCount > 10){
+        break;
+      }
       try {
         const adImage = await card.$("img");
         if (adImage) {
           const adImageSrc = await adImage
             .getProperty("src")
             .then((prop) => prop.jsonValue());
-          console.log("Src found: ", adImageSrc);
           adImages.push(adImageSrc);
+          cardsCount++
         }
       } catch (error) {
         console.log("Error processing an ad card:", error.message);
@@ -213,7 +217,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     }
     try {
       let previousHeight;
-      for(let count = 0; count < 3; count++){
+      for(let count = 0; count < 7; count++){
         previousHeight = await page.evaluate("document.body.scrollHeight");
 
         await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -239,7 +243,11 @@ app.post("/api/get-meta-ads", async (req, res) => {
     }
     const adImages = [];
     const adVideos = [];
+    let cardsCount = 0
     for (const grid of adGrids) {
+      if(cardsCount > 10){
+        break
+      }
       const adCards = await grid.$$(adCardSelector);
       console.log("Ad cards length: ", adCards.length);
 
@@ -251,6 +259,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
               .getProperty("src")
               .then((prop) => prop.jsonValue());
             adImages.push(adImageSrc);
+            cardsCount++
           }
           const adVideo = await card.$(adVideoSelector);
           if (adVideo) {
@@ -258,6 +267,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
               .getProperty("src")
               .then((prop) => prop.jsonValue());
             adVideos.push(adVideoSrc);
+            cardsCount++
           }
         } catch (error) {
           console.log("Error processing an ad card:", error.message);
