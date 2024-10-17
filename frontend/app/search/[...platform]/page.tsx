@@ -35,8 +35,6 @@ const page = ({ params }: { params: any }) => {
   const [platform, setPlatform] = useState<string>("google");
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
-  const controller = new AbortController();
-  const signal = controller.signal;
   const router = useRouter();
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -65,7 +63,6 @@ const page = ({ params }: { params: any }) => {
               url: params.platform[1],
               platform: params.platform[0],
             }),
-            signal
           }
         );
         if (!adResponse.ok) {
@@ -230,7 +227,7 @@ const page = ({ params }: { params: any }) => {
             </SelectContent>
           </Select>
         </div>
-        <div className="text-black rounded-md p-2 bg-[#f5f5f5]" >Trials Left: {5 - usageCount}</div>
+        <div className="text-black rounded-md p-2 bg-[#f5f5f5]" >Trials Left: {4 - usageCount}</div>
         <GetPro />
       </nav>
       <div className="w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white">
