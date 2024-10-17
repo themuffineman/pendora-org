@@ -207,6 +207,9 @@ app.post("/api/get-meta-ads", async (req, res) => {
   try {
     page.setDefaultTimeout(150000);
     const pageId = await getPageId(url, page);
+    if(!pageId){
+      return res.sendStatus(404)
+    }
     await page.goto(
       `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&media_type=all&search_type=page&view_all_page_id=${pageId}`
     );
