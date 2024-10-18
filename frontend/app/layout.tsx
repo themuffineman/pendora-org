@@ -17,6 +17,9 @@ export default function RootLayout({
   
   return (
       <html lang="en">
+        <head>
+          <script defer src="https://cdn.overtracking.com/t/tllnMQkfn3WqCweca/"></script>
+        </head>
         <body className={inter.className}>
           {children}
         </body>
