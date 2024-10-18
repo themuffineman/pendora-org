@@ -65,11 +65,10 @@ export default async function Home() {
       </nav>
       <div className="flex flex-col gap-5 items-center w-full ">
         <h1 className=" text-4xl md:text-5xl w-full max-w-[42rem] md:leading-[3rem] h-max p-2 text-center tracking-tight font-bold relative bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-900">
-          See how your competitors are marketing online
+          See all the ads a business is running online.
         </h1>
         <h3 className="w-[80%] text-center text-sm md:text-base text-neutral-400">
-          Peel back the curtain and see the ad copy and the creatives your
-          competitors are using to market their brands online.
+          Peel back the curtain and see the ad copy and the creatives businesses are using.
         </h3>
         <MainSearch />
       </div>
