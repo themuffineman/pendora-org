@@ -7,10 +7,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 const features = [
+  "TikTok Ads",
+  "LinkedIn Ads",
   "Save Ads for later",
   "Faster lookup speeds",
   "No daily limit",
-  "Access to all ads",
+  "Extract all ad history",
 ];
 function GetPro() {
   return (
@@ -23,15 +25,21 @@ function GetPro() {
           <div className="text-5xl font-extrabold tracking-tight ">$14.99</div>
           <div className="text-sm font-light">per/mo</div>
         </div>
-        <form action="https://submit-form.com/4mFTvZQSv" className="flex flex-col items-center w-full gap-2 mt-10">
+        <form
+          action="https://submit-form.com/4mFTvZQSv"
+          className="flex flex-col items-center w-full gap-2 mt-10"
+        >
           <input
-            type="email" 
-            id="email" 
+            type="email"
+            id="email"
             name="email"
             className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
             placeholder="Enter your email"
           />
-          <button type="submit" className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2">
+          <button
+            type="submit"
+            className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2"
+          >
             Get on PRO waitlist
           </button>
         </form>

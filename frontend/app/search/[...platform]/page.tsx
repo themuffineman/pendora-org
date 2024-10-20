@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {useServiceUsage} from "@/hooks/useStorage"
+import { useServiceUsage } from "@/hooks/useStorage";
 import Toast from "@/components/Toast";
 const features = [
   "TikTok Ads",
@@ -24,7 +24,7 @@ const features = [
   "Save Ads for later",
   "Faster lookup speeds",
   "No daily limit",
-  "Extract all ad history"
+  "Extract all ad history",
 ];
 const page = ({ params }: { params: any }) => {
   interface adTypes {
@@ -34,13 +34,12 @@ const page = ({ params }: { params: any }) => {
   const [ads, setAds] = useState<any[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
-  const [noAdsFound, setNoAdsFound] = useState<boolean>(false)
+  const [noAdsFound, setNoAdsFound] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
   const [platform, setPlatform] = useState<string>("google");
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
-  const [timeNotifier, setTimeNotifier] = useState<boolean>(false)
-  let loadTime=0
+  const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
   const router = useRouter();
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -51,19 +50,20 @@ const page = ({ params }: { params: any }) => {
   }, []);
   async function fetchData(e?: any) {
     e?.preventDefault();
+    let loadTime = 0;
     const intervalId = setInterval(() => {
       loadTime += 1;
-      if (loadTime === 10) {
-        setTimeNotifier(true)
-        setTimeout(()=>{
-          setTimeNotifier(false)
+      if (loadTime === 15) {
+        setTimeNotifier(true);
+        setTimeout(() => {
+          setTimeNotifier(false);
           clearInterval(intervalId);
-        }, 5000)
+        }, 10000);
       }
-    }, 1000)
-    if(usageCount > 4){
-      setIsOpen(true)
-    }else{
+    }, 1000);
+    if (usageCount > 4) {
+      setIsOpen(true);
+    } else {
       setAds([]);
       setIsFetching(true);
       setFailedToFetch(false);
@@ -81,11 +81,11 @@ const page = ({ params }: { params: any }) => {
             }),
           }
         );
-        if(adResponse.status === 404){
-          setNoAdsFound(true)
+        if (adResponse.status === 404) {
+          setNoAdsFound(true);
           throw new Error("No Ads Found");
         }
-        if(!adResponse.ok) {
+        if (!adResponse.ok) {
           throw new Error("Failed to fetch");
         }
         const ads: { adImages: string[]; adVideos?: string[] } =
@@ -120,8 +120,8 @@ const page = ({ params }: { params: any }) => {
           incrementUsage();
         }
       } catch (error: any) {
-        setFailedToFetch(true)
-        console.error(error.message)
+        setFailedToFetch(true);
+        console.error(error.message);
       } finally {
         setIsFetching(false);
       }
@@ -165,26 +165,36 @@ const page = ({ params }: { params: any }) => {
               >
                 Search
               </button>
-            ):(
+            ) : (
               <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black font-medium absolute top-1/2 -translate-y-1/2 right-[1%]">
                   <DialogTitle className="font-medium">Search</DialogTitle>
                 </DialogTrigger>
                 <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
-                  <div className="text-lg font-bold tracking-tight ">Max Usage Reached. Resets Tommorrow</div>
+                  <div className="text-lg font-bold tracking-tight ">
+                    Max Usage Reached. Resets Tommorrow
+                  </div>
                   <div className="flex items-end">
-                    <div className="text-5xl font-extrabold tracking-tight ">$14.99</div>
+                    <div className="text-5xl font-extrabold tracking-tight ">
+                      $14.99
+                    </div>
                     <div className="text-sm font-light">per/mo</div>
                   </div>
-                  <form action="https://submit-form.com/4mFTvZQSv" className="flex flex-col items-center w-full gap-2 mt-10">
+                  <form
+                    action="https://submit-form.com/4mFTvZQSv"
+                    className="flex flex-col items-center w-full gap-2 mt-10"
+                  >
                     <input
-                      type="email" 
-                      id="email" 
+                      type="email"
+                      id="email"
                       name="email"
                       className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
                       placeholder="Enter your email"
                     />
-                    <button type="submit" className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2">
+                    <button
+                      type="submit"
+                      className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2"
+                    >
                       Get on PRO waitlist
                     </button>
                   </form>
@@ -248,7 +258,9 @@ const page = ({ params }: { params: any }) => {
             </SelectContent>
           </Select>
         </div>
-        <div className="text-black rounded-md p-2 bg-[#f5f5f5]" >Trials Left: {4 - usageCount}</div>
+        <div className="text-black rounded-md p-2 bg-[#f5f5f5]">
+          Trials Left: {4 - usageCount}
+        </div>
         <GetPro />
       </nav>
       <div className="w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white">
@@ -292,7 +304,7 @@ const page = ({ params }: { params: any }) => {
               </button>
             ) : null}
           </div>
-          
+
           {ads && ads.length > 0 && (
             <Dialog>
               <DialogTrigger className="w-max p-3 rounded-md bg-black text-white font-medium">
@@ -300,18 +312,26 @@ const page = ({ params }: { params: any }) => {
               </DialogTrigger>
               <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
                 <div className="flex items-end">
-                  <div className="text-5xl font-extrabold tracking-tight ">$14.99</div>
+                  <div className="text-5xl font-extrabold tracking-tight ">
+                    $14.99
+                  </div>
                   <div className="text-sm font-light">per/mo</div>
                 </div>
-                <form action="https://submit-form.com/4mFTvZQSv" className="flex flex-col items-center w-full gap-2 mt-10">
+                <form
+                  action="https://submit-form.com/4mFTvZQSv"
+                  className="flex flex-col items-center w-full gap-2 mt-10"
+                >
                   <input
-                    type="email" 
-                    id="email" 
+                    type="email"
+                    id="email"
                     name="email"
                     className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
                     placeholder="Enter your email"
                   />
-                  <button type="submit" className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2">
+                  <button
+                    type="submit"
+                    className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2"
+                  >
                     Get on PRO waitlist
                   </button>
                 </form>

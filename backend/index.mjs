@@ -46,14 +46,14 @@ app.post("/api/get-google-ads", async (req, res) => {
         args: ['--no-sandbox', '--disable-setuid-sandbox']
       });
       page = await browser.newPage();
-      // await page.setRequestInterception(true);
-      // page.on('request', (request) => {
-      //     if (request.resourceType() === 'image') {
-      //         request.abort();
-      //     } else {
-      //         request.continue();
-      //     }
-      // })
+      await page.setRequestInterception(true);
+      page.on('request', (request) => {
+          if (request.resourceType() === 'image') {
+              request.abort();
+          } else {
+              request.continue();
+          }
+      })
       if (browser && page) {
         console.log("Browser and Page opended");
         break;
@@ -188,6 +188,14 @@ app.post("/api/get-meta-ads", async (req, res) => {
         args: ['--no-sandbox', '--disable-setuid-sandbox']
       });
       page = await browser.newPage();
+      await page.setRequestInterception(true);
+      page.on('request', (request) => {
+          if (request.resourceType() === 'image') {
+              request.abort();
+          } else {
+              request.continue();
+          }
+      })
       if (browser && page) {
         console.log("Browser and Page opended");
         break;
