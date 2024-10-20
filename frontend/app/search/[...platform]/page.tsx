@@ -17,11 +17,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {useServiceUsage} from "@/hooks/useStorage"
+import Toast from "@/components/Toast";
 const features = [
+  "TikTok Ads",
+  "LinkedIn Ads",
   "Save Ads for later",
   "Faster lookup speeds",
   "No daily limit",
-  "Access to all ads",
+  "Extract all ad history"
 ];
 const page = ({ params }: { params: any }) => {
   interface adTypes {
@@ -31,10 +34,13 @@ const page = ({ params }: { params: any }) => {
   const [ads, setAds] = useState<any[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
+  const [noAdsFound, setNoAdsFound] = useState<boolean>(false)
   const [input, setInput] = useState<string>("");
   const [platform, setPlatform] = useState<string>("google");
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
+  const [timeNotifier, setTimeNotifier] = useState<boolean>(false)
+  let loadTime=0
   const router = useRouter();
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,6 +51,16 @@ const page = ({ params }: { params: any }) => {
   }, []);
   async function fetchData(e?: any) {
     e?.preventDefault();
+    const intervalId = setInterval(() => {
+      loadTime += 1;
+      if (loadTime === 10) {
+        setTimeNotifier(true)
+        setTimeout(()=>{
+          setTimeNotifier(false)
+          clearInterval(intervalId);
+        }, 5000)
+      }
+    }, 1000)
     if(usageCount > 4){
       setIsOpen(true)
     }else{
@@ -65,7 +81,11 @@ const page = ({ params }: { params: any }) => {
             }),
           }
         );
-        if (!adResponse.ok) {
+        if(adResponse.status === 404){
+          setNoAdsFound(true)
+          throw new Error("No Ads Found");
+        }
+        if(!adResponse.ok) {
           throw new Error("Failed to fetch");
         }
         const ads: { adImages: string[]; adVideos?: string[] } =
@@ -99,8 +119,9 @@ const page = ({ params }: { params: any }) => {
           setAds(initData);
           incrementUsage();
         }
-      } catch (error) {
-        setFailedToFetch(true);
+      } catch (error: any) {
+        setFailedToFetch(true)
+        console.error(error.message)
       } finally {
         setIsFetching(false);
       }
@@ -150,7 +171,7 @@ const page = ({ params }: { params: any }) => {
                   <DialogTitle className="font-medium">Search</DialogTitle>
                 </DialogTrigger>
                 <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
-                  <div className="text-lg font-bold tracking-tight ">Max Usage Reached</div>
+                  <div className="text-lg font-bold tracking-tight ">Max Usage Reached. Resets Tommorrow</div>
                   <div className="flex items-end">
                     <div className="text-5xl font-extrabold tracking-tight ">$14.99</div>
                     <div className="text-sm font-light">per/mo</div>
@@ -262,7 +283,7 @@ const page = ({ params }: { params: any }) => {
               </button>
             ) : isFetching ? (
               <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
-            ) : ads.length === 0 ? (
+            ) : noAdsFound ? (
               <button
                 onClick={fetchData}
                 className="w-max p-4 bg-[#f5f5f5] transition flex items-center place-self-center justify-center rounded-md text-black text-base hover:bg-[#f0f0f0] shadow-2xl shadow-[#f2f2f2]"
@@ -271,6 +292,7 @@ const page = ({ params }: { params: any }) => {
               </button>
             ) : null}
           </div>
+          
           {ads && ads.length > 0 && (
             <Dialog>
               <DialogTrigger className="w-max p-3 rounded-md bg-black text-white font-medium">
@@ -314,6 +336,9 @@ const page = ({ params }: { params: any }) => {
                 </div>
               </DialogContent>
             </Dialog>
+          )}
+          {timeNotifier && (
+            <Toast error={false} message="Too Slow ? " pro={true} />
           )}
         </div>
       </div>
