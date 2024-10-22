@@ -67,9 +67,9 @@ const MainSearch = () => {
           <SelectContent>
             <SelectItem value="meta">
               <div className="flex gap-2 items-center justify-between ">
-                <img className="size-5" src="/metaverse.svg" alt="Meta logo" />
+                <img className="size-5" src="/facebook-icon.svg" alt="Facebook logo" />
                 <span className="text-base font-medium text-center">
-                  Meta Ads
+                  Facebook Ads
                 </span>
               </div>
             </SelectItem>
@@ -82,6 +82,30 @@ const MainSearch = () => {
                 />
                 <span className="text-base font-medium text-center">
                   Google Ads
+                </span>
+              </div>
+            </SelectItem>
+            <SelectItem disabled={true} value="tiktok">
+              <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
+                <img
+                  className="size-5"
+                  src="/tiktok-logo2.svg"
+                  alt="TikTok logo"
+                />
+                <span  className="text-base font-medium text-center">
+                  TikTok
+                </span>
+              </div>
+            </SelectItem>
+            <SelectItem disabled={true} value="linkedin">
+              <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
+                <img
+                  className="size-5"
+                  src="/linkedin-logo.svg"
+                  alt="LinkedIn logo"
+                />
+                <span className="text-base font-medium text-center">
+                  LinkedIn
                 </span>
               </div>
             </SelectItem>

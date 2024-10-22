@@ -68,16 +68,40 @@ const Search = ({context}: {context: any}) => {
                 <SelectContent>
                     <SelectItem value="meta">
                         <div className='flex gap-2 items-center justify-between '>
-                            <img className='size-5' src="/metaverse.svg" alt="Meta logo" />
-                            <span className='text-base font-medium text-center'>Meta</span>
+                            <img className='size-5' src="/facebook-icon.svg" alt="Meta logo" />
+                            <span className='text-base font-medium text-center'>Facebook Ads</span>
                         </div>
                     </SelectItem>
                     <SelectItem value="google">
                         <div className='flex gap-2 items-center justify-between'>
                             <img className='size-5' src="/google-logo.svg" alt="Google logo" />
-                            <span className='text-base font-medium text-center'>Google</span>
+                            <span className='text-base font-medium text-center'>Google Ads</span>
                         </div>
                     </SelectItem>
+                    <SelectItem disabled={true} value="tiktok">
+              <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
+                <img
+                  className="size-5"
+                  src="/tiktok-logo2.svg"
+                  alt="TikTok logo"
+                />
+                <span  className="text-base font-medium text-center">
+                  TikTok Ads
+                </span>
+              </div>
+            </SelectItem>
+            <SelectItem disabled={true} value="linkedin">
+              <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
+                <img
+                  className="size-5"
+                  src="/linkedin-logo.svg"
+                  alt="LinkedIn logo"
+                />
+                <span className="text-base font-medium text-center">
+                  LinkedIn Ads
+                </span>
+              </div>
+            </SelectItem>
                 </SelectContent>
             </Select>
         </div>

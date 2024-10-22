@@ -14,11 +14,11 @@ const features = [
   "No daily limit",
   "Extract all ad history",
 ];
-function GetPro() {
+function GetPro({children}) {
   return (
     <Dialog>
       <DialogTrigger className="min-w-max p-2 bg-black text-white rounded-md font-semibold text-center flex items-center justify-center">
-        <DialogTitle>Get Pro</DialogTitle>
+        <DialogTitle>{children? children : "Get Pro"}</DialogTitle>
       </DialogTrigger>
       <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
         <div className="flex items-end">
