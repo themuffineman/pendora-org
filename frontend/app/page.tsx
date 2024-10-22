@@ -6,37 +6,37 @@ import MainSearch from "@/components/MainSearch";
 import GetPro from "@/components/GetPro";
 
 export default async function Home() {
-  async function isSubscribed() {
-    let client;
-    try {
-      client = new MongoClient(process.env.MONGODB_URI!);
-      await client.connect();
-      const database = client.db("adsInspectDatabase");
-      const collection = database.collection("subscriptionDetails");
-      const { getUser } = getKindeServerSession();
-      const user = await getUser();
-      console.log(user.email);
-      const subscriptionDetails = await collection.findOne({
-        email: user.email,
-      });
-      console.log("Details: ", subscriptionDetails);
-      if (subscriptionDetails) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error: any) {
-      console.log("main error: ", error.message);
-      return null;
-    } finally {
-      await client?.close();
-    }
-  }
-  const { isAuthenticated } = getKindeServerSession();
-  const isUserAuthenticated = await isAuthenticated();
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  const isUserSubscribed = await isSubscribed();
+  // async function isSubscribed() {
+  //   let client;
+  //   try {
+  //     client = new MongoClient(process.env.MONGODB_URI!);
+  //     await client.connect();
+  //     const database = client.db("adsInspectDatabase");
+  //     const collection = database.collection("subscriptionDetails");
+  //     const { getUser } = getKindeServerSession();
+  //     const user = await getUser();
+  //     console.log(user.email);
+  //     const subscriptionDetails = await collection.findOne({
+  //       email: user.email,
+  //     });
+  //     console.log("Details: ", subscriptionDetails);
+  //     if (subscriptionDetails) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   } catch (error: any) {
+  //     console.log("main error: ", error.message);
+  //     return null;
+  //   } finally {
+  //     await client?.close();
+  //   }
+  // }
+  // const { isAuthenticated } = getKindeServerSession();
+  // const isUserAuthenticated = await isAuthenticated();
+  // const { getUser } = getKindeServerSession();
+  // const user = await getUser();
+  // const isUserSubscribed = await isSubscribed();
 
   return (
     <main className="flex flex-col w-full h-screen justify-center ">
@@ -62,7 +62,8 @@ export default async function Home() {
           See all the ads a business is running online.
         </h1>
         <h3 className="w-[80%] text-center text-sm md:text-base text-neutral-400">
-          Peel back the curtain and see the ad copy and the creatives businesses are using.
+          Peel back the curtain and see the ad copy and the creatives businesses
+          are using.
         </h3>
         <MainSearch />
       </div>
