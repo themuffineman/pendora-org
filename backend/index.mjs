@@ -2,6 +2,7 @@ import express from "express";
 import puppeteer from "puppeteer";
 import cors from "cors";
 import { config } from "dotenv";
+const { v4: uuidv4 } = require('uuid');
 config();
 const app = express();
 app.listen(8080, () => {
