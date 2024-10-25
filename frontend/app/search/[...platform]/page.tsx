@@ -3,34 +3,18 @@ import AdCard from "@/components/AdCard";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GetPro from "@/components/GetPro";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useServiceUsage } from "@/hooks/useStorage";
 import Toast from "@/components/Toast";
-const features = [
-  "TikTok Ads",
-  "LinkedIn Ads",
-  "Save Ads for later",
-  "Faster lookup speeds",
-  "No daily limit",
-  "Extract all ad history",
-];
+import Search from "@/components/Search";
+import {InitSocket} from "@/utils/utils.js"
+
 const page = ({ params }: { params: any }) => {
+
   interface adTypes {
     url: string;
     type: "image" | "video";
   }
+
   const [ads, setAds] = useState<any[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
@@ -41,16 +25,22 @@ const page = ({ params }: { params: any }) => {
   const [usageCount, incrementUsage] = useServiceUsage();
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
   const router = useRouter();
-  async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    router.push(`/search/${platform}/${input}`);
+  async function goToSearch(e: React.FormEvent<HTMLFormElement>){
+      e.preventDefault()
+      router.push(`/search/${platform}/${input}`);
   }
+
   useEffect(() => {
     fetchData();
   }, []);
   async function fetchData(e?: any) {
     e?.preventDefault();
     let loadTime = 0;
+    const socket = new InitSocket({
+      url: 'wss://pendora-org-production.up.railway.app',
+
+    })
+    await socket.connect()
     const intervalId = setInterval(() => {
       loadTime += 1;
       if (loadTime === 15) {
@@ -130,134 +120,7 @@ const page = ({ params }: { params: any }) => {
   return (
     <>
       <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
-        <div className="w-max flex items-center justify-start gap-3 max-w-[700px] ">
-          <form
-            onSubmit={(e) => goToSearch(e)}
-            className="relative w-[70%] min-w-[500px]  max-w-[600px] flex justify-center items-center self-start"
-          >
-            <input
-              required={true}
-              onChange={(e) => {
-                setInput(e.target.value);
-              }}
-              className="w-[100%] h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md "
-              placeholder={
-                platform === "google"
-                  ? "Enter domain e.g. domain.com"
-                  : "Enter Facebook username"
-              }
-              type="search"
-            />
-            <svg
-              className="absolute left-[1%] max-left top-1/2 -translate-y-1/2"
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="#d3d3d3"
-              viewBox="0 0 256 256"
-            >
-              <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-            </svg>
-            {usageCount < 4 ? (
-              <button
-                type="submit"
-                className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black absolute top-1/2 -translate-y-1/2 right-[1%]"
-              >
-                Search
-              </button>
-            ) : (
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogTrigger className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black font-medium absolute top-1/2 -translate-y-1/2 right-[1%]">
-                  <DialogTitle className="font-medium">Search</DialogTitle>
-                </DialogTrigger>
-                <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
-                  <div className="text-lg font-bold tracking-tight ">
-                    Max Usage Reached. Resets Tommorrow
-                  </div>
-                  <div className="flex items-end">
-                    <div className="text-5xl font-extrabold tracking-tight ">
-                      $14.99
-                    </div>
-                    <div className="text-sm font-light">per/mo</div>
-                  </div>
-                  <form
-                    action="https://submit-form.com/4mFTvZQSv"
-                    className="flex flex-col items-center w-full gap-2 mt-10"
-                  >
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
-                      placeholder="Enter your email"
-                    />
-                    <button
-                      type="submit"
-                      className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2"
-                    >
-                      Get on PRO waitlist
-                    </button>
-                  </form>
-                  <div className="w-full flex flex-col items-start gap-4 ">
-                    <div className="text-base font-medium ">Pro Features:</div>
-                    <ul className="flex flex-col gap-2 items-start">
-                      {features.map((string) => (
-                        <li className="flex gap-2 items-center text-sm font-light ">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="15"
-                            height="15"
-                            fill="#000000"
-                            viewBox="0 0 256 256"
-                          >
-                            <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                          </svg>
-                          {string}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            )}
-          </form>
-          <Select
-            value={platform}
-            onValueChange={(value) => {
-              setPlatform(value);
-            }}
-          >
-            <SelectTrigger className="min-w-max h-12">
-              <SelectValue placeholder="Platform" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="meta">
-                <div className="flex gap-2 items-center justify-between ">
-                  <img
-                    className="size-5"
-                    src="/metaverse.svg"
-                    alt="Meta logo"
-                  />
-                  <span className="text-base font-medium text-center">
-                    Meta
-                  </span>
-                </div>
-              </SelectItem>
-              <SelectItem value="google">
-                <div className="flex gap-2 items-center justify-between">
-                  <img
-                    className="size-5"
-                    src="/google-logo.svg"
-                    alt="Google logo"
-                  />
-                  <span className="text-base font-medium text-center">
-                    Google
-                  </span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Search platform={platform} setPlatform={setPlatform} input={input} setInput={setInput} isOpen={isOpen} setIsOpen={setIsOpen} usageCount={usageCount} />
         <div className="text-black rounded-md p-2 bg-[#f5f5f5]">
           Trials Left: {4 - usageCount}
         </div>

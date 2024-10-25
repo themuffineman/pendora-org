@@ -4,6 +4,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 const features = [
   "TikTok Ads",
   "LinkedIn Ads",
@@ -12,13 +13,19 @@ const features = [
   "No daily limit",
   "Extract all ad history",
 ];
-function GetPro({ children }: { children?: any }) {
+
+function GetPro({ children, dailyLimit, isOpen, setIsOpen }: { children?: any, dailyLimit?:boolean, isOpen: any, setIsOpen?:any }) {
   return (
-    <Dialog>
-      <DialogTrigger className="min-w-max p-2 bg-black text-white rounded-md font-semibold text-center flex items-center justify-center">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger className="min-w-max hover:translate-y-[2px] transition p-2 bg-black text-white rounded-md font-semibold text-center flex items-center justify-center">
         <DialogTitle>{children ? children : "Get Pro"}</DialogTitle>
       </DialogTrigger>
       <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
+        {dailyLimit && (
+          <div className="text-lg font-bold tracking-tight ">
+          Max Usage Reached. Resets Tommorrow
+        </div>
+        )}
         <div className="flex items-end">
           <div className="text-5xl font-extrabold tracking-tight ">$14.99</div>
           <div className="text-sm font-light">per/mo</div>
