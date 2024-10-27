@@ -23,7 +23,7 @@ const page = ({ params }: { params: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
-  const [statusUpdate, setStatusUpdate] = useState<string>("Connecting");
+  const [statusUpdate, setStatusUpdate] = useState<string>("Connecting...");
   const router = useRouter();
   function handleMessage(message: any) {
     if (message.type === "id") {
@@ -76,7 +76,7 @@ const page = ({ params }: { params: any }) => {
       setIsFetching(true);
       setFailedToFetch(false);
       try {
-        console.log("socket id is", id)
+        console.log("socket id is", id);
         const adResponse = await fetch(
           `https://pendora-org-production.up.railway.app/api/get-${params.platform[0]}-ads`,
           {
@@ -120,7 +120,7 @@ const page = ({ params }: { params: any }) => {
           usageCount={usageCount}
           goToSearch={goToSearch}
         />
-        <div className="text-black rounded-md p-2 bg-[#f5f5f5]">
+        <div className="text-black min-w-max rounded-md p-2 bg-[#f5f5f5]">
           Trials Left: {4 - usageCount}
         </div>
         <GetPro />
@@ -156,7 +156,7 @@ const page = ({ params }: { params: any }) => {
                 Failed To Fetch. Try Again.
               </button>
             ) : isFetching ? (
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-1">
                 <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
                 <div className="bg-[#f5f5f5] rounded-md p-2 text-sm">
                   {statusUpdate}
