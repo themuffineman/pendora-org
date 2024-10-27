@@ -18,7 +18,7 @@ interface props {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   goToSearch: (e: React.FormEvent<HTMLFormElement>) => void;
 }
-const Search = async ({
+const Search = ({
   platform,
   setPlatform,
   input,
