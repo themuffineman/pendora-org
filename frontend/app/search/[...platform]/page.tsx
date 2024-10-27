@@ -160,7 +160,7 @@ const page = ({ params }: { params: any }) => {
               <div className="flex flex-col">
                 <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
                 <div className="bg-[#f5f5f5] rounded-md p-2 text-sm">
-                  {status}
+                  {statusUpdate}
                 </div>
               </div>
             ) : noAdsFound ? (
