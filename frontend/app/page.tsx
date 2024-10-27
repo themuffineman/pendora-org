@@ -13,8 +13,8 @@ export default async function Home() {
   async function isSubscribed() {
     const { isAuthenticated } = getKindeServerSession();
     const isUserAuthenticated = await isAuthenticated();
-    if(!isUserAuthenticated){
-      return
+    if (!isUserAuthenticated) {
+      return;
     }
     let client;
     try {
@@ -41,10 +41,10 @@ export default async function Home() {
       await client?.close();
     }
   }
-  
+
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  const isUserSubscribed = await isSubscribed();
+  const isUserSubscribed = false; //await isSubscribed();
 
   return (
     <main className="flex flex-col w-full h-screen justify-center ">

@@ -13,7 +13,6 @@ const page = ({ params }: { params: any }) => {
     url: string;
     type: "image" | "video";
   }
-
   const [ads, setAds] = useState<any[]>([]);
   const [socketId, setSocketId] = useState<string | null>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -40,7 +39,6 @@ const page = ({ params }: { params: any }) => {
     e.preventDefault();
     router.push(`/search/${platform}/${input}`);
   }
-
   useEffect(() => {
     fetchData();
   }, []);
