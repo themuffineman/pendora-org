@@ -7,20 +7,22 @@ export class InitSocket {
     this.onClose = onClose;
     this.onOpen = onOpen;
     this.onError = onError;
+    this.id = uuidv4(); // Generate a unique ID for the instance
   }
+
   connect() {
-    const id = uuidv4();
-    const socket = new WebSocket(this.url);
-    socket.onopen = this.onOpen;
-    socket.onmessage = this.onMessage;
-    socket.onerror = this.onError;
-    socket.onclose = this.onClose;
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(id);
-    } else {
-      console.error("Cannot send data.");
-    }
-    return id;
+    this.socket = new WebSocket(this.url);
+
+    this.socket.onopen = () => {
+      if (this.onOpen) this.onOpen();
+      this.socket.send(this.id); // Send the UUID once the connection is open
+    };
+
+    this.socket.onmessage = this.onMessage;
+    this.socket.onerror = this.onError;
+    this.socket.onclose = this.onClose;
+
+    return this.id; // Return the unique ID if needed
   }
 }
 
