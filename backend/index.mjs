@@ -18,7 +18,7 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ port: 4040 });
 const clients = new Map();
 function broadcastMessage(userId, message) {
   const client = clients.get(userId);
