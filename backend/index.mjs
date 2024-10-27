@@ -5,7 +5,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 config();
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket({ port: 8080 });
 const clients = new Map();
 
 // Function to send a message to a specific client by ID
