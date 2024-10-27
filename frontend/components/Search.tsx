@@ -8,23 +8,17 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select";
-  import {
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    DialogTrigger,
-  } from "@/components/ui/dialog";
 interface props{
-    platform: any;
-    setPlatform: any;
-    setInput:any;
-    input:any;
+    platform: string;
+    setPlatform: React.Dispatch<React.SetStateAction<string>>;
+    setInput: React.Dispatch<React.SetStateAction<string>>;
+    input:string;
     usageCount: number;
-    IsOpen: any;
-    setIsOpen: any;
-    gotToSearch:any;
+    isOpen: boolean;
+    setIsOpen:  React.Dispatch<React.SetStateAction<boolean>>;
+    goToSearch: (e: React.FormEvent<HTMLFormElement>) => void;
 }
-const Search:props = async ({platform, setPlatform, input,setInput, usageCount, IsOpen, setIsOpen, goToSearch}) => {
+const Search = async ({platform, setPlatform, input, setInput, usageCount, isOpen, setIsOpen, goToSearch}: props) => {
     async function isSubscribed() {
         const { isAuthenticated } = getKindeServerSession();
         const isUserAuthenticated = await isAuthenticated();
@@ -51,14 +45,12 @@ const Search:props = async ({platform, setPlatform, input,setInput, usageCount, 
           }
         } catch (error: any) {
           console.log("main error: ", error.message);
-          return null;
+          return undefined;
         } finally {
           await client?.close();
         }
       }
-
-
-      const isUserSubscribed = await isSubscribed();
+    const isUserSubscribed = await isSubscribed();
   return (
     <div className="w-max flex items-center justify-start gap-3 max-w-[700px] ">
     <form
@@ -133,7 +125,7 @@ const Search:props = async ({platform, setPlatform, input,setInput, usageCount, 
             </span>
           </div>
         </SelectItem>
-        <SelectItem disabled={isSubscribed} value="tiktok">
+        <SelectItem disabled={isUserSubscribed} value="tiktok">
               <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
                 <img
                   className="size-5"
@@ -145,7 +137,7 @@ const Search:props = async ({platform, setPlatform, input,setInput, usageCount, 
                 </span>
               </div>
             </SelectItem>
-            <SelectItem disabled={isSubscribed} value="linkedin">
+            <SelectItem disabled={isUserSubscribed} value="linkedin">
               <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
                 <img
                   className="size-5"

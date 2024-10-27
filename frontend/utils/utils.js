@@ -28,3 +28,4 @@ export const proFeatures = [
   "No daily limit",
   "Extract all ad history",
 ]
+export const proPrice = 1.99;

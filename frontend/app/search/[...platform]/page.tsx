@@ -6,10 +6,9 @@ import GetPro from "@/components/GetPro";
 import { useServiceUsage } from "@/hooks/useStorage";
 import Toast from "@/components/Toast";
 import Search from "@/components/Search";
-import {InitSocket} from "@/utils/utils.js"
+import { InitSocket } from "@/utils/utils.js";
 
 const page = ({ params }: { params: any }) => {
-
   interface adTypes {
     url: string;
     type: "image" | "video";
@@ -25,9 +24,9 @@ const page = ({ params }: { params: any }) => {
   const [usageCount, incrementUsage] = useServiceUsage();
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
   const router = useRouter();
-  async function goToSearch(e: React.FormEvent<HTMLFormElement>){
-      e.preventDefault()
-      router.push(`/search/${platform}/${input}`);
+  async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    router.push(`/search/${platform}/${input}`);
   }
 
   useEffect(() => {
@@ -37,10 +36,9 @@ const page = ({ params }: { params: any }) => {
     e?.preventDefault();
     let loadTime = 0;
     const socket = new InitSocket({
-      url: 'wss://pendora-org-production.up.railway.app',
-
-    })
-    await socket.connect()
+      url: "wss://pendora-org-production.up.railway.app",
+    });
+    await socket.connect();
     const intervalId = setInterval(() => {
       loadTime += 1;
       if (loadTime === 15) {
@@ -120,7 +118,16 @@ const page = ({ params }: { params: any }) => {
   return (
     <>
       <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
-        <Search platform={platform} setPlatform={setPlatform} input={input} setInput={setInput} isOpen={isOpen} setIsOpen={setIsOpen} usageCount={usageCount} />
+        <Search
+          platform={platform}
+          setPlatform={setPlatform}
+          input={input}
+          setInput={setInput}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          usageCount={usageCount}
+          goToSearch={goToSearch}
+        />
         <div className="text-black rounded-md p-2 bg-[#f5f5f5]">
           Trials Left: {4 - usageCount}
         </div>
@@ -169,59 +176,10 @@ const page = ({ params }: { params: any }) => {
           </div>
 
           {ads && ads.length > 0 && (
-            <Dialog>
-              <DialogTrigger className="w-max p-3 rounded-md bg-black text-white font-medium">
-                <DialogTitle className="font-medium">Load More</DialogTitle>
-              </DialogTrigger>
-              <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
-                <div className="flex items-end">
-                  <div className="text-5xl font-extrabold tracking-tight ">
-                    $14.99
-                  </div>
-                  <div className="text-sm font-light">per/mo</div>
-                </div>
-                <form
-                  action="https://submit-form.com/4mFTvZQSv"
-                  className="flex flex-col items-center w-full gap-2 mt-10"
-                >
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
-                    placeholder="Enter your email"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2"
-                  >
-                    Get on PRO waitlist
-                  </button>
-                </form>
-                <div className="w-full flex flex-col items-start gap-4 ">
-                  <div className="text-base font-medium ">Pro Features:</div>
-                  <ul className="flex flex-col gap-2 items-start">
-                    {features.map((string) => (
-                      <li className="flex gap-2 items-center text-sm font-light ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="15"
-                          height="15"
-                          fill="#000000"
-                          viewBox="0 0 256 256"
-                        >
-                          <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                        </svg>
-                        {string}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <GetPro>Load More</GetPro>
           )}
           {timeNotifier && (
-            <Toast error={false} message="Too Slow ? " pro={true} />
+            <Toast error={false} message="Access all ad platforms with PRO version" pro={true} />
           )}
         </div>
       </div>
