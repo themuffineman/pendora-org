@@ -4,43 +4,43 @@ import {
   LogoutLink,
   getKindeServerSession,
 } from "@kinde-oss/kinde-auth-nextjs/server";
-import { MongoClient } from "mongodb";
+// import { MongoClient } from "mongodb";
 import "./page.css";
 import MainSearch from "@/components/MainSearch";
 import GetPro from "@/components/GetPro";
 
 export default async function Home() {
-  async function isSubscribed() {
-    const { isAuthenticated } = getKindeServerSession();
-    const isUserAuthenticated = await isAuthenticated();
-    if (!isUserAuthenticated) {
-      return;
-    }
-    let client;
-    try {
-      client = new MongoClient(process.env.MONGODB_URI!);
-      await client.connect();
-      const database = client.db("adsInspectDatabase");
-      const collection = database.collection("subscriptionDetails");
-      const { getUser } = getKindeServerSession();
-      const user = await getUser();
-      console.log(user.email);
-      const subscriptionDetails = await collection.findOne({
-        email: user.email,
-      });
-      console.log("Details: ", subscriptionDetails);
-      if (subscriptionDetails) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error: any) {
-      console.log("main error: ", error.message);
-      return null;
-    } finally {
-      await client?.close();
-    }
-  }
+  // async function isSubscribed() {
+  //   const { isAuthenticated } = getKindeServerSession();
+  //   const isUserAuthenticated = await isAuthenticated();
+  //   if (!isUserAuthenticated) {
+  //     return;
+  //   }
+  //   let client;
+  //   try {
+  //     client = new MongoClient(process.env.MONGODB_URI!);
+  //     await client.connect();
+  //     const database = client.db("adsInspectDatabase");
+  //     const collection = database.collection("subscriptionDetails");
+  //     const { getUser } = getKindeServerSession();
+  //     const user = await getUser();
+  //     console.log(user.email);
+  //     const subscriptionDetails = await collection.findOne({
+  //       email: user.email,
+  //     });
+  //     console.log("Details: ", subscriptionDetails);
+  //     if (subscriptionDetails) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   } catch (error: any) {
+  //     console.log("main error: ", error.message);
+  //     return null;
+  //   } finally {
+  //     await client?.close();
+  //   }
+  // }
 
   const { getUser } = getKindeServerSession();
   const user = await getUser();

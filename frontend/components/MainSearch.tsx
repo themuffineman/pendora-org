@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-
 import {
   Select,
   SelectContent,
@@ -67,7 +66,11 @@ const MainSearch = () => {
           <SelectContent>
             <SelectItem value="meta">
               <div className="flex gap-2 items-center justify-between ">
-                <img className="size-5" src="/facebook-icon.svg" alt="Facebook logo" />
+                <img
+                  className="size-5"
+                  src="/facebook-icon.svg"
+                  alt="Facebook logo"
+                />
                 <span className="text-base font-medium text-center">
                   Facebook Ads
                 </span>
@@ -86,19 +89,25 @@ const MainSearch = () => {
               </div>
             </SelectItem>
             <SelectItem disabled={true} value="tiktok">
-              <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
+              <div
+                title="Please Upgrade to Pro"
+                className="flex gap-2 items-center justify-between"
+              >
                 <img
                   className="size-5"
                   src="/tiktok-logo2.svg"
                   alt="TikTok logo"
                 />
-                <span  className="text-base font-medium text-center">
+                <span className="text-base font-medium text-center">
                   TikTok
                 </span>
               </div>
             </SelectItem>
             <SelectItem disabled={true} value="linkedin">
-              <div title="Please Upgrade to Pro" className="flex gap-2 items-center justify-between">
+              <div
+                title="Please Upgrade to Pro"
+                className="flex gap-2 items-center justify-between"
+              >
                 <img
                   className="size-5"
                   src="/linkedin-logo.svg"
