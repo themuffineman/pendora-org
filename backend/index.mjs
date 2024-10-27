@@ -22,7 +22,7 @@ const wss = new WebSocketServer({ server });
 const clients = new Map();
 function broadcastMessage(userId, message) {
   const client = clients.get(userId);
-  console.log("Client to receive", client)
+  console.log("Client to receive", client);
   if (client && client.readyState === WebSocket.OPEN) {
     client.send(message);
   } else {
@@ -30,10 +30,11 @@ function broadcastMessage(userId, message) {
   }
 }
 wss.on("connection", (ws) => {
-  ws.on('message', (message) => {
+  ws.on("message", (message) => {
     // Assume the first message from the client contains the userId
     if (!ws.userId) {
       ws.userId = message; // Set a custom userId property on the ws instance
+      console.log("ws.userId is: ", ws.userId);
       clients.set(ws.userId, ws); // Store ws instance in clients map keyed by userId
       console.log(`Client connected with ID: ${ws.userId}`);
     }
