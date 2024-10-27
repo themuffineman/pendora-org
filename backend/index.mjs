@@ -1,6 +1,6 @@
 import express from "express";
 import puppeteer from "puppeteer";
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws";
 import cors from "cors";
 import { config } from "dotenv";
 import { v4 as uuidv4 } from "uuid";
