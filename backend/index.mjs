@@ -22,7 +22,6 @@ const wss = new WebSocketServer({ server });
 const clients = new Map();
 function broadcastMessage(userId, message) {
   const client = clients.get(userId);
-  console.log("Client to receive", client);
   if (client && client.readyState === WebSocket.OPEN) {
     client.send(message);
   } else {
