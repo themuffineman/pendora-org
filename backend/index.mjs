@@ -5,10 +5,17 @@ import cors from "cors";
 import { config } from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 config();
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGIN,
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 const wss = new WebSocket({ port: 8080 });
 const clients = new Map();
-
-// Function to send a message to a specific client by ID
 function broadcastMessage(userId, message) {
   const client = clients.get(userId);
 
@@ -52,15 +59,6 @@ function checkApiKey(req, res, next) {
   }
   next();
 }
-app.use(
-  cors({
-    origin: process.env.ALLOWED_ORIGIN,
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
-);
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 // app.use(checkApiKey);
 app.post("/api/get-google-ads", async (req, res) => {
   const { url } = req.body;
