@@ -26,6 +26,7 @@ const page = ({ params }: { params: any }) => {
   const [statusUpdate, setStatusUpdate] = useState<string>("Connecting...");
   const router = useRouter();
   function handleMessage(message: any) {
+    console.log("received message:", message);
     if (message.type === "id") {
       setSocketId(message.message);
     } else {
@@ -56,7 +57,7 @@ const page = ({ params }: { params: any }) => {
         }, 10000);
       }
     }, 1000);
-    if (usageCount > 4) {
+    if (usageCount > 40) {
       setIsOpen(true);
     } else {
       const socket = new InitSocket({
