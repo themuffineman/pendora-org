@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 export class InitSocket {
   constructor({ url, onMessage, onClose, onOpen, onError }) {
@@ -9,7 +9,7 @@ export class InitSocket {
     this.onError = onError;
   }
   connect() {
-    const id = randomUUID();
+    const id = uuidv4();
     const socket = new WebSocket(this.url);
     socket.onopen = this.onOpen;
     socket.onmessage = this.onMessage;
