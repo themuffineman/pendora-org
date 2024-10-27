@@ -22,7 +22,7 @@ const wss = new WebSocketServer({ server });
 const clients = new Map();
 function broadcastMessage(userId, message) {
   const client = clients.get(userId);
-
+  console.log("Client to receive", client)
   if (client && client.readyState === WebSocket.OPEN) {
     client.send(message);
   } else {
@@ -30,21 +30,18 @@ function broadcastMessage(userId, message) {
   }
 }
 wss.on("connection", (ws) => {
-  ws.on("message", (message) => {
-    // Set userId based on the first message received
+  ws.on('message', (message) => {
+    // Assume the first message from the client contains the userId
     if (!ws.userId) {
-      ws.userId = message;
-      clients.set(ws.userId, ws);
+      ws.userId = message; // Set a custom userId property on the ws instance
+      clients.set(ws.userId, ws); // Store ws instance in clients map keyed by userId
       console.log(`Client connected with ID: ${ws.userId}`);
-    } else {
-      console.log(`Received message from ${ws.userId}: ${message}`);
-      // Handle any additional messages after initial userId message
     }
   });
   ws.on("close", () => {
     if (ws.userId) {
       console.log(`Client with ID ${ws.userId} disconnected`);
-      clients.delete(ws.userId);
+      clients.delete(ws.userId); // Remove the client by userId
     }
   });
 });
