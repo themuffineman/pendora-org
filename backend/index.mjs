@@ -5,6 +5,10 @@ import cors from "cors";
 import { config } from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 config();
+const app = express();
+app.listen(8080, () => {
+  console.log("Server running");
+});
 app.use(
   cors({
     origin: process.env.ALLOWED_ORIGIN,
@@ -45,10 +49,7 @@ wss.on("connection", (ws) => {
     clients.delete(userId);
   });
 });
-const app = express();
-app.listen(8080, () => {
-  console.log("Server running");
-});
+
 function checkApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"];
   if (!apiKey) {
