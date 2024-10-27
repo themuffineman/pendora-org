@@ -1,12 +1,12 @@
 import express from "express";
 import puppeteer from "puppeteer";
-import { WebSocketServer } from 'ws';
+import { WebSocketServer } from "ws";
 import cors from "cors";
 import { config } from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 config();
 const app = express();
-app.listen(8080, () => {
+const server = app.listen(8080, () => {
   console.log("Server running");
 });
 app.use(
@@ -18,7 +18,7 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-const wss = new WebSocketServer({ port: 4040 });
+const wss = new WebSocketServer({ server });
 const clients = new Map();
 function broadcastMessage(userId, message) {
   const client = clients.get(userId);
@@ -30,7 +30,7 @@ function broadcastMessage(userId, message) {
   }
 }
 wss.on("connection", (ws) => {
-  ws.on('message', (message) => {
+  ws.on("message", (message) => {
     // Set userId based on the first message received
     if (!ws.userId) {
       ws.userId = message;

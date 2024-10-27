@@ -76,7 +76,6 @@ const page = ({ params }: { params: any }) => {
       setIsFetching(true);
       setFailedToFetch(false);
       try {
-        console.log("socket id is", id);
         const adResponse = await fetch(
           `https://pendora-org-production.up.railway.app/api/get-${params.platform[0]}-ads`,
           {
@@ -156,7 +155,7 @@ const page = ({ params }: { params: any }) => {
                 Failed To Fetch. Try Again.
               </button>
             ) : isFetching ? (
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2 items-center">
                 <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
                 <div className="bg-[#f5f5f5] rounded-md p-2 text-sm">
                   {statusUpdate}
