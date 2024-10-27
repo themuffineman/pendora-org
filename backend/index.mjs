@@ -31,21 +31,13 @@ function broadcastMessage(userId, message) {
   }
 }
 wss.on("connection", (ws) => {
-  // Assign a unique ID to the connected client
   const userId = uuidv4();
   ws.userId = userId;
-
-  // Store the WebSocket connection in the clients map
   clients.set(userId, ws);
   console.log(`Client connected with ID: ${userId}`);
-
-  // Send a welcome message to the new client
   ws.send({ type: "id", message: userId });
-
-  // Handle WebSocket disconnections
   ws.on("close", () => {
     console.log(`Client with ID ${userId} disconnected`);
-    // Remove the client from the map on disconnect
     clients.delete(userId);
   });
 });
@@ -62,7 +54,7 @@ function checkApiKey(req, res, next) {
 }
 // app.use(checkApiKey);
 app.post("/api/get-google-ads", async (req, res) => {
-  const { url } = req.body;
+  const { url, id } = req.body;
   console.log("Received request:", url);
   const gridSelector =
     "body > div:nth-child(9) > root > start-page > creative-grid > priority-creative-grid";
@@ -167,7 +159,7 @@ app.post("/api/get-google-ads", async (req, res) => {
           const adImageSrc = await adImage
             .getProperty("src")
             .then((prop) => prop.jsonValue());
-          broadcastMessage({ type: "imageAd", message: adImageSrc });
+          broadcastMessage(id, { type: "imageAd", message: adImageSrc });
           cardsCount++;
         }
       } catch (error) {
@@ -185,7 +177,7 @@ app.post("/api/get-google-ads", async (req, res) => {
   }
 });
 app.post("/api/get-meta-ads", async (req, res) => {
-  const { url } = req.body;
+  const { url, id } = req.body;
   console.log("Received Request: ", url);
   const gridSelector =
     "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w";
@@ -304,7 +296,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
             const adImageSrc = await adImage
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            broadcastMessage({ type: "imageAd", message: adImageSrc });
+            broadcastMessage(id, { type: "imageAd", message: adImageSrc });
             cardsCount++;
           }
           const adVideo = await card.$(adVideoSelector);
@@ -312,7 +304,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
             const adVideoSrc = await adVideo
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            broadcastMessage({ type: "videoAd", message: adVideoSrc });
+            broadcastMessage(id, { type: "videoAd", message: adVideoSrc });
             cardsCount++;
           }
         } catch (error) {

@@ -23,7 +23,7 @@ const page = ({ params }: { params: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
-  const [statusUpdate, setStatusUpdate] = useState<string>("");
+  const [statusUpdate, setStatusUpdate] = useState<string>("Connecting");
   const router = useRouter();
   function handleMessage(message: any) {
     if (message.type === "id") {
@@ -58,7 +58,7 @@ const page = ({ params }: { params: any }) => {
         setStatusUpdate("Error Occured");
       },
     });
-    await socket.connect();
+    socket.connect();
     const intervalId = setInterval(() => {
       loadTime += 1;
       if (loadTime === 15) {
@@ -76,6 +76,7 @@ const page = ({ params }: { params: any }) => {
       setIsFetching(true);
       setFailedToFetch(false);
       try {
+        console.log("socket id is", socketId)
         const adResponse = await fetch(
           `https://pendora-org-production.up.railway.app/api/get-${params.platform[0]}-ads`,
           {

@@ -8,7 +8,7 @@ export class InitSocket {
     this.onOpen = onOpen;
     this.onError = onError;
   }
-  async connect() {
+  connect() {
     const socket = new WebSocket(this.url);
     socket.onopen = this.onOpen;
     socket.onmessage = this.onMessage;
