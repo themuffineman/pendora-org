@@ -1,4 +1,4 @@
-import randomUUID from "crypto";
+import { randomUUID } from "crypto";
 
 export class InitSocket {
   constructor({ url, onMessage, onClose, onOpen, onError }) {
@@ -9,7 +9,7 @@ export class InitSocket {
     this.onError = onError;
   }
   connect() {
-    const id = randomUUID()
+    const id = randomUUID();
     const socket = new WebSocket(this.url);
     socket.onopen = this.onOpen;
     socket.onmessage = this.onMessage;
@@ -17,10 +17,10 @@ export class InitSocket {
     socket.onclose = this.onClose;
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(id);
-    }else {
-      console.error('Cannot send data.');
+    } else {
+      console.error("Cannot send data.");
     }
-    return {id}
+    return id;
   }
 }
 
