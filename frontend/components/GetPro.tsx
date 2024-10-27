@@ -4,23 +4,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-const features = [
-  "TikTok Ads",
-  "LinkedIn Ads",
-  "Save Ads for later",
-  "Faster lookup speeds",
-  "No daily limit",
-  "Extract all ad history",
-];
-function GetPro({ children }: { children?: any }) {
+import {proFeatures, proPrice} from '@/utils/utils.js'
+
+function GetPro({ children, dailyLimit, isOpen, setIsOpen }: { children?: any, dailyLimit?:boolean, isOpen?: any, setIsOpen?:any }) {
   return (
-    <Dialog>
-      <DialogTrigger className="min-w-max p-2 bg-black text-white rounded-md font-semibold text-center flex items-center justify-center">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger className="min-w-max hover:translate-y-[2px] transition p-2 bg-black text-white rounded-md font-semibold text-center flex items-center justify-center">
         <DialogTitle>{children ? children : "Get Pro"}</DialogTitle>
       </DialogTrigger>
       <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
+        {dailyLimit && (
+          <div className="text-lg font-bold tracking-tight ">
+          Max Usage Reached. Resets Tommorrow
+        </div>
+        )}
         <div className="flex items-end">
-          <div className="text-5xl font-extrabold tracking-tight ">$14.99</div>
+          <div className="text-5xl font-extrabold tracking-tight ">${proPrice}</div>
           <div className="text-sm font-light">per/mo</div>
         </div>
         <form
@@ -44,7 +43,7 @@ function GetPro({ children }: { children?: any }) {
         <div className="w-full flex flex-col items-start gap-4 ">
           <div className="text-base font-medium ">Pro Features:</div>
           <ul className="flex flex-col gap-2 items-start">
-            {features.map((string) => (
+            {proFeatures.map((string) => (
               <li className="flex gap-2 items-center text-sm font-light ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -3,35 +3,19 @@ import AdCard from "@/components/AdCard";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GetPro from "@/components/GetPro";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useServiceUsage } from "@/hooks/useStorage";
 import Toast from "@/components/Toast";
-const features = [
-  "TikTok Ads",
-  "LinkedIn Ads",
-  "Save Ads for later",
-  "Faster lookup speeds",
-  "No daily limit",
-  "Extract all ad history",
-];
+import Search from "@/components/Search";
+import { InitSocket } from "@/utils/utils.js";
+
 const page = ({ params }: { params: any }) => {
   interface adTypes {
     url: string;
     type: "image" | "video";
   }
+
   const [ads, setAds] = useState<any[]>([]);
+  const [socketId, setSocketId] = useState<string | null>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
   const [noAdsFound, setNoAdsFound] = useState<boolean>(false);
@@ -40,17 +24,43 @@ const page = ({ params }: { params: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
+  const [statusUpdate, setStatusUpdate] = useState<string>("");
   const router = useRouter();
+  function handleMessage(message: any) {
+    if (message.type === "id") {
+      setSocketId(message.message);
+    } else {
+      setAds((prevAds) => {
+        prevAds.push(message.message);
+        return prevAds;
+      });
+    }
+  }
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push(`/search/${platform}/${input}`);
   }
+
   useEffect(() => {
     fetchData();
   }, []);
   async function fetchData(e?: any) {
     e?.preventDefault();
     let loadTime = 0;
+    const socket = new InitSocket({
+      url: "wss://pendora-org-production.up.railway.app",
+      onMessage: handleMessage,
+      onOpen: () => {
+        setStatusUpdate("Connection Established");
+      },
+      onClose: () => {
+        setStatusUpdate("Connection Closed");
+      },
+      onError: () => {
+        setStatusUpdate("Error Occured");
+      },
+    });
+    await socket.connect();
     const intervalId = setInterval(() => {
       loadTime += 1;
       if (loadTime === 15) {
@@ -78,6 +88,7 @@ const page = ({ params }: { params: any }) => {
             body: JSON.stringify({
               url: params.platform[1],
               platform: params.platform[0],
+              id: socketId,
             }),
           }
         );
@@ -88,37 +99,7 @@ const page = ({ params }: { params: any }) => {
         if (!adResponse.ok) {
           throw new Error("Failed to fetch");
         }
-        const ads: { adImages: string[]; adVideos?: string[] } =
-          await adResponse.json();
-        if (params.platform[0] === "google") {
-          const initData: adTypes[] = [];
-          ads?.adImages.forEach((string) => {
-            initData.push({
-              url: string,
-              type: "image",
-            });
-          });
-          setAds(initData);
-          incrementUsage();
-        }
-        if (params.platform[0] === "meta") {
-          const initData: adTypes[] = [];
-          ads?.adImages.forEach((string) => {
-            initData.push({
-              url: string,
-              type: "image",
-            });
-          });
-          ads.adVideos &&
-            ads?.adVideos.forEach((string) => {
-              initData.push({
-                url: string,
-                type: "video",
-              });
-            });
-          setAds(initData);
-          incrementUsage();
-        }
+        incrementUsage();
       } catch (error: any) {
         setFailedToFetch(true);
         console.error(error.message);
@@ -130,134 +111,16 @@ const page = ({ params }: { params: any }) => {
   return (
     <>
       <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
-        <div className="w-max flex items-center justify-start gap-3 max-w-[700px] ">
-          <form
-            onSubmit={(e) => goToSearch(e)}
-            className="relative w-[70%] min-w-[500px]  max-w-[600px] flex justify-center items-center self-start"
-          >
-            <input
-              required={true}
-              onChange={(e) => {
-                setInput(e.target.value);
-              }}
-              className="w-[100%] h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md "
-              placeholder={
-                platform === "google"
-                  ? "Enter domain e.g. domain.com"
-                  : "Enter Facebook username"
-              }
-              type="search"
-            />
-            <svg
-              className="absolute left-[1%] max-left top-1/2 -translate-y-1/2"
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="#d3d3d3"
-              viewBox="0 0 256 256"
-            >
-              <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-            </svg>
-            {usageCount < 4 ? (
-              <button
-                type="submit"
-                className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black absolute top-1/2 -translate-y-1/2 right-[1%]"
-              >
-                Search
-              </button>
-            ) : (
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogTrigger className="w-[5rem] h-[2.3rem] rounded-md bg-yellow-400 text-black font-medium absolute top-1/2 -translate-y-1/2 right-[1%]">
-                  <DialogTitle className="font-medium">Search</DialogTitle>
-                </DialogTrigger>
-                <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
-                  <div className="text-lg font-bold tracking-tight ">
-                    Max Usage Reached. Resets Tommorrow
-                  </div>
-                  <div className="flex items-end">
-                    <div className="text-5xl font-extrabold tracking-tight ">
-                      $14.99
-                    </div>
-                    <div className="text-sm font-light">per/mo</div>
-                  </div>
-                  <form
-                    action="https://submit-form.com/4mFTvZQSv"
-                    className="flex flex-col items-center w-full gap-2 mt-10"
-                  >
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
-                      placeholder="Enter your email"
-                    />
-                    <button
-                      type="submit"
-                      className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2"
-                    >
-                      Get on PRO waitlist
-                    </button>
-                  </form>
-                  <div className="w-full flex flex-col items-start gap-4 ">
-                    <div className="text-base font-medium ">Pro Features:</div>
-                    <ul className="flex flex-col gap-2 items-start">
-                      {features.map((string) => (
-                        <li className="flex gap-2 items-center text-sm font-light ">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="15"
-                            height="15"
-                            fill="#000000"
-                            viewBox="0 0 256 256"
-                          >
-                            <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                          </svg>
-                          {string}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            )}
-          </form>
-          <Select
-            value={platform}
-            onValueChange={(value) => {
-              setPlatform(value);
-            }}
-          >
-            <SelectTrigger className="min-w-max h-12">
-              <SelectValue placeholder="Platform" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="meta">
-                <div className="flex gap-2 items-center justify-between ">
-                  <img
-                    className="size-5"
-                    src="/metaverse.svg"
-                    alt="Meta logo"
-                  />
-                  <span className="text-base font-medium text-center">
-                    Meta
-                  </span>
-                </div>
-              </SelectItem>
-              <SelectItem value="google">
-                <div className="flex gap-2 items-center justify-between">
-                  <img
-                    className="size-5"
-                    src="/google-logo.svg"
-                    alt="Google logo"
-                  />
-                  <span className="text-base font-medium text-center">
-                    Google
-                  </span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Search
+          platform={platform}
+          setPlatform={setPlatform}
+          input={input}
+          setInput={setInput}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          usageCount={usageCount}
+          goToSearch={goToSearch}
+        />
         <div className="text-black rounded-md p-2 bg-[#f5f5f5]">
           Trials Left: {4 - usageCount}
         </div>
@@ -294,7 +157,12 @@ const page = ({ params }: { params: any }) => {
                 Failed To Fetch. Try Again.
               </button>
             ) : isFetching ? (
-              <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
+              <div className="flex flex-col">
+                <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
+                <div className="bg-[#f5f5f5] rounded-md p-2 text-sm">
+                  {status}
+                </div>
+              </div>
             ) : noAdsFound ? (
               <button
                 onClick={fetchData}
@@ -305,60 +173,13 @@ const page = ({ params }: { params: any }) => {
             ) : null}
           </div>
 
-          {ads && ads.length > 0 && (
-            <Dialog>
-              <DialogTrigger className="w-max p-3 rounded-md bg-black text-white font-medium">
-                <DialogTitle className="font-medium">Load More</DialogTitle>
-              </DialogTrigger>
-              <DialogContent className="flex w-[80vw] gap-2 flex-col items-center rounded-md">
-                <div className="flex items-end">
-                  <div className="text-5xl font-extrabold tracking-tight ">
-                    $14.99
-                  </div>
-                  <div className="text-sm font-light">per/mo</div>
-                </div>
-                <form
-                  action="https://submit-form.com/4mFTvZQSv"
-                  className="flex flex-col items-center w-full gap-2 mt-10"
-                >
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
-                    placeholder="Enter your email"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full font-bold bg-yellow-400 text-black rounded-md flex items-center justify-center p-2"
-                  >
-                    Get on PRO waitlist
-                  </button>
-                </form>
-                <div className="w-full flex flex-col items-start gap-4 ">
-                  <div className="text-base font-medium ">Pro Features:</div>
-                  <ul className="flex flex-col gap-2 items-start">
-                    {features.map((string) => (
-                      <li className="flex gap-2 items-center text-sm font-light ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="15"
-                          height="15"
-                          fill="#000000"
-                          viewBox="0 0 256 256"
-                        >
-                          <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                        </svg>
-                        {string}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </DialogContent>
-            </Dialog>
-          )}
+          {ads && ads.length > 0 && <GetPro>Load More</GetPro>}
           {timeNotifier && (
-            <Toast error={false} message="Too Slow ? " pro={true} />
+            <Toast
+              error={false}
+              message="Access all ad platforms with PRO version"
+              pro={true}
+            />
           )}
         </div>
       </div>

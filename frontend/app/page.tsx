@@ -1,42 +1,50 @@
 import Link from "next/link";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import {
+  LoginLink,
+  LogoutLink,
+  getKindeServerSession,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 import { MongoClient } from "mongodb";
 import "./page.css";
 import MainSearch from "@/components/MainSearch";
 import GetPro from "@/components/GetPro";
 
 export default async function Home() {
-  // async function isSubscribed() {
-  //   let client;
-  //   try {
-  //     client = new MongoClient(process.env.MONGODB_URI!);
-  //     await client.connect();
-  //     const database = client.db("adsInspectDatabase");
-  //     const collection = database.collection("subscriptionDetails");
-  //     const { getUser } = getKindeServerSession();
-  //     const user = await getUser();
-  //     console.log(user.email);
-  //     const subscriptionDetails = await collection.findOne({
-  //       email: user.email,
-  //     });
-  //     console.log("Details: ", subscriptionDetails);
-  //     if (subscriptionDetails) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (error: any) {
-  //     console.log("main error: ", error.message);
-  //     return null;
-  //   } finally {
-  //     await client?.close();
-  //   }
-  // }
-  // const { isAuthenticated } = getKindeServerSession();
-  // const isUserAuthenticated = await isAuthenticated();
-  // const { getUser } = getKindeServerSession();
-  // const user = await getUser();
-  // const isUserSubscribed = await isSubscribed();
+  async function isSubscribed() {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if(!isUserAuthenticated){
+      return
+    }
+    let client;
+    try {
+      client = new MongoClient(process.env.MONGODB_URI!);
+      await client.connect();
+      const database = client.db("adsInspectDatabase");
+      const collection = database.collection("subscriptionDetails");
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      console.log(user.email);
+      const subscriptionDetails = await collection.findOne({
+        email: user.email,
+      });
+      console.log("Details: ", subscriptionDetails);
+      if (subscriptionDetails) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error: any) {
+      console.log("main error: ", error.message);
+      return null;
+    } finally {
+      await client?.close();
+    }
+  }
+  
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  const isUserSubscribed = await isSubscribed();
 
   return (
     <main className="flex flex-col w-full h-screen justify-center ">
@@ -53,8 +61,24 @@ export default async function Home() {
             <circle cx="8.5" cy="8.5" r="3.5" fill="#FFFF00" />
           </svg>
         </Link>
-        <div className="flex gap-2 ">
-          <GetPro />
+        <div className="flex gap-5 ">
+          {isUserSubscribed ? (
+            <>
+              <div className="rounded-md w-max bg-white max-w-[100px] p-2 px-4 border truncate">
+                Welcome: <span className="font-bold">{user.email}</span>
+              </div>
+              <LogoutLink className="hover:translate-y-[2px] transition p-2 px-4 rounded-md text-white border font-bold bg-red-400 ">
+                Log Out
+              </LogoutLink>
+            </>
+          ) : (
+            <>
+              <LoginLink className="hover:translate-y-[2px] transition p-2 px-4 rounded-md bg-white border">
+                Login
+              </LoginLink>
+              <GetPro />
+            </>
+          )}
         </div>
       </nav>
       <div className="flex flex-col gap-5 items-center w-full ">
