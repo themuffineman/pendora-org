@@ -31,13 +31,21 @@ function broadcastMessage(userId, message) {
 }
 wss.on("connection", (ws) => {
   ws.on('message', (message) => {
-    ws.userId = message;
-    clients.set(message, ws);
-    console.log(`Client connected with ID: ${message}`);
+    // Set userId based on the first message received
+    if (!ws.userId) {
+      ws.userId = message;
+      clients.set(ws.userId, ws);
+      console.log(`Client connected with ID: ${ws.userId}`);
+    } else {
+      console.log(`Received message from ${ws.userId}: ${message}`);
+      // Handle any additional messages after initial userId message
+    }
   });
   ws.on("close", () => {
-    console.log(`Client with ID ${userId} disconnected`);
-    clients.delete(userId);
+    if (ws.userId) {
+      console.log(`Client with ID ${ws.userId} disconnected`);
+      clients.delete(ws.userId);
+    }
   });
 });
 
