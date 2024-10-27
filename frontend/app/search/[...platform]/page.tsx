@@ -45,20 +45,7 @@ const page = ({ params }: { params: any }) => {
   async function fetchData(e?: any) {
     e?.preventDefault();
     let loadTime = 0;
-    const socket = new InitSocket({
-      url: "wss://pendora-org-production.up.railway.app",
-      onMessage: handleMessage,
-      onOpen: () => {
-        setStatusUpdate("Connection Established");
-      },
-      onClose: () => {
-        setStatusUpdate("Connection Closed");
-      },
-      onError: () => {
-        setStatusUpdate("Error Occured");
-      },
-    });
-    const id = socket.connect();
+
     const intervalId = setInterval(() => {
       loadTime += 1;
       if (loadTime === 15) {
@@ -72,6 +59,20 @@ const page = ({ params }: { params: any }) => {
     if (usageCount > 4) {
       setIsOpen(true);
     } else {
+      const socket = new InitSocket({
+        url: "wss://pendora-org-production.up.railway.app",
+        onMessage: handleMessage,
+        onOpen: () => {
+          setStatusUpdate("Connection Established");
+        },
+        onClose: () => {
+          setStatusUpdate("Connection Closed");
+        },
+        onError: () => {
+          setStatusUpdate("Error Occured");
+        },
+      });
+      const id = socket.connect();
       setAds([]);
       setIsFetching(true);
       setFailedToFetch(false);
