@@ -62,6 +62,9 @@ function checkApiKey(req, res, next) {
 // app.use(checkApiKey);
 app.post("/api/get-google-ads", async (req, res) => {
   const { url, id } = req.body;
+  if (!url) {
+    return res.sendStatus(500);
+  }
   console.log("Received request:", url);
   const gridSelector =
     "body > div:nth-child(9) > root > start-page > creative-grid > priority-creative-grid";
@@ -185,6 +188,9 @@ app.post("/api/get-google-ads", async (req, res) => {
 });
 app.post("/api/get-meta-ads", async (req, res) => {
   const { url, id } = req.body;
+  if (!url) {
+    return res.sendStatus(500);
+  }
   console.log("Received Request: ", url);
   const gridSelector =
     "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w";
