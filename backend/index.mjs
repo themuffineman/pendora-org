@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 import Websocket from "ws";
 import cors from "cors";
 import { config } from "dotenv";
-const { v4: uuidv4 } = require("uuid");
+import { v4 as uuidv4 } from "uuid";
 config();
 const wss = new WebSocket.Server({ port: 8080 });
 const clients = new Map();
