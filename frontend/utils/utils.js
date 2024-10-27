@@ -1,31 +1,28 @@
-import randomUUID from 'crypto'
+import randomUUID from "crypto";
 
-export class InitSocket{
-
-    constructor(params){
-        this.url = params.socketUrl;
-        this.onMessage = params.onMessage;
-        this.onClose = params.onClose;
-        this.onOpen = params.onOpen;
-        this.fetchUrl = params.fetchUrl;
-    }
-    async connect(){
-        const uniqueId = randomUUID()
-        const socket = new WebSocket(this.url)
-        socket.onopen = this.onOpen;
-        socket.onmessage = this.onMessage;
-        socket.onerror = this.onError;
-        socket.onclose = this.onClose
-        return {id: uniqueId}
-    }
+export class InitSocket {
+  constructor({ url, onMessage, onClose, onOpen, onError }) {
+    this.url = url;
+    this.onMessage = onMessage;
+    this.onClose = onClose;
+    this.onOpen = onOpen;
+    this.onError = onError;
+  }
+  async connect() {
+    const socket = new WebSocket(this.url);
+    socket.onopen = this.onOpen;
+    socket.onmessage = this.onMessage;
+    socket.onerror = this.onError;
+    socket.onclose = this.onClose;
+  }
 }
 
 export const proFeatures = [
-    "TikTok Ads",
+  "TikTok Ads",
   "LinkedIn Ads",
   "Save Ads for later",
   "Faster lookup speeds",
   "No daily limit",
   "Extract all ad history",
-]
+];
 export const proPrice = 1.99;

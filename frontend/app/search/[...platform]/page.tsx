@@ -15,6 +15,7 @@ const page = ({ params }: { params: any }) => {
   }
 
   const [ads, setAds] = useState<any[]>([]);
+  const [socketId, setSocketId] = useState<string | null>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
   const [noAdsFound, setNoAdsFound] = useState<boolean>(false);
@@ -23,7 +24,18 @@ const page = ({ params }: { params: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
+  const [statusUpdate, setStatusUpdate] = useState<string>("");
   const router = useRouter();
+  function handleMessage(message: any) {
+    if (message.type === "id") {
+      setSocketId(message.message);
+    } else {
+      setAds((prevAds) => {
+        prevAds.push(message.message);
+        return prevAds;
+      });
+    }
+  }
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push(`/search/${platform}/${input}`);
@@ -37,6 +49,16 @@ const page = ({ params }: { params: any }) => {
     let loadTime = 0;
     const socket = new InitSocket({
       url: "wss://pendora-org-production.up.railway.app",
+      onMessage: handleMessage,
+      onOpen: () => {
+        setStatusUpdate("Connection Established");
+      },
+      onClose: () => {
+        setStatusUpdate("Connection Closed");
+      },
+      onError: () => {
+        setStatusUpdate("Error Occured");
+      },
     });
     await socket.connect();
     const intervalId = setInterval(() => {
@@ -66,6 +88,7 @@ const page = ({ params }: { params: any }) => {
             body: JSON.stringify({
               url: params.platform[1],
               platform: params.platform[0],
+              id: socketId,
             }),
           }
         );
@@ -76,37 +99,7 @@ const page = ({ params }: { params: any }) => {
         if (!adResponse.ok) {
           throw new Error("Failed to fetch");
         }
-        const ads: { adImages: string[]; adVideos?: string[] } =
-          await adResponse.json();
-        if (params.platform[0] === "google") {
-          const initData: adTypes[] = [];
-          ads?.adImages.forEach((string) => {
-            initData.push({
-              url: string,
-              type: "image",
-            });
-          });
-          setAds(initData);
-          incrementUsage();
-        }
-        if (params.platform[0] === "meta") {
-          const initData: adTypes[] = [];
-          ads?.adImages.forEach((string) => {
-            initData.push({
-              url: string,
-              type: "image",
-            });
-          });
-          ads.adVideos &&
-            ads?.adVideos.forEach((string) => {
-              initData.push({
-                url: string,
-                type: "video",
-              });
-            });
-          setAds(initData);
-          incrementUsage();
-        }
+        incrementUsage();
       } catch (error: any) {
         setFailedToFetch(true);
         console.error(error.message);
@@ -164,7 +157,12 @@ const page = ({ params }: { params: any }) => {
                 Failed To Fetch. Try Again.
               </button>
             ) : isFetching ? (
-              <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
+              <div className="flex flex-col">
+                <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
+                <div className="bg-[#f5f5f5] rounded-md p-2 text-sm">
+                  {status}
+                </div>
+              </div>
             ) : noAdsFound ? (
               <button
                 onClick={fetchData}
@@ -175,11 +173,13 @@ const page = ({ params }: { params: any }) => {
             ) : null}
           </div>
 
-          {ads && ads.length > 0 && (
-            <GetPro>Load More</GetPro>
-          )}
+          {ads && ads.length > 0 && <GetPro>Load More</GetPro>}
           {timeNotifier && (
-            <Toast error={false} message="Access all ad platforms with PRO version" pro={true} />
+            <Toast
+              error={false}
+              message="Access all ad platforms with PRO version"
+              pro={true}
+            />
           )}
         </div>
       </div>

@@ -1,9 +1,43 @@
 import express from "express";
 import puppeteer from "puppeteer";
+import Websocket from "ws";
 import cors from "cors";
 import { config } from "dotenv";
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 config();
+const wss = new WebSocket.Server({ port: 8080 });
+const clients = new Map();
+
+// Function to send a message to a specific client by ID
+function broadcastMessage(userId, message) {
+  const client = clients.get(userId);
+
+  // Check if the client is connected and open
+  if (client && client.readyState === WebSocket.OPEN) {
+    client.send(message);
+  } else {
+    console.log(`Client with ID ${userId} is not connected.`);
+  }
+}
+wss.on("connection", (ws) => {
+  // Assign a unique ID to the connected client
+  const userId = uuidv4();
+  ws.userId = userId;
+
+  // Store the WebSocket connection in the clients map
+  clients.set(userId, ws);
+  console.log(`Client connected with ID: ${userId}`);
+
+  // Send a welcome message to the new client
+  ws.send({ type: "id", message: userId });
+
+  // Handle WebSocket disconnections
+  ws.on("close", () => {
+    console.log(`Client with ID ${userId} disconnected`);
+    // Remove the client from the map on disconnect
+    clients.delete(userId);
+  });
+});
 const app = express();
 app.listen(8080, () => {
   console.log("Server running");
@@ -39,22 +73,22 @@ app.post("/api/get-google-ads", async (req, res) => {
     "body > div:nth-child(9) > root > start-page > creative-grid > material-button > material-ripple";
   let browser;
   let page;
-  
+
   for (let browserRetries = 0; browserRetries < 4; browserRetries++) {
     try {
       browser = await puppeteer.launch({
         protocolTimeout: 240000,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
       page = await browser.newPage();
       await page.setRequestInterception(true);
-      page.on('request', (request) => {
-          if (request.resourceType() === 'image') {
-              request.abort();
-          } else {
-              request.continue();
-          }
-      })
+      page.on("request", (request) => {
+        if (request.resourceType() === "image") {
+          request.abort();
+        } else {
+          request.continue();
+        }
+      });
       if (browser && page) {
         console.log("Browser and Page opended");
         break;
@@ -94,7 +128,7 @@ app.post("/api/get-google-ads", async (req, res) => {
       });
       try {
         let previousHeight;
-        for(let count= 0; count < 5; count++) {
+        for (let count = 0; count < 5; count++) {
           previousHeight = await page.evaluate("document.body.scrollHeight");
 
           await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -121,11 +155,11 @@ app.post("/api/get-google-ads", async (req, res) => {
       return res.json({ adImages: [] }).status(200);
     }
     console.log("Grid found");
-    let cardsCount = 0
+    let cardsCount = 0;
     const adCards = await adGrid.$$(adCardSelector);
     const adImages = [];
     for (const card of adCards) {
-      if(cardsCount > 10){
+      if (cardsCount > 10) {
         break;
       }
       try {
@@ -134,15 +168,15 @@ app.post("/api/get-google-ads", async (req, res) => {
           const adImageSrc = await adImage
             .getProperty("src")
             .then((prop) => prop.jsonValue());
-          adImages.push(adImageSrc);
-          cardsCount++
+          broadcastMessage({ type: "imageAd", message: adImageSrc });
+          cardsCount++;
         }
       } catch (error) {
         console.log("Error processing an ad card:", error.message);
         continue;
       }
     }
-    return res.status(200).json({ adImages });
+    return res.sendStatus(200);
   } catch (error) {
     console.error("Error fetching ads:", error.message);
     return res.sendStatus(500);
@@ -186,17 +220,17 @@ app.post("/api/get-meta-ads", async (req, res) => {
     try {
       browser = await puppeteer.launch({
         protocolTimeout: 240000,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
       page = await browser.newPage();
       await page.setRequestInterception(true);
-      page.on('request', (request) => {
-          if (request.resourceType() === 'image') {
-              request.abort();
-          } else {
-              request.continue();
-          }
-      })
+      page.on("request", (request) => {
+        if (request.resourceType() === "image") {
+          request.abort();
+        } else {
+          request.continue();
+        }
+      });
       if (browser && page) {
         console.log("Browser and Page opended");
         break;
@@ -206,7 +240,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     } catch (error) {
       await page?.close();
       await browser?.close();
-      console.log("Browser launch error: ",error.message);
+      console.log("Browser launch error: ", error.message);
       if (browserRetries === 3) {
         return res.sendStatus(500);
       }
@@ -216,8 +250,8 @@ app.post("/api/get-meta-ads", async (req, res) => {
   try {
     page.setDefaultTimeout(150000);
     const pageId = await getPageId(url, page);
-    if(!pageId){
-      return res.sendStatus(404)
+    if (!pageId) {
+      return res.sendStatus(404);
     }
     await page.goto(
       `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&media_type=all&search_type=page&view_all_page_id=${pageId}`
@@ -230,7 +264,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
     }
     try {
       let previousHeight;
-      for(let count = 0; count < 7; count++){
+      for (let count = 0; count < 7; count++) {
         previousHeight = await page.evaluate("document.body.scrollHeight");
 
         await page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
@@ -256,10 +290,10 @@ app.post("/api/get-meta-ads", async (req, res) => {
     }
     const adImages = [];
     const adVideos = [];
-    let cardsCount = 0
+    let cardsCount = 0;
     for (const grid of adGrids) {
-      if(cardsCount > 10){
-        break
+      if (cardsCount > 10) {
+        break;
       }
       const adCards = await grid.$$(adCardSelector);
       console.log("Ad cards length: ", adCards.length);
@@ -271,16 +305,16 @@ app.post("/api/get-meta-ads", async (req, res) => {
             const adImageSrc = await adImage
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            adImages.push(adImageSrc);
-            cardsCount++
+            broadcastMessage({ type: "imageAd", message: adImageSrc });
+            cardsCount++;
           }
           const adVideo = await card.$(adVideoSelector);
           if (adVideo) {
             const adVideoSrc = await adVideo
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            adVideos.push(adVideoSrc);
-            cardsCount++
+            broadcastMessage({ type: "videoAd", message: adVideoSrc });
+            cardsCount++;
           }
         } catch (error) {
           console.log("Error processing an ad card:", error.message);
@@ -288,7 +322,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
         }
       }
     }
-    return res.status(200).json({ adImages, adVideos });
+    return res.sendStatus(200);
   } catch (error) {
     console.log(error.message);
     return res.sendStatus(500);
