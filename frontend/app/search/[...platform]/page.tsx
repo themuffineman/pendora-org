@@ -25,13 +25,14 @@ const page = ({ params }: { params: any }) => {
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
   const [statusUpdate, setStatusUpdate] = useState<string>("Connecting...");
   const router = useRouter();
-  function handleMessage(message: any) {
+  async function handleMessage(message: any) {
     console.log("received message:", message);
-    if (message.type === "id") {
-      setSocketId(message.message);
+    const messageBody = await message.json();
+    if (messageBody.type === "id") {
+      setSocketId(messageBody.message);
     } else {
       setAds((prevAds) => {
-        prevAds.push(message.message);
+        prevAds.push(messageBody.message);
         return prevAds;
       });
     }

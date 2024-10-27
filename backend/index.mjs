@@ -167,7 +167,11 @@ app.post("/api/get-google-ads", async (req, res) => {
           const adImageSrc = await adImage
             .getProperty("src")
             .then((prop) => prop.jsonValue());
-          broadcastMessage(id, { type: "imageAd", message: adImageSrc });
+          const broadcastData = JSON.stringify({
+            type: "imageAd",
+            message: adImageSrc,
+          });
+          broadcastMessage(id, broadcastData);
           cardsCount++;
         }
       } catch (error) {
@@ -307,7 +311,11 @@ app.post("/api/get-meta-ads", async (req, res) => {
             const adImageSrc = await adImage
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            broadcastMessage(id, { type: "imageAd", message: adImageSrc });
+            const broadcastData = JSON.stringify({
+              type: "videoAd",
+              message: adImageSrc,
+            });
+            broadcastMessage(id, broadcastData);
             cardsCount++;
           }
           const adVideo = await card.$(adVideoSelector);
@@ -315,7 +323,11 @@ app.post("/api/get-meta-ads", async (req, res) => {
             const adVideoSrc = await adVideo
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            broadcastMessage(id, { type: "videoAd", message: adVideoSrc });
+            const broadcastData = JSON.stringify({
+              type: "videoAd",
+              message: adVideoSrc,
+            });
+            broadcastMessage(id, broadcastData);
             cardsCount++;
           }
         } catch (error) {
