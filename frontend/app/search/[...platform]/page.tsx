@@ -68,6 +68,7 @@ const page = ({ params }: { params: any }) => {
         },
         onClose: () => {
           setStatusUpdate("Connection Closed");
+          console.log("Connection closed");
         },
         onError: () => {
           setStatusUpdate("Error Occured");
