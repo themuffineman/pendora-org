@@ -31,11 +31,11 @@ function broadcastMessage(userId, message) {
 }
 wss.on("connection", (ws) => {
   ws.on("message", (message) => {
-    // Assume the first message from the client contains the userId
+    const userId = message.toString("utf-8"); // Convert the buffer to a UTF-8 string
+
     if (!ws.userId) {
-      ws.userId = message; // Set a custom userId property on the ws instance
-      console.log("ws.userId is: ", ws.userId);
-      clients.set(ws.userId, ws); // Store ws instance in clients map keyed by userId
+      ws.userId = userId; // Store userId in the WebSocket instance
+      clients.set(ws.userId, ws); // Add client to the map
       console.log(`Client connected with ID: ${ws.userId}`);
     }
   });
