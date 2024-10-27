@@ -9,11 +9,18 @@ export class InitSocket {
     this.onError = onError;
   }
   connect() {
+    const id = randomUUID()
     const socket = new WebSocket(this.url);
     socket.onopen = this.onOpen;
     socket.onmessage = this.onMessage;
     socket.onerror = this.onError;
     socket.onclose = this.onClose;
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(id);
+    }else {
+      console.error('Cannot send data.');
+    }
+    return {id}
   }
 }
 

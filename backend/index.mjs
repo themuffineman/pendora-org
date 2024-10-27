@@ -23,7 +23,6 @@ const clients = new Map();
 function broadcastMessage(userId, message) {
   const client = clients.get(userId);
 
-  // Check if the client is connected and open
   if (client && client.readyState === WebSocket.OPEN) {
     client.send(message);
   } else {
@@ -31,11 +30,11 @@ function broadcastMessage(userId, message) {
   }
 }
 wss.on("connection", (ws) => {
-  const userId = uuidv4();
-  ws.userId = userId;
-  clients.set(userId, ws);
-  console.log(`Client connected with ID: ${userId}`);
-  ws.send({ type: "id", message: userId });
+  ws.on('message', (message) => {
+    ws.userId = message;
+    clients.set(message, ws);
+    console.log(`Client connected with ID: ${message}`);
+  });
   ws.on("close", () => {
     console.log(`Client with ID ${userId} disconnected`);
     clients.delete(userId);

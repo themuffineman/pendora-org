@@ -58,7 +58,7 @@ const page = ({ params }: { params: any }) => {
         setStatusUpdate("Error Occured");
       },
     });
-    socket.connect();
+    const id = socket.connect();
     const intervalId = setInterval(() => {
       loadTime += 1;
       if (loadTime === 15) {
@@ -76,7 +76,7 @@ const page = ({ params }: { params: any }) => {
       setIsFetching(true);
       setFailedToFetch(false);
       try {
-        console.log("socket id is", socketId)
+        console.log("socket id is", id)
         const adResponse = await fetch(
           `https://pendora-org-production.up.railway.app/api/get-${params.platform[0]}-ads`,
           {
@@ -87,7 +87,7 @@ const page = ({ params }: { params: any }) => {
             body: JSON.stringify({
               url: params.platform[1],
               platform: params.platform[0],
-              id: socketId,
+              id: id,
             }),
           }
         );
