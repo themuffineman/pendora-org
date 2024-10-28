@@ -29,14 +29,23 @@ const page = ({ params }: { params: any }) => {
     console.log("message.data: ", message.data);
     if (typeof message.data === "string") {
       // Try parsing if it's a JSON string
+      console.log("message is json");
       try {
         const parsedData = JSON.parse(message.data);
         console.log("Message Content:", parsedData.message);
+        setAds((prevAds) => {
+          prevAds.push(parsedData.message);
+          return prevAds;
+        });
       } catch (error) {
         console.error("Error parsing JSON:", error);
       }
     } else if (typeof message.data === "object" && message.data.message) {
-      // Directly access the message if data is an object
+      console.log("message is object");
+      setAds((prevAds) => {
+        prevAds.push(message.data.message);
+        return prevAds;
+      });
       console.log("Message Content:", message.data.message);
     } else {
       console.warn("Unexpected data format:", message.data);
@@ -44,10 +53,7 @@ const page = ({ params }: { params: any }) => {
     // if (messageBody.type === "id") {
     //   setSocketId(messageBody.message);
     // } else {
-    //   setAds((prevAds) => {
-    //     prevAds.push(messageBody.message);
-    //     return prevAds;
-    //   });
+    //
     // }
   }
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
