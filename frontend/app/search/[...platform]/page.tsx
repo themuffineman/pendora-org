@@ -26,16 +26,29 @@ const page = ({ params }: { params: any }) => {
   const [statusUpdate, setStatusUpdate] = useState<string>("Connecting...");
   const router = useRouter();
   async function handleMessage(message: any) {
-    const messageBody = JSON.parse(message);
-    console.log("received message:", messageBody);
-    if (messageBody.type === "id") {
-      setSocketId(messageBody.message);
+    console.log("message.data: ", message.data);
+    if (typeof message.data === "string") {
+      // Try parsing if it's a JSON string
+      try {
+        const parsedData = JSON.parse(message.data);
+        console.log("Message Content:", parsedData.message);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+    } else if (typeof message.data === "object" && message.data.message) {
+      // Directly access the message if data is an object
+      console.log("Message Content:", message.data.message);
     } else {
-      setAds((prevAds) => {
-        prevAds.push(messageBody.message);
-        return prevAds;
-      });
+      console.warn("Unexpected data format:", message.data);
     }
+    // if (messageBody.type === "id") {
+    //   setSocketId(messageBody.message);
+    // } else {
+    //   setAds((prevAds) => {
+    //     prevAds.push(messageBody.message);
+    //     return prevAds;
+    //   });
+    // }
   }
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
