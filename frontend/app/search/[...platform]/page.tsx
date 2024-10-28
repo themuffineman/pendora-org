@@ -45,7 +45,6 @@ const page = ({ params }: { params: any }) => {
   async function fetchData(e?: any) {
     e?.preventDefault();
     let loadTime = 0;
-
     const intervalId = setInterval(() => {
       loadTime += 1;
       if (loadTime === 15) {
@@ -56,24 +55,9 @@ const page = ({ params }: { params: any }) => {
         }, 10000);
       }
     }, 1000);
-    if (usageCount > 40) {
+    if (usageCount > 4) {
       setIsOpen(true);
     } else {
-      const socket = new InitSocket({
-        url: "wss://pendora-org-production.up.railway.app",
-        onMessage: handleMessage,
-        onOpen: () => {
-          setStatusUpdate("Connection Established");
-        },
-        onClose: () => {
-          setStatusUpdate("Connection Closed");
-          console.log("Connection closed");
-        },
-        onError: () => {
-          setStatusUpdate("Error Occured");
-        },
-      });
-      const id = socket.connect();
       setAds([]);
       setIsFetching(true);
       setFailedToFetch(false);
@@ -88,7 +72,6 @@ const page = ({ params }: { params: any }) => {
             body: JSON.stringify({
               url: params.platform[1],
               platform: params.platform[0],
-              id: id,
             }),
           }
         );
@@ -99,7 +82,37 @@ const page = ({ params }: { params: any }) => {
         if (!adResponse.ok) {
           throw new Error("Failed to fetch");
         }
-        incrementUsage();
+        const ads: { adImages: string[]; adVideos?: string[] } =
+          await adResponse.json();
+        if (params.platform[0] === "google") {
+          const initData: adTypes[] = [];
+          ads?.adImages.forEach((string) => {
+            initData.push({
+              url: string,
+              type: "image",
+            });
+          });
+          setAds(initData);
+          incrementUsage();
+        }
+        if (params.platform[0] === "meta") {
+          const initData: adTypes[] = [];
+          ads?.adImages.forEach((string) => {
+            initData.push({
+              url: string,
+              type: "image",
+            });
+          });
+          ads.adVideos &&
+            ads?.adVideos.forEach((string) => {
+              initData.push({
+                url: string,
+                type: "video",
+              });
+            });
+          setAds(initData);
+          incrementUsage();
+        }
       } catch (error: any) {
         setFailedToFetch(true);
         console.error(error.message);
@@ -160,7 +173,7 @@ const page = ({ params }: { params: any }) => {
               <div className="flex flex-col gap-2 items-center">
                 <div className="size-16 animate-spin rounded-full border-[5px] border-t-white border-[#d8d8d8]" />
                 <div className="bg-[#f5f5f5] rounded-md p-2 text-sm">
-                  {statusUpdate}
+                  Searching...
                 </div>
               </div>
             ) : noAdsFound ? (
@@ -177,7 +190,7 @@ const page = ({ params }: { params: any }) => {
           {timeNotifier && (
             <Toast
               error={false}
-              message="Access all ad platforms with PRO version"
+              message="Access all ad platforms with PRO"
               pro={true}
             />
           )}

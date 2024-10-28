@@ -1,51 +1,12 @@
 import express from "express";
 import puppeteer from "puppeteer";
-import { WebSocketServer, WebSocket } from "ws";
 import cors from "cors";
 import { config } from "dotenv";
-import { v4 as uuidv4 } from "uuid";
 config();
 const app = express();
-const server = app.listen(8080, () => {
+app.listen(8080, () => {
   console.log("Server running");
 });
-app.use(
-  cors({
-    origin: process.env.ALLOWED_ORIGIN,
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
-);
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-const wss = new WebSocketServer({ server });
-const clients = new Map();
-function broadcastMessage(userId, message) {
-  const client = clients.get(userId);
-  if (client && client.readyState === WebSocket.OPEN) {
-    client.send(message);
-  } else {
-    console.log(`Client with ID ${userId} is not connected.`);
-  }
-}
-wss.on("connection", (ws) => {
-  ws.on("message", (message) => {
-    const userId = message.toString("utf-8"); // Convert the buffer to a UTF-8 string
-
-    if (!ws.userId) {
-      ws.userId = userId; // Store userId in the WebSocket instance
-      clients.set(ws.userId, ws); // Add client to the map
-      console.log(`Client connected with ID: ${ws.userId}`);
-    }
-  });
-  ws.on("close", () => {
-    if (ws.userId) {
-      console.log(`Client with ID ${ws.userId} disconnected`);
-      clients.delete(ws.userId); // Remove the client by userId
-    }
-  });
-});
-
 function checkApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"];
   if (!apiKey) {
@@ -56,12 +17,18 @@ function checkApiKey(req, res, next) {
   }
   next();
 }
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGIN,
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // app.use(checkApiKey);
 app.post("/api/get-google-ads", async (req, res) => {
-  const { url, id } = req.body;
-  if (!url) {
-    return res.sendStatus(500);
-  }
+  const { url } = req.body;
   console.log("Received request:", url);
   const gridSelector =
     "body > div:nth-child(9) > root > start-page > creative-grid > priority-creative-grid";
@@ -166,11 +133,7 @@ app.post("/api/get-google-ads", async (req, res) => {
           const adImageSrc = await adImage
             .getProperty("src")
             .then((prop) => prop.jsonValue());
-          const broadcastData = JSON.stringify({
-            type: "imageAd",
-            message: adImageSrc,
-          });
-          broadcastMessage(id, broadcastData);
+          adImages.push(adImageSrc);
           cardsCount++;
         }
       } catch (error) {
@@ -178,7 +141,7 @@ app.post("/api/get-google-ads", async (req, res) => {
         continue;
       }
     }
-    return res.sendStatus(200);
+    return res.status(200).json({ adImages });
   } catch (error) {
     console.error("Error fetching ads:", error.message);
     return res.sendStatus(500);
@@ -188,10 +151,7 @@ app.post("/api/get-google-ads", async (req, res) => {
   }
 });
 app.post("/api/get-meta-ads", async (req, res) => {
-  const { url, id } = req.body;
-  if (!url) {
-    return res.sendStatus(500);
-  }
+  const { url } = req.body;
   console.log("Received Request: ", url);
   const gridSelector =
     "div.x12peec7.x1dr59a3.x1kgmq87.x1ja2u2z > div > div > div > div.x8bgqxi.x1n2onr6 > div._8n_0 > div > div.x1dr75xp.xh8yej3.x16md763 > div.xrvj5dj.xdq2opy.xexx8yu.xbxaen2.x18d9i69.xbbxn1n.xdoe023.xbumo9q.x143o31f.x7sq92a.x1crum5w";
@@ -310,11 +270,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
             const adImageSrc = await adImage
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            const broadcastData = JSON.stringify({
-              type: "videoAd",
-              message: adImageSrc,
-            });
-            broadcastMessage(id, broadcastData);
+            adImages.push(adImageSrc);
             cardsCount++;
           }
           const adVideo = await card.$(adVideoSelector);
@@ -322,11 +278,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
             const adVideoSrc = await adVideo
               .getProperty("src")
               .then((prop) => prop.jsonValue());
-            const broadcastData = JSON.stringify({
-              type: "videoAd",
-              message: adVideoSrc,
-            });
-            broadcastMessage(id, broadcastData);
+            adVideos.push(adVideoSrc);
             cardsCount++;
           }
         } catch (error) {
@@ -335,7 +287,7 @@ app.post("/api/get-meta-ads", async (req, res) => {
         }
       }
     }
-    return res.sendStatus(200);
+    return res.status(200).json({ adImages, adVideos });
   } catch (error) {
     console.log(error.message);
     return res.sendStatus(500);
