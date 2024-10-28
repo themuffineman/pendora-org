@@ -128,7 +128,7 @@ const Search = ({
               <span className="text-base font-medium text-center">Google</span>
             </div>
           </SelectItem>
-          <SelectItem disabled={isUserSubscribed} value="tiktok">
+          <SelectItem disabled={true} value="tiktok">
             <div
               title="Please Upgrade to Pro"
               className="flex gap-2 items-center justify-between"
@@ -141,7 +141,7 @@ const Search = ({
               <span className="text-base font-medium text-center">TikTok</span>
             </div>
           </SelectItem>
-          <SelectItem disabled={isUserSubscribed} value="linkedin">
+          <SelectItem disabled={true} value="linkedin">
             <div
               title="Please Upgrade to Pro"
               className="flex gap-2 items-center justify-between"

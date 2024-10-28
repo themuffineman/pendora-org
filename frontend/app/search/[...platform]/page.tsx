@@ -22,19 +22,8 @@ const page = ({ params }: { params: any }) => {
   const [platform, setPlatform] = useState<string>("google");
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
-  const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
-  const [statusUpdate, setStatusUpdate] = useState<string>("Connecting...");
   const router = useRouter();
-  function handleMessage(message: any) {
-    try {
-      const parsedData = JSON.parse(message.data);
-      const type = parsedData.type === "imageAd" ? "image" : "video";
-      const newAds = [...ads, { url: parsedData.message, type }];
-      setAds(newAds);
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-    }
-  }
+
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push(`/search/${platform}/${input}`);
@@ -44,17 +33,6 @@ const page = ({ params }: { params: any }) => {
   }, []);
   async function fetchData(e?: any) {
     e?.preventDefault();
-    let loadTime = 0;
-    const intervalId = setInterval(() => {
-      loadTime += 1;
-      if (loadTime === 15) {
-        setTimeNotifier(true);
-        setTimeout(() => {
-          setTimeNotifier(false);
-          clearInterval(intervalId);
-        }, 10000);
-      }
-    }, 1000);
     if (usageCount > 4) {
       setIsOpen(true);
     } else {
@@ -150,7 +128,7 @@ const page = ({ params }: { params: any }) => {
             className={` ${
               ads?.length === 0 || failedToFetch || isFetching
                 ? "flex items-center justify-center"
-                : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center  grid-flow-row"
+                : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 place-items-center items grid-flow-row"
             }  w-full h-full`}
           >
             {ads && ads.length > 0 ? (
@@ -187,13 +165,6 @@ const page = ({ params }: { params: any }) => {
           </div>
 
           {ads && ads.length > 0 && <GetPro>Load More</GetPro>}
-          {timeNotifier && (
-            <Toast
-              error={false}
-              message="Access all ad platforms with PRO"
-              pro={true}
-            />
-          )}
         </div>
       </div>
     </>
