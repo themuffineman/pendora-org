@@ -25,36 +25,15 @@ const page = ({ params }: { params: any }) => {
   const [timeNotifier, setTimeNotifier] = useState<boolean>(false);
   const [statusUpdate, setStatusUpdate] = useState<string>("Connecting...");
   const router = useRouter();
-  async function handleMessage(message: any) {
-    console.log("message.data: ", message.data);
-    if (typeof message.data === "string") {
-      // Try parsing if it's a JSON string
-      console.log("message is json");
-      try {
-        const parsedData = JSON.parse(message.data);
-        console.log("Message Content:", parsedData.message);
-        setAds((prevAds) => {
-          prevAds.push(parsedData.message);
-          return prevAds;
-        });
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-    } else if (typeof message.data === "object" && message.data.message) {
-      console.log("message is object");
-      setAds((prevAds) => {
-        prevAds.push(message.data.message);
-        return prevAds;
-      });
-      console.log("Message Content:", message.data.message);
-    } else {
-      console.warn("Unexpected data format:", message.data);
+  function handleMessage(message: any) {
+    try {
+      const parsedData = JSON.parse(message.data);
+      const type = parsedData.type === "adImage" ? "image" : "video";
+      const newAds = [...ads, { url: parsedData.message, type }];
+      setAds(newAds);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
     }
-    // if (messageBody.type === "id") {
-    //   setSocketId(messageBody.message);
-    // } else {
-    //
-    // }
   }
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
