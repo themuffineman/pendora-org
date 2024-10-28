@@ -28,7 +28,7 @@ const page = ({ params }: { params: any }) => {
   function handleMessage(message: any) {
     try {
       const parsedData = JSON.parse(message.data);
-      const type = parsedData.type === "adImage" ? "image" : "video";
+      const type = parsedData.type === "imageAd" ? "image" : "video";
       const newAds = [...ads, { url: parsedData.message, type }];
       setAds(newAds);
     } catch (error) {
