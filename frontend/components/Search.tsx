@@ -114,8 +114,14 @@ const Search = ({
         <SelectContent>
           <SelectItem value="meta">
             <div className="flex gap-2 items-center justify-between ">
-              <img className="size-5" src="/metaverse.svg" alt="Meta logo" />
-              <span className="text-base font-medium text-center">Meta</span>
+              <img
+                className="size-5"
+                src="/facebook-icon.svg"
+                alt="Facebook logo"
+              />
+              <span className="text-base font-medium text-center">
+                Facebook Ads
+              </span>
             </div>
           </SelectItem>
           <SelectItem value="google">
@@ -125,7 +131,9 @@ const Search = ({
                 src="/google-logo.svg"
                 alt="Google logo"
               />
-              <span className="text-base font-medium text-center">Google</span>
+              <span className="text-base font-medium text-center">
+                Google Ads
+              </span>
             </div>
           </SelectItem>
           <SelectItem disabled={true} value="tiktok">

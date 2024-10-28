@@ -101,7 +101,7 @@ const page = ({ params }: { params: any }) => {
   }
   return (
     <>
-      <nav className="w-full px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
+      <nav className="w-full px-5 gap-4 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
         <Search
           platform={platform}
           setPlatform={setPlatform}
