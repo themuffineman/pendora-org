@@ -26,8 +26,8 @@ const page = ({ params }: { params: any }) => {
   const [statusUpdate, setStatusUpdate] = useState<string>("Connecting...");
   const router = useRouter();
   async function handleMessage(message: any) {
-    console.log("received message:", message);
-    const messageBody = await message.json();
+    const messageBody = JSON.parse(message);
+    console.log("received message:", messageBody);
     if (messageBody.type === "id") {
       setSocketId(messageBody.message);
     } else {
