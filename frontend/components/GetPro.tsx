@@ -64,7 +64,7 @@ function GetPro({
           <div className="text-base font-medium ">Pro Features:</div>
           <ul className="flex flex-col gap-2 items-start">
             {proFeatures.map((string) => (
-              <li className="flex gap-2 items-center text-sm font-light ">
+              <li key={string} className="flex gap-2 items-center text-sm font-light ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="15"
