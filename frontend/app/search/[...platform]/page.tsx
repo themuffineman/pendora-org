@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GetPro from "@/components/GetPro";
 import { useServiceUsage } from "@/hooks/useStorage";
-import Toast from "@/components/Toast";
 import Search from "@/components/Search";
-import { InitSocket } from "@/utils/utils.js";
+import AuthLinks from "@/components/AuthLinks";
+
 
 const page = ({ params }: { params: any }) => {
   interface adTypes {
@@ -14,7 +14,6 @@ const page = ({ params }: { params: any }) => {
     type: "image" | "video";
   }
   const [ads, setAds] = useState<any[]>([]);
-  const [socketId, setSocketId] = useState<string | null>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
   const [noAdsFound, setNoAdsFound] = useState<boolean>(false);
@@ -22,7 +21,16 @@ const page = ({ params }: { params: any }) => {
   const [platform, setPlatform] = useState<string>("google");
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
+  const [isAuth, setIsAuth]  = useState<any>()
   const router = useRouter();
+  async function verifyAuth(){
+    const isAuthResponse = await fetch("/api/is-auth");
+    const isAuth = await isAuthResponse.json();
+    setIsAuth(isAuth)
+  }
+  useEffect(()=>{
+    verifyAuth()
+  },[])
 
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,7 +43,7 @@ const page = ({ params }: { params: any }) => {
     e?.preventDefault();
     if (usageCount > 4) {
       setIsOpen(true);
-    } else {
+    }else {
       setAds([]);
       setIsFetching(true);
       setFailedToFetch(false);
@@ -112,10 +120,11 @@ const page = ({ params }: { params: any }) => {
           usageCount={usageCount}
           goToSearch={goToSearch}
         />
-        <div className="text-black min-w-max rounded-md p-2 bg-[#f5f5f5]">
+        <div className="text-black text-sm min-w-max rounded-md p-2 bg-[#f5f5f5]">
           Trials Left: {4 - usageCount}
         </div>
         <GetPro />
+        <AuthLinks type={isAuth?.isAuth ? 'logout': 'login'}/>
       </nav>
       <div className="w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white">
         <div className="flex flex-col w-full h-full items-center justify-start gap-10">

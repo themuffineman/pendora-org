@@ -1,50 +1,21 @@
+"use client";
 import Link from "next/link";
-import {
-  LoginLink,
-  LogoutLink,
-  getKindeServerSession,
-} from "@kinde-oss/kinde-auth-nextjs/server";
-// import { MongoClient } from "mongodb";
+import {useEffect, useState} from 'react'
 import "./page.css";
 import MainSearch from "@/components/MainSearch";
 import GetPro from "@/components/GetPro";
+import AuthLinks from "@/components/AuthLinks";
 
-export default async function Home() {
-  // async function isSubscribed() {
-  //   const { isAuthenticated } = getKindeServerSession();
-  //   const isUserAuthenticated = await isAuthenticated();
-  //   if (!isUserAuthenticated) {
-  //     return;
-  //   }
-  //   let client;
-  //   try {
-  //     client = new MongoClient(process.env.MONGODB_URI!);
-  //     await client.connect();
-  //     const database = client.db("adsInspectDatabase");
-  //     const collection = database.collection("subscriptionDetails");
-  //     const { getUser } = getKindeServerSession();
-  //     const user = await getUser();
-  //     console.log(user.email);
-  //     const subscriptionDetails = await collection.findOne({
-  //       email: user.email,
-  //     });
-  //     console.log("Details: ", subscriptionDetails);
-  //     if (subscriptionDetails) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (error: any) {
-  //     console.log("main error: ", error.message);
-  //     return null;
-  //   } finally {
-  //     await client?.close();
-  //   }
-  // }
-
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  const isUserSubscribed = false; //await isSubscribed();
+export default function Home() {
+  const [isAuth, setIsAuth]  = useState<any>()
+  async function verifyAuth(){
+    const isAuthResponse = await fetch("/api/is-auth");
+    const isAuth = await isAuthResponse.json();
+    setIsAuth(isAuth)
+  }
+  useEffect(()=>{
+    verifyAuth()
+  },[])
 
   return (
     <main className="flex flex-col w-full h-screen justify-center ">
@@ -62,20 +33,16 @@ export default async function Home() {
           </svg>
         </Link>
         <div className="flex gap-5 ">
-          {isUserSubscribed ? (
+          {isAuth?.isAuth ? (
             <>
               <div className="rounded-md w-max bg-white max-w-[100px] p-2 px-4 border truncate">
-                Welcome: <span className="font-bold">{user.email}</span>
+                Welcome: <span className="font-bold">{isAuth?.email}</span>
               </div>
-              <LogoutLink className="hover:translate-y-[2px] transition p-2 px-4 rounded-md text-white border font-bold bg-red-400 ">
-                Log Out
-              </LogoutLink>
+              <AuthLinks type="logout" />
             </>
           ) : (
             <>
-              <LoginLink className="hover:translate-y-[2px] transition p-2 px-4 rounded-md bg-white border">
-                Login
-              </LoginLink>
+              <AuthLinks type="login" />
               <GetPro />
             </>
           )}
