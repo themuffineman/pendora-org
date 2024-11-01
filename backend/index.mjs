@@ -257,13 +257,12 @@ app.post("/api/get-meta-ads", async (req, res) => {
     const adVideos = [];
     let cardsCount = 0;
     for (const grid of adGrids) {
-      if (cardsCount > 10) {
-        break;
-      }
       const adCards = await grid.$$(adCardSelector);
       console.log("Ad cards length: ", adCards.length);
-
       for (const card of adCards) {
+        if (cardsCount > 10) {
+          break;
+        }
         try {
           const adImage = await card.$(adImgSelector);
           if (adImage) {

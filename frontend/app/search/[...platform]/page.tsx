@@ -7,7 +7,6 @@ import { useServiceUsage } from "@/hooks/useStorage";
 import Search from "@/components/Search";
 import AuthLinks from "@/components/AuthLinks";
 
-
 const page = ({ params }: { params: any }) => {
   interface adTypes {
     url: string;
@@ -22,7 +21,6 @@ const page = ({ params }: { params: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
   const [isAuth, setIsAuth]  = useState<any>()
-  const router = useRouter();
   async function verifyAuth(){
     const isAuthResponse = await fetch("/api/is-auth");
     const isAuth = await isAuthResponse.json();
@@ -31,6 +29,7 @@ const page = ({ params }: { params: any }) => {
   useEffect(()=>{
     verifyAuth()
   },[])
+
 
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -123,8 +122,10 @@ const page = ({ params }: { params: any }) => {
         <div className="text-black text-sm min-w-max rounded-md p-2 bg-[#f5f5f5]">
           Trials Left: {4 - usageCount}
         </div>
-        <GetPro />
-        <AuthLinks type={isAuth?.isAuth ? 'logout': 'login'}/>
+        <div className="flex gap-2 items-center">
+          <GetPro />
+          <AuthLinks type={isAuth?.isAuth ? 'logout': 'login'}/>
+        </div>
       </nav>
       <div className="w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white">
         <div className="flex flex-col w-full h-full items-center justify-start gap-10">

@@ -1,30 +1,19 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import AdCard from "@/components/AdCard";
-import { AdDataContext } from "@/components/AppWrapper";
-import Search from "@/components/Search";
-import Link from "next/link";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import MainSearch from "@/components/MainSearch";
+import GetPro from "@/components/GetPro";
+import { useServiceUsage } from "@/hooks/useStorage";
+import AuthLinks from "@/components/AuthLinks";
+
 const page = () => {
   const [ads, setAds] = useState<string[] | []>([]);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [adsFound, setAdsFound] = useState<boolean>(true);
-  const context = useContext(AdDataContext);
-  const pathname = usePathname();
-  const pathCondition =
-    pathname === "/dashboard/search" ||
-    pathname === "/dashboard/saved-ads" ||
-    pathname === "dashboard";
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [usageCount, incrementUsage] = useServiceUsage();
+  
   async function fetchData() {
     try {
       setFailedToFetch(false);
@@ -48,47 +37,26 @@ const page = () => {
       }
     }
   }
+  useEffect(() => {
+    if(!isAuth?.isAuth){
+      router.push("/api/auth/login")
+    }else{
+      fetchData();
+    }
+  }, []);
+
   return (
     <>
-      {pathCondition ? (
-        <nav className="w-full min-w-[454px] px-5 gap-2 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
-          {/* <Search/> */}
-          <div className="flex items-center gap-2 w-max">
-            <Link
-              href={"/dashboard/saved-ads"}
-              className="flex w-max gap-2 p-2 rounded-md bg-[#f5f5f5] items-center justify-center cursor-pointer hover:bg-[#f0f0f0]"
-            >
-              {/* <svg  xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#c0c0c0" viewBox="0 0 256 256"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"></path></svg> */}
-              <span className="text-base font-medium text-center">
-                Saved Ads
-              </span>
-            </Link>
-            <button className="w-max px-4 p-2 rounded-md text-black flex items-center justify-center bg-yellow-200">
-              Upgrade
-            </button>
-            <div className="flex items-center justify-end p-5">
-              <Popover>
-                <PopoverTrigger>
-                  <div className="p-2 font-bold size-8 rounded-full bg-black text-white flex items-center justify-center uppercase">
-                    {context?.user}
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="w-max h-max flex flex-col gap-2 rounded-md bg-[#f5f5f5]">
-                  <a
-                    className="border p-1 px-3 hover:bg-neutral-700 rounded-md bg-black text-white flex items-center justify-center"
-                    href={process.env.BILLING_PORTAL_URL}
-                  >
-                    Manage Billing
-                  </a>
-                  <LogoutLink className="border p-1 px-3 hover:bg-[#f0f0f0] rounded-md bg-white flex items-center justify-center">
-                    Sign Out
-                  </LogoutLink>
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-        </nav>
-      ) : null}
+      <nav className="w-full px-5 gap-4 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
+        <MainSearch />
+        <div className="text-black text-sm min-w-max rounded-md p-2 bg-[#f5f5f5]">
+          Trials Left: {4 - usageCount}
+        </div>
+        <div className="flex gap-2 items-center">
+          <GetPro />
+          <AuthLinks type={isAuth?.isAuth ? "logout" : "login"} />
+        </div>
+      </nav>
       <div className=" mt-16 p-10  flex flex-col w-full h-full items-center justify-center">
         <div
           className={` ${
