@@ -36,7 +36,7 @@ export default function Home() {
           {isAuth?.isAuth ? (
             <>
               <div className="rounded-md w-max bg-white max-w-[100px] p-2 px-4 border truncate">
-                Welcome: <span className="font-bold">{isAuth?.email}</span>
+                <span className="font-bold">{isAuth?.email}</span>
               </div>
               <AuthLinks type="logout" />
             </>
