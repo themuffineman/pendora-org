@@ -13,7 +13,15 @@ const page = () => {
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [adsFound, setAdsFound] = useState<boolean>(true);
   const [usageCount, incrementUsage] = useServiceUsage();
-  
+  const [isAuth, setIsAuth]  = useState<any>()
+
+  async function verifyAuth(){
+    const isAuthResponse = await fetch("/api/is-auth");
+    const isAuth = await isAuthResponse.json();
+    setIsAuth(isAuth)
+  }
+  useEffect(()=>{
+  },[])
   async function fetchData() {
     try {
       setFailedToFetch(false);
@@ -38,6 +46,7 @@ const page = () => {
     }
   }
   useEffect(() => {
+    
     if(!isAuth?.isAuth){
       router.push("/api/auth/login")
     }else{
