@@ -21,6 +21,7 @@ const page = ({ params }: { params: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
   const [isAuth, setIsAuth]  = useState<any>()
+  const router = useRouter();
   async function verifyAuth(){
     const isAuthResponse = await fetch("/api/is-auth");
     const isAuth = await isAuthResponse.json();
