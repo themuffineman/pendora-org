@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link";
 import {useEffect, useState} from 'react'
-import "./page.css";
 import MainSearch from "@/components/MainSearch";
 import GetPro from "@/components/GetPro";
 import AuthLinks from "@/components/AuthLinks";
