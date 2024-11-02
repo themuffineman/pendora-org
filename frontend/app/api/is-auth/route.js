@@ -1,7 +1,7 @@
 import {getKindeServerSession} from "@kinde-oss/kinde-auth-nextjs/server";
 import { MongoClient } from "mongodb";
 
-export async function GET() {
+export async function GET(){
   let client;
   let isAuth=false;
   let isSubscribed=false;
@@ -40,4 +40,4 @@ export async function GET() {
    } finally {
      await client?.close();
    }
- }
+}

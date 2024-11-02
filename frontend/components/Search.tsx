@@ -1,6 +1,5 @@
+"use client"
 import GetPro from "@/components/GetPro";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-// import { MongoClient } from "mongodb";
 import {
   Select,
   SelectContent,
@@ -12,7 +11,6 @@ interface props {
   platform: string;
   setPlatform: React.Dispatch<React.SetStateAction<string>>;
   setInput: React.Dispatch<React.SetStateAction<string>>;
-  input: string;
   usageCount: number;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,45 +19,14 @@ interface props {
 const Search = ({
   platform,
   setPlatform,
-  input,
   setInput,
   usageCount,
   isOpen,
   setIsOpen,
   goToSearch,
 }: props) => {
-  // async function isSubscribed() {
-  //     const { isAuthenticated } = getKindeServerSession();
-  //     const isUserAuthenticated = await isAuthenticated();
-  //     if(!isUserAuthenticated){
-  //       return
-  //     }
-  //     let client;
-  //     try {
-  //       client = new MongoClient(process.env.MONGODB_URI!);
-  //       await client.connect();
-  //       const database = client.db("adsInspectDatabase");
-  //       const collection = database.collection("subscriptionDetails");
-  //       const { getUser } = getKindeServerSession();
-  //       const user = await getUser();
-  //       console.log(user.email);
-  //       const subscriptionDetails = await collection.findOne({
-  //         email: user.email,
-  //       });
-  //       console.log("Details: ", subscriptionDetails);
-  //       if (subscriptionDetails) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     } catch (error: any) {
-  //       console.log("main error: ", error.message);
-  //       return undefined;
-  //     } finally {
-  //       await client?.close();
-  //     }
-  //   }
-  const isUserSubscribed = false; //await isSubscribed();
+
+  // const isUserSubscribed = false; //await isSubscribed();
   return (
     <div className="w-max flex items-center justify-start gap-3 max-w-[700px] ">
       <form

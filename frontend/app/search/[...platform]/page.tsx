@@ -22,6 +22,7 @@ const page = ({ params }: { params: any }) => {
   const [usageCount, incrementUsage] = useServiceUsage();
   const [isAuth, setIsAuth]  = useState<any>()
   const router = useRouter();
+  
   async function verifyAuth(){
     const isAuthResponse = await fetch("/api/is-auth");
     const isAuth = await isAuthResponse.json();
@@ -113,7 +114,6 @@ const page = ({ params }: { params: any }) => {
         <Search
           platform={platform}
           setPlatform={setPlatform}
-          input={input}
           setInput={setInput}
           isOpen={isOpen}
           setIsOpen={setIsOpen}

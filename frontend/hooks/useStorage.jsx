@@ -1,6 +1,5 @@
 "use client"
 import { useState, useEffect } from 'react';
-export const dynamic = 'force-dynamic';
 
 // Helper function to get today's date in 'YYYY-MM-DD' format
 const getTodayDate = () => {
