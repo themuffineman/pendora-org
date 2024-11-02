@@ -1,4 +1,3 @@
-import React from "react";
 import GetPro from "./GetPro";
 interface propTypes {
   message: string;
