@@ -1,10 +1,9 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import AdCard from "@/components/AdCard";
 import { useRouter } from "next/navigation";
 import MainSearch from "@/components/MainSearch";
 import GetPro from "@/components/GetPro";
-import { useServiceUsage } from "@/hooks/useStorage";
 import AuthLinks from "@/components/AuthLinks";
 
 const page = () => {
@@ -13,7 +12,6 @@ const page = () => {
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [adsFound, setAdsFound] = useState<boolean>(true);
-  const [usageCount, incrementUsage] = useServiceUsage();
   const [isAuth, setIsAuth]  = useState<any>()
   const router = useRouter();
 
@@ -61,11 +59,10 @@ const page = () => {
     <>
       <nav className="w-full px-5 gap-4 bg-white flex items-center justify-between py-2 border-b border-[#F5F5F5] shadow-lg fixed top-0 right-0 z-50 overflow-x-auto">
         <MainSearch />
-        <div className="text-black text-sm min-w-max rounded-md p-2 bg-[#f5f5f5]">
-          Trials Left: {4 - usageCount}
-        </div>
         <div className="flex gap-2 items-center">
-          <GetPro />
+          {!isAuth?.isSubscribed && (
+            <GetPro/>
+          )}
           <AuthLinks type={isAuth?.isAuth ? "logout" : "login"} />
         </div>
       </nav>
