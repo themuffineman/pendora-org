@@ -8,6 +8,7 @@ import { useServiceUsage } from "@/hooks/useStorage";
 import AuthLinks from "@/components/AuthLinks";
 
 const page = () => {
+  
   const [ads, setAds] = useState<string[] | []>([]);
   const [failedToFetch, setFailedToFetch] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -21,8 +22,14 @@ const page = () => {
     const isAuth = await isAuthResponse.json();
     setIsAuth(isAuth)
   }
-  useEffect(()=>{
-  },[])
+  async function initLoad(){
+    await verifyAuth();
+    if(!isAuth?.isAuth){
+      router.push("/api/auth/login")
+    }else{
+      fetchData();
+    }
+  }
   async function fetchData() {
     try {
       setFailedToFetch(false);
@@ -47,12 +54,7 @@ const page = () => {
     }
   }
   useEffect(() => {
-    
-    if(!isAuth?.isAuth){
-      router.push("/api/auth/login")
-    }else{
-      fetchData();
-    }
+    initLoad()
   }, []);
 
   return (
