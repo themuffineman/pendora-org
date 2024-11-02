@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
 import AdCard from "@/components/AdCard";
 import { useRouter } from "next/navigation";

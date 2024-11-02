@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect } from 'react';
 
 // Helper function to get today's date in 'YYYY-MM-DD' format
