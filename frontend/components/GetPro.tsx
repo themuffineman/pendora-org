@@ -41,7 +41,7 @@ function GetPro({
           <div className="text-5xl font-extrabold tracking-tight ">
             ${proPrice}
           </div>
-          <div className="text-sm font-light">per/mo</div>
+          <div className="text-sm font-light">pay once</div>
         </div>
         <form
           action="https://submit-form.com/4mFTvZQSv"
