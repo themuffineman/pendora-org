@@ -18,7 +18,6 @@ export default function RootLayout({
   return (
       <html lang="en">
         <head>
-          <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
           <script defer src="https://cdn.overtracking.com/t/tllnMQkfn3WqCweca/"></script>
         </head>
         <body className={inter.className}>
