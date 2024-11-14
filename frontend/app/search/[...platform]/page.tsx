@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import AdCard from "@/components/AdCard";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,18 +20,17 @@ const page = ({ params }: { params: any }) => {
   const [platform, setPlatform] = useState<string>("google");
   const [isOpen, setIsOpen] = useState(false);
   const [usageCount, incrementUsage] = useServiceUsage();
-  const [isAuth, setIsAuth]  = useState<any>()
+  const [isAuth, setIsAuth] = useState<any>();
   const router = useRouter();
-  
-  async function verifyAuth(){
+
+  async function verifyAuth() {
     const isAuthResponse = await fetch("/api/is-auth");
     const isAuth = await isAuthResponse.json();
-    setIsAuth(isAuth)
+    setIsAuth(isAuth);
   }
-  useEffect(()=>{
-    verifyAuth()
-  },[])
-
+  useEffect(() => {
+    verifyAuth();
+  }, []);
 
   async function goToSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,7 +43,7 @@ const page = ({ params }: { params: any }) => {
     e?.preventDefault();
     if (usageCount > 4) {
       setIsOpen(true);
-    }else {
+    } else {
       setAds([]);
       setIsFetching(true);
       setFailedToFetch(false);
@@ -125,7 +124,7 @@ const page = ({ params }: { params: any }) => {
         </div>
         <div className="flex gap-2 items-center">
           <GetPro />
-          <AuthLinks type={isAuth?.isAuth ? 'logout': 'login'}/>
+          <AuthLinks type={isAuth?.isAuth ? "logout" : "login"} />
         </div>
       </nav>
       <div className="w-full mt-16 h-full flex flex-col p-10 gap-[2rem] justify-start items-center overflow-auto bg-white">
