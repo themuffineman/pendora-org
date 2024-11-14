@@ -51,7 +51,7 @@ function GetPro({
             type="email"
             id="email"
             name="email"
-            className="w-full h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
+            className="w-full outline-neutral-300 h-12 p-2 px-[20px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md"
             placeholder="Enter your email"
           />
           <button

@@ -175,6 +175,81 @@ const AdCard: React.FC<componentProps> = ({ adImage, type, format }) => {
             });
         }
     }
+    async function triggerDownloadVideo(
+        videoUrl: string,
+        defaultFileName: string = "downloaded-video",
+    ) {
+        setSaveMessage({
+            message: "Downloading...",
+            error: false,
+        });
+        setConfirmation(true);
+        try {
+            // Fetch the video from the URL
+            const response = await fetch(videoUrl);
+    
+            if (!response.ok) {
+                throw new Error(`Failed to fetch: ${response.statusText}`);
+            }
+    
+            // Convert the response to a Blob
+            const blob = await response.blob();
+    
+            // Detect MIME type from the Blob
+            const mimeType = blob.type;
+    
+            // Set the correct file extension based on the MIME type
+            let extension = "";
+            if (mimeType === "video/mp4") {
+                extension = "mp4";
+            } else if (mimeType === "video/webm") {
+                extension = "webm";
+            } else if (mimeType === "video/ogg") {
+                extension = "ogv";
+            } else {
+                throw new Error(`Unsupported MIME type: ${mimeType}`);
+            }
+    
+            // Construct the full file name
+            const fileName = `${defaultFileName}.${extension}`;
+    
+            // Create a URL for the Blob and trigger the download
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link); // Append to the DOM
+            link.click(); // Trigger download
+            document.body.removeChild(link); // Clean up
+    
+            // Revoke the object URL to free memory
+            URL.revokeObjectURL(url);
+            setSaveMessage({
+                message: "Downloaded Successfully",
+                error: false,
+            });
+            await new Promise<void>((resolve) => {
+                setTimeout(resolve, 2000);
+            });
+        } catch (error: any) {
+            setSaveMessage({
+                message: error.message,
+                error: true,
+            });
+            await new Promise<void>((resolve) => {
+                setTimeout(resolve, 2000);
+            });
+            console.error("Error downloading the video:", error.message);
+        } finally {
+            setConfirmation(false);
+            setSaveMessage({
+                // Resetting message
+                message: "",
+                error: false,
+            });
+        }
+    }
+    
     return (
         <div className="size-max gap-2 flex flex-col items-center justify-between bg-[#f5f5f5] p-2 rounded-md mx-auto">
             {format === "image" ? (
@@ -224,9 +299,13 @@ const AdCard: React.FC<componentProps> = ({ adImage, type, format }) => {
                             Save to list
                         </button> */}
                     <div
-                        onClick={() =>
-                            triggerDownloadImage(adImage, "Ads by AdsInspect")
-                        }
+                        onClick={() =>{
+                            if(format === 'video'){
+                                triggerDownloadVideo(adImage, "Ads by AdsInspect")
+                            }else{
+                                triggerDownloadImage(adImage, "Ads by AdsInspect")
+                            }
+                        }}
                         className="w-max p-1 rounded-md hover:bg-[#ffff]"
                     >
                         <svg
@@ -258,9 +337,13 @@ const AdCard: React.FC<componentProps> = ({ adImage, type, format }) => {
                         Delete
                     </button>
                     <div
-                        onClick={() =>
-                            triggerDownloadImage(adImage, "Ads by AdsInspect")
-                        }
+                        onClick={() =>{
+                            if(format === 'video'){
+                                triggerDownloadVideo(adImage, "Ads by AdsInspect")
+                            }else{
+                                triggerDownloadImage(adImage, "Ads by AdsInspect")
+                            }
+                        }}
                         className="w-max p-1 rounded-md hover:bg-[#ffff]"
                     >
                         <svg

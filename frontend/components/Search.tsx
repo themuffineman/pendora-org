@@ -54,7 +54,7 @@ const Search = ({
                 onChange={(e) => {
                   setInput(e.target.value);
                 }}
-                className="w-[100%] h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md "
+                className="w-[100%] outline-neutral-300 h-12 p-2 px-[40px] pr-[100px] bg-[#F5F5F5] placeholder:text-black/30 rounded-md "
                 placeholder={
                   platform === "google"
                     ? "Enter domain e.g. domain.com"
@@ -103,7 +103,7 @@ const Search = ({
           openTooltip();
         }}
       >
-        <SelectTrigger className="min-w-max h-12">
+        <SelectTrigger className="min-w-max h-12 focus:outline-[#f5f5f5] focus:ring-[#f5f5f5]">
           <SelectValue placeholder="Platform" />
         </SelectTrigger>
         <SelectContent>
@@ -143,9 +143,9 @@ const Search = ({
               />
               <span className="text-base font-medium gap-5 text-center flex items-center justify-between">
                 TikTok
-                <span className="text-xs text-black bg-yellow-400 rounded-md p-2">
-                Coming Soon
-                </span>
+                <span className="text-xs text-black bg-yellow-400 rounded-md p-[1px]">
+                    Coming Soon
+                  </span>
               </span>
             </div>
           </SelectItem>
@@ -161,9 +161,9 @@ const Search = ({
               />
               <span className="text-base gap-5 font-medium text-center flex items-center justify-between">
                 LinkedIn
-                <span className="text-xs text-black bg-yellow-400 rounded-md p-2">
-                  Coming Soon
-                </span>
+                <span className="text-xs text-black bg-yellow-400 rounded-md p-[1px]">
+                    Coming Soon
+                  </span>
               </span>
             </div>
           </SelectItem>
